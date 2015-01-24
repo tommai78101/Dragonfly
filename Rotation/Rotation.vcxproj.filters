@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\dragonfly-v3.4">
+      <UniqueIdentifier>{8101a61a-9785-4e29-83a6-12ec86baa5b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dragonfly-v3.4">
+      <UniqueIdentifier>{afcbe593-b17f-4423-a51c-5c043336bce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dragonfly-v3.4\source">
+      <UniqueIdentifier>{c7862ce8-1407-4ecf-b10d-d1bbb176ac15}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dragonfly-v3.4\include\Box.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\Circle.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\Clock.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\Event.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\EventCollision.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\EventKeyboard.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\EventMouse.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\EventOut.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\EventStep.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\EventView.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\Frame.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\Fraps.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\GameManager.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\GraphicsManager.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\InputManager.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\Line.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\LogManager.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\Manager.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\Object.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\ObjectList.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\ObjectListIterator.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\Pause.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\Position.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\ResourceManager.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\SceneGraph.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\Splash.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\SplashDragonfly.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\Sprite.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\State.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\StateMachine.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\utility.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\ViewObject.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\include\WorldManager.h">
+      <Filter>Header Files\dragonfly-v3.4</Filter>
+    </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\header\Common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dragonfly-v3.4\source\game.cpp">
+      <Filter>Source Files\dragonfly-v3.4\source</Filter>
+    </ClCompile>
+    <ClCompile Include="dragonfly-v3.4\platform.cpp">
+      <Filter>Source Files\dragonfly-v3.4</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
