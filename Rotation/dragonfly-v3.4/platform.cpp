@@ -6,5 +6,6 @@
 #include "header\Common.h"
 
 int main() {
+	test();
 	return 0;
 }
