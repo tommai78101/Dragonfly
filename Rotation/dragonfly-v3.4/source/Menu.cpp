@@ -5,6 +5,9 @@
 
 #include "..\header\Menu.h"
 
+//Remember, w = h = 256, which is large.
+//Our screen buffer w and h is around 256, 80 respectively.
+
 Menu::Menu(){
 	setType(DF_TYPE_MENU);
 	LogManager& log = LogManager::getInstance();
@@ -15,29 +18,37 @@ Menu::Menu(){
 
 		setSprite(tempSprite);
 		setSpriteSlowdown(3);
+		setTransparency();
 		setLocation(CENTER_CENTER);
 		registerInterest(DF_STEP_EVENT);
 		registerInterest(DF_KEYBOARD_EVENT);
+
+		WorldManager& world = WorldManager::getInstance();
+		Box box = world.getBoundary();
+		int w = box.getHorizontal();
+		int h = box.getVertical();
+		world.moveObject(this, Position(128, 40));
+
 		setActive(true);
 	}
 	else {
 		log.writeLog("Menu::Menu(): Sprite \"square_spinning\" not found.");
 	}
+
+	Menu::initalSpin = false;
 }
 
 int Menu::eventHandler(Event* e){
 	WorldManager& world = WorldManager::getInstance();
 	LogManager& log = LogManager::getInstance();
 	if (e->getType() == DF_STEP_EVENT){
-		Position tempPos = this->getPosition();
-		log.writeLog("Step Event: Square Position: %d, %d", tempPos.getX(), tempPos.getY());
-
-		int count = 0;
-		ObjectList list = world.getAllObjects();
-		for (ObjectListIterator i(&list); !i.isDone(); i.next()){
-			count++;
+		int SpriteIndex = this->getSpriteIndex();
+		if (SpriteIndex == 0 && Menu::initalSpin){
+			this->setSpriteIndex(4);
 		}
-		log.writeLog("Total number of Objects: %d", count);
+		else if (SpriteIndex >= 9){
+			Menu::initalSpin = true;
+		}
 		return 1;
 	}
 	else if (e->getType() == DF_KEYBOARD_EVENT){
@@ -62,6 +73,10 @@ int Menu::eventHandler(Event* e){
 		else if (key == 'd'){
 			tempPos.setXY(tempPos.getX() + 1, tempPos.getY());
 			test = true;
+		}
+		else if (key == 'n'){
+			new Menu;
+			world.markForDelete(this);
 		}
 		if (test){
 			world.moveObject(this, tempPos);
