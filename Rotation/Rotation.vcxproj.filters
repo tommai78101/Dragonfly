@@ -129,6 +129,9 @@
     <ClInclude Include="dragonfly-v3.4\header\Menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\header\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dragonfly-v3.4\source\game.cpp">

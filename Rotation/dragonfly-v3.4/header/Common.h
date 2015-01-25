@@ -11,5 +11,8 @@
 #include "..\include\Box.h"
 #include "..\include\GraphicsManager.h"
 #include "..\include\utility.h"
+#include "..\include\ViewObject.h"
+#include "..\include\ObjectList.h"
+#include "..\include\ObjectListIterator.h"
 
 #endif

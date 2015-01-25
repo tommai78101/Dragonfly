@@ -7,6 +7,7 @@
 class Menu : public ViewObject {
 private:
 	bool initalSpin;
+	Position cursorPosition;
 public:
 	Menu();
 	int eventHandler(Event* e);

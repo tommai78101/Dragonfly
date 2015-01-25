@@ -3,7 +3,7 @@
  */
 
 #include "header\Common.h"
-#include "header\Menu.h"
+#include "header\Game.h"
 
 #define WORLD_BOUNDARY_WIDTH 256
 #define WORLD_BOUNDARY_HEIGHT 256
@@ -11,16 +11,7 @@
 bool PopulateWorld(){
 	LogManager& log = LogManager::getInstance();
 	log.writeLog("Populating game world.");
-
-	/*
-		Start the game.
-
-		syntax:
-
-		new GameStart();
-	*/
-	new Menu();	
-
+	new Game;
 	return true;
 }
 
@@ -33,15 +24,6 @@ bool LoadResources(){
 		return false;
 	}
 
-	/*
-		Load sprites here:
-
-		syntax: 
-
-		if (result = rm.loadSprite("assets/gameStart.txt", "GameStart") != 0){
-			l.writeLog("There's something wrong. Return value: %d", result);
-		}
-	*/
 	int Result = 0;
 	if (Result = resource.loadSprite("assets/square_spinning.txt", "square_spinning") != 0){
 		log.writeLog("There's something wrong. Return value: %d", Result);
