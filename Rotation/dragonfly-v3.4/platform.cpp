@@ -28,7 +28,9 @@ bool LoadResources(){
 	if (Result = resource.loadSprite("assets/square_spinning.txt", "square_spinning") != 0){
 		log.writeLog("There's something wrong. Return value: %d", Result);
 	}
-
+	if (Result = resource.loadSprite("assets/logo.txt", "logo") != 0){
+		log.writeLog("There's something wrong. Return value: %d", Result);
+	}
 	return true;
 }
 

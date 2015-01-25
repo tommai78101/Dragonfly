@@ -4,14 +4,16 @@
 #include <iostream>
 #include <sstream>
 
+static bool canSelect = false;
+
 //Remember, w = h = 256, which is large.
 //Our screen buffer w and h is around 256, 80 respectively.
 
 Menu::Menu(){
-	setType(DF_TYPE_MENU);
 	LogManager& log = LogManager::getInstance();
 	ResourceManager& resource = ResourceManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
+	WorldManager& world = WorldManager::getInstance();
 
 	Sprite* tempSprite = resource.getSprite("square_spinning");
 	if (tempSprite){
@@ -21,22 +23,23 @@ Menu::Menu(){
 		setSpriteSlowdown(5);
 		setTransparency();
 		setLocation(CENTER_CENTER);
+		setType(TYPE_MENU);
 		registerInterest(DF_STEP_EVENT);
 		registerInterest(DF_KEYBOARD_EVENT);
 
 		int w = g.getHorizontal()/2;
 		int h = g.getVertical()/2;
-		WorldManager& world = WorldManager::getInstance();
 		world.moveObject(this, Position(w, h));
 
 		setActive(true);
+
+		Menu::initalSpin = false;
+		Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4);
 	}
 	else {
 		log.writeLog("Menu::Menu(): Sprite \"square_spinning\" not found.");
+		world.markForDelete(this);
 	}
-
-	Menu::initalSpin = false;
-	Menu::cursorPosition = Position(g.getHorizontal()/4, (g.getVertical()/6)*4);
 }
 
 int Menu::eventHandler(Event* e){
@@ -47,24 +50,31 @@ int Menu::eventHandler(Event* e){
 		if (SpriteIndex == 0 && Menu::initalSpin){
 			this->setSpriteIndex(4);
 		}
-		else if (SpriteIndex >= 9){
+		else if (SpriteIndex == 9 && !Menu::initalSpin){
 			Menu::initalSpin = true;
+			canSelect = true;
 			setSpriteSlowdown(3);
+			GraphicsManager& g = GraphicsManager::getInstance();
+			Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4);
+			new Logo;
 		}
 		return 1;
 	}
-	else if (e->getType() == DF_KEYBOARD_EVENT){
+	else if (e->getType() == DF_KEYBOARD_EVENT && canSelect){
 		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
 		int key = keyboard->getKey();
 		LogManager& log = LogManager::getInstance();
 		GraphicsManager& g = GraphicsManager::getInstance();
 		log.writeLog("Key pressed.");
 
+		//TODO(Thompson): Need to add control instructions for the user to see what to press.
 		if (key == 'w'){
-			Menu::cursorPosition = Position(g.getHorizontal() / 4, (g.getVertical() / 6) * 4);
+			Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4);
+			Menu::StartGame = true;
 		}
 		else if (key == 's'){
-			Menu::cursorPosition = Position(g.getHorizontal() / 4, (g.getVertical() / 6) * 5);
+			Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 5);
+			Menu::StartGame = false;
 		}
 	}
 	return 0;
@@ -72,6 +82,64 @@ int Menu::eventHandler(Event* e){
 
 void Menu::draw(){
 	Object::draw();
+	if (canSelect){
+		GraphicsManager& g = GraphicsManager::getInstance();
+		g.drawCh(Menu::cursorPosition, '>', 2);
+
+		Position text = Position(Menu::cursorPosition.getX() + 6, (g.getVertical() / 6) * 4);
+		g.drawString(text, "Start Game", Justification::LEFT_JUSTIFIED, 2);
+
+		text.setY((g.getVertical() / 6) * 5);
+		g.drawString(text, "Quit Game", Justification::LEFT_JUSTIFIED, 2);
+
+	}
+}
+
+//TODO(Thompson): Find a way to mark the Logo for deletion when the user clicks on "Start Game" or "Quit Game".
+Logo::Logo(){
+	setType(TYPE_LOGO);
+	LogManager& log = LogManager::getInstance();
+	ResourceManager& resource = ResourceManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
-	g.drawCh(Menu::cursorPosition, '>', 2);
+
+	Sprite* tempSprite = resource.getSprite("logo");
+	if (tempSprite){
+		log.writeLog("Successfully loaded sprite.");
+
+		setSprite(tempSprite);
+		setSpriteSlowdown(15);
+		setTransparency();
+		setLocation(CENTER_CENTER);
+		registerInterest(DF_STEP_EVENT);
+
+		int w = g.getHorizontal() / 2;
+		int h = g.getVertical() / 2;
+		WorldManager& world = WorldManager::getInstance();
+		world.moveObject(this, Position(w, h));
+
+		setActive(true);
+	}
+	else {
+		log.writeLog("Menu::Menu(): Sprite \"square_spinning\" not found.");
+	}
+	Logo::goUp = 0;
+}
+
+int Logo::eventHandler(Event* e){
+	if (e->getType() == DF_STEP_EVENT){
+		if (Logo::goUp > 6){
+			getPosition().setXY(getPosition().getX(), getPosition().getY()-1);
+		}
+		else if (Logo::goUp > 3) {
+			getPosition().setXY(getPosition().getX(), getPosition().getY()+1);
+		}
+		Logo::goUp++;
+		if (Logo::goUp > 9){
+			Logo::goUp = 0;
+		}
+	}
+}
+
+void Logo::draw(){
+	Object::draw();
 }
