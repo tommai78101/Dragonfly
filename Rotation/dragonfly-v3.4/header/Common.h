@@ -9,5 +9,7 @@
 #include "..\include\EventStep.h"
 #include "..\include\EventKeyboard.h"
 #include "..\include\Box.h"
+#include "..\include\GraphicsManager.h"
+#include "..\include\utility.h"
 
 #endif

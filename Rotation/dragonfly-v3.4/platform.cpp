@@ -8,7 +8,7 @@
 #define WORLD_BOUNDARY_WIDTH 256
 #define WORLD_BOUNDARY_HEIGHT 256
 
-static bool PopulateWorld(){
+bool PopulateWorld(){
 	LogManager& log = LogManager::getInstance();
 	log.writeLog("Populating game world.");
 
@@ -24,7 +24,7 @@ static bool PopulateWorld(){
 	return true;
 }
 
-static bool LoadResources(){
+bool LoadResources(){
 	ResourceManager& resource = ResourceManager::getInstance();
 	LogManager& log = LogManager::getInstance();
 	resource.startUp();

@@ -6,36 +6,23 @@
 #include "..\header\Menu.h"
 
 Menu::Menu(){
-	setType("Menu");
+	setType(DF_TYPE_MENU);
 	LogManager& log = LogManager::getInstance();
 	ResourceManager& resource = ResourceManager::getInstance();
 	Sprite* tempSprite = resource.getSprite("square_spinning");
 	if (tempSprite){
 		log.writeLog("Successfully loaded sprite.");
-		WorldManager& world = WorldManager::getInstance();
-		Box box = world.getBoundary();
-		int width = box.getHorizontal();
-		int height = box.getVertical();
 
 		setSprite(tempSprite);
 		setSpriteSlowdown(3);
-		setTransparency();
-		setType(DF_TYPE_MENU);
-		setSolidness(SPECTRAL);
-
-
-		Position position(width / 2, height / 2);
-		world.moveObject(this, position);
-
+		setLocation(CENTER_CENTER);
 		registerInterest(DF_STEP_EVENT);
 		registerInterest(DF_KEYBOARD_EVENT);
+		setActive(true);
 	}
 	else {
 		log.writeLog("Menu::Menu(): Sprite \"square_spinning\" not found.");
 	}
-}
-
-Menu::~Menu(){
 }
 
 int Menu::eventHandler(Event* e){
@@ -60,12 +47,20 @@ int Menu::eventHandler(Event* e){
 		log.writeLog("Key pressed.");
 		Position tempPos = this->getPosition();
 		bool test = false;
-		if (key == 'j'){
-			tempPos.setXY(tempPos.getX() + 1, tempPos.getY());
+		if (key == 'w'){
+			tempPos.setXY(tempPos.getX(), tempPos.getY() - 1);
 			test = true;
 		}
-		else if (key == 'h'){
-			tempPos.setXY(tempPos.getX() - 1, tempPos.getY());
+		else if (key == 's'){
+			tempPos.setXY(tempPos.getX(), tempPos.getY() + 1);
+			test = true;
+		}
+		else if (key == 'a'){
+			tempPos.setXY(tempPos.getX()-1, tempPos.getY());
+			test = true;
+		}
+		else if (key == 'd'){
+			tempPos.setXY(tempPos.getX() + 1, tempPos.getY());
 			test = true;
 		}
 		if (test){
@@ -78,10 +73,6 @@ int Menu::eventHandler(Event* e){
 	return 0;
 }
 
-void Menu::step(){
-
-}
-
-void Menu::start(){
-	
+void Menu::draw(){
+	Object::draw();
 }

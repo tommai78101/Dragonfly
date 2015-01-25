@@ -1,14 +1,12 @@
+#include "..\include\ViewObject.h"
 #include "..\include\Object.h"
 #include "..\include\Event.h"
 
 #define DF_TYPE_MENU "Menu"
 
-class Menu : public Object {
-private:
-	void step();
-	void start();
+class Menu : public ViewObject {
 public:
 	Menu();
-	~Menu();
 	int eventHandler(Event* e);
+	void draw();
 };
