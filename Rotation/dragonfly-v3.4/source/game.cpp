@@ -16,6 +16,7 @@ Game::Game(){
 	setSpriteSlowdown(5);
 
 	registerInterest(DF_STEP_EVENT);
+	registerInterest(DF_KEYBOARD_EVENT);
 }
 
 int Game::eventHandler(Event* e){
@@ -43,6 +44,28 @@ int Game::eventHandler(Event* e){
 				Tutorial->floatUp = !Tutorial->floatUp;
 				Tutorial->counter = 0;
 			}
+		}
+	}
+	else if (e->getType() == DF_KEYBOARD_EVENT){
+		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
+		int key = keyboard->getKey();
+		if (key == 'r'){
+			Object* menu;
+			Object* logo;
+			WorldManager& world = WorldManager::getInstance();
+			ObjectList list = world.getAllObjects();
+			for (ObjectListIterator i(&list); !i.isDone(); i.next()){
+				Object* obj = i.currentObject();
+				if (obj->getType().compare(TYPE_MENU) == 0){
+					menu = obj;
+				}
+				else if (obj->getType().compare(TYPE_LOGO) == 0){
+					logo = obj;
+				}
+			}
+			menu->setVisible(true);
+			logo->setVisible(true);
+			world.markForDelete(this);
 		}
 	}
 }
