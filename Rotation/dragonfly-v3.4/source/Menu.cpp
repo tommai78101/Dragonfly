@@ -53,7 +53,6 @@ int Menu::eventHandler(Event* e){
 	WorldManager& world = WorldManager::getInstance();
 	LogManager& log = LogManager::getInstance();
 	if (e->getType() == DF_STEP_EVENT){
-		log.writeLog("Stepping...");
 		int SpriteIndex = this->getSpriteIndex();
 		if (SpriteIndex == 0 && Menu::initalSpin){
 			this->setSpriteIndex(4);
@@ -106,6 +105,23 @@ int Menu::eventHandler(Event* e){
 					world.markForDelete(obj);
 				}
 			}
+		}
+		else if (key == 'r'){
+			Object* menu;
+			Object* logo;
+			WorldManager& world = WorldManager::getInstance();
+			ObjectList list = world.getAllObjects();
+			for (ObjectListIterator i(&list); !i.isDone(); i.next()){
+				Object* obj = i.currentObject();
+				if (obj->getType().compare(TYPE_MENU) == 0){
+					menu = obj;
+				}
+				else if (obj->getType().compare(TYPE_LOGO) == 0){
+					logo = obj;
+				}
+			}
+			menu->setVisible(true);
+			logo->setVisible(true);
 		}
 		return 1;
 	}

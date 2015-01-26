@@ -4,6 +4,7 @@
 
 #include "header\Common.h"
 #include "header\Game.h"
+#include "header\Menu.h"
 
 #define WORLD_BOUNDARY_WIDTH 256
 #define WORLD_BOUNDARY_HEIGHT 256
@@ -11,7 +12,7 @@
 bool PopulateWorld(){
 	LogManager& log = LogManager::getInstance();
 	log.writeLog("Populating game world.");
-	new Game;
+	new Menu;
 	return true;
 }
 
