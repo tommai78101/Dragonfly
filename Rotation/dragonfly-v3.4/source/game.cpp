@@ -19,17 +19,17 @@ int Game::eventHandler(Event* e){
 	if (e->getType() == DF_STEP_EVENT){
 		if (this->getCurrentState() == State::TUTORIAL){
 			tutorial* Tutorial = &this->GameState.TutorialState;
-			if (Tutorial->counter > 3){
-				Tutorial->floatUp = !Tutorial->floatUp;
+			if (Tutorial->floatUp){
+				Tutorial->stringY--;
 			}
 			else {
-				if (Tutorial->floatUp){
-					Tutorial->stringY--;
-				}
-				else {
-					Tutorial->stringY++;
-				}
-				Tutorial->counter++;
+				Tutorial->stringY++;
+			}
+			Tutorial->counter++;
+
+			if (Tutorial->counter > 3){
+				Tutorial->floatUp = !Tutorial->floatUp;
+				Tutorial->counter = 0;
 			}
 		}
 	}
