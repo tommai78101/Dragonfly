@@ -19,7 +19,7 @@ Menu::Menu(){
 		setSprite(tempSprite);
 		setSpriteSlowdown(5);
 		setTransparency();
-		setLocation(CENTER_CENTER);
+		//setLocation(CENTER_CENTER);
 		setType(TYPE_MENU);
 		registerInterest(DF_STEP_EVENT);
 		registerInterest(DF_KEYBOARD_EVENT);
@@ -131,7 +131,6 @@ void Menu::draw(){
 
 //TODO(Thompson): Find a way to mark the Logo for deletion when the user clicks on "Start Game" or "Quit Game".
 Logo::Logo(){
-	setType(TYPE_LOGO);
 	LogManager& log = LogManager::getInstance();
 	ResourceManager& resource = ResourceManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
@@ -139,11 +138,11 @@ Logo::Logo(){
 	Sprite* tempSprite = resource.getSprite("logo");
 	if (tempSprite){
 		log.writeLog("[LOGO] Successfully loaded sprite.");
-
+		setType(TYPE_LOGO);
 		setSprite(tempSprite);
 		setSpriteSlowdown(15);
 		setTransparency();
-		setLocation(CENTER_CENTER);
+		//setLocation(CENTER_CENTER);
 		registerInterest(DF_STEP_EVENT);
 
 		int w = g.getHorizontal() / 2;

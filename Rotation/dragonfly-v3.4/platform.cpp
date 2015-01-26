@@ -6,9 +6,6 @@
 #include "header\Game.h"
 #include "header\Menu.h"
 
-#define WORLD_BOUNDARY_WIDTH 256
-#define WORLD_BOUNDARY_HEIGHT 256
-
 bool PopulateWorld(){
 	LogManager& log = LogManager::getInstance();
 	log.writeLog("Populating game world.");
@@ -26,10 +23,10 @@ bool LoadResources(){
 	}
 
 	int Result = 0;
-	if (Result = resource.loadSprite("assets/square_spinning.txt", "square_spinning") != 0){
+	if ((Result = resource.loadSprite("assets/square_spinning.txt", "square_spinning")) != 0){
 		log.writeLog("There's something wrong. Return value: %d", Result);
 	}
-	if (Result = resource.loadSprite("assets/logo.txt", "logo") != 0){
+	if ((Result = resource.loadSprite("assets/logo.txt", "logo")) != 0){
 		log.writeLog("There's something wrong. Return value: %d", Result);
 	}
 	return true;
@@ -60,17 +57,6 @@ int main() {
 		game.shutDown();
 		log.shutDown();
 		return -2;
-	}
-	log.writeLog("Setting new boundary size: 256x256");
-	world.setBoundary(Box(Position(0, 0), WORLD_BOUNDARY_WIDTH, WORLD_BOUNDARY_HEIGHT));
-
-	Box boundary = world.getBoundary();
-	if (boundary.getHorizontal() < WORLD_BOUNDARY_WIDTH || boundary.getVertical() < WORLD_BOUNDARY_HEIGHT){
-		log.writeLog("Something is wrong with the boundary size. World boundary size: %d, %d", boundary.getHorizontal(), boundary.getVertical());
-		world.shutDown();
-		game.shutDown();
-		log.shutDown();
-		return -3;
 	}
 
 	if (LoadResources() && PopulateWorld()) {
