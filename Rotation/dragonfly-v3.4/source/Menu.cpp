@@ -90,9 +90,6 @@ int Menu::eventHandler(Event* e){
 				this->setVisible(false);
 				for (ObjectListIterator i(&list); !i.isDone(); i.next()){
 					Object* obj = i.currentObject();
-					if (obj->getType().compare(TYPE_GAME) == 0){
-						obj->setVisible(true);
-					}
 					if (obj->getType().compare(TYPE_LOGO) == 0){
 						obj->setVisible(false);
 					}
