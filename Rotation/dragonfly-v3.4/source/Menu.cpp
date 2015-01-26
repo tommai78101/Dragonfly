@@ -94,9 +94,10 @@ int Menu::eventHandler(Event* e){
 					}
 				}
 				
-				
 				//TODO: Start game here.
 				//TODO: Need another object to activate this when it's no longer active.
+
+				new Game;
 			}
 			else {
 				for (ObjectListIterator i(&list); !i.isDone(); i.next()){
