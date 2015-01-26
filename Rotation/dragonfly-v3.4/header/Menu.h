@@ -18,6 +18,7 @@ class Menu : public ViewObject {
 private:
 	bool initalSpin;
 	Position cursorPosition;
+	bool canSelectOptions;
 	bool StartGame;
 public:
 	Menu();

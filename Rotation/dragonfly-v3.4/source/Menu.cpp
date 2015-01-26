@@ -3,8 +3,6 @@
 #include "..\header\Menu.h"
 #include "..\header\Game.h"
 
-static bool canSelect = false;
-
 //Remember, w = h = 256, which is large.
 //Our screen buffer w and h is around 256, 80 respectively.
 
@@ -33,6 +31,7 @@ Menu::Menu(){
 		setVisible(true);
 
 		Menu::initalSpin = false;
+		Menu::canSelectOptions = false;
 		Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4);
 		Menu::StartGame = true;
 	}
@@ -61,7 +60,7 @@ int Menu::eventHandler(Event* e){
 		}
 		else if (SpriteIndex == 9 && !Menu::initalSpin){
 			Menu::initalSpin = true;
-			canSelect = true;
+			Menu::canSelectOptions = true;
 			setSpriteSlowdown(3);
 			GraphicsManager& g = GraphicsManager::getInstance();
 			Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4);
@@ -69,7 +68,7 @@ int Menu::eventHandler(Event* e){
 		}
 		return 1;
 	}
-	else if (e->getType() == DF_KEYBOARD_EVENT && canSelect){
+	else if (e->getType() == DF_KEYBOARD_EVENT && Menu::canSelectOptions){
 		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
 		int key = keyboard->getKey();
 		LogManager& log = LogManager::getInstance();
@@ -118,7 +117,7 @@ int Menu::eventHandler(Event* e){
 
 void Menu::draw(){
 	Object::draw();
-	if (canSelect){
+	if (Menu::canSelectOptions){
 		GraphicsManager& g = GraphicsManager::getInstance();
 		g.drawCh(Menu::cursorPosition, '>', 2);
 
