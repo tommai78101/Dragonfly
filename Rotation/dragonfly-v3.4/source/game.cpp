@@ -11,6 +11,9 @@ Game::Game(){
 	Tutorial->stringX = g.getHorizontal() / 4 + 2;
 	Tutorial->stringY = g.getVertical() / 2;
 	Tutorial->floatUp = false;
+	Tutorial->counterSpeed = 5;
+
+	setSpriteSlowdown(5);
 
 	registerInterest(DF_STEP_EVENT);
 }
@@ -19,13 +22,22 @@ int Game::eventHandler(Event* e){
 	if (e->getType() == DF_STEP_EVENT){
 		if (this->getCurrentState() == State::TUTORIAL){
 			tutorial* Tutorial = &this->GameState.TutorialState;
-			if (Tutorial->floatUp){
-				Tutorial->stringY--;
+			if (Tutorial->counterSpeed == 0){
+				if (Tutorial->floatUp){
+					Tutorial->stringY--;
+				}
+				else {
+					Tutorial->stringY++;
+				}
+			}
+
+			if (Tutorial->counterSpeed > GAME_TICK_SPEED){
+				Tutorial->counter++;
+				Tutorial->counterSpeed = 0;
 			}
 			else {
-				Tutorial->stringY++;
+				Tutorial->counterSpeed++;
 			}
-			Tutorial->counter++;
 
 			if (Tutorial->counter > 3){
 				Tutorial->floatUp = !Tutorial->floatUp;
