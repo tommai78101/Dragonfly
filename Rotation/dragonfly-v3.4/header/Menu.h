@@ -21,6 +21,7 @@ private:
 	bool StartGame;
 public:
 	Menu();
+	~Menu();
 	int eventHandler(Event* e);
 	void draw();
 };

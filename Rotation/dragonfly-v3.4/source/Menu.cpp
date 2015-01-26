@@ -1,8 +1,7 @@
 #include "..\header\Common.h"
 
 #include "..\header\Menu.h"
-#include <iostream>
-#include <sstream>
+#include "..\header\Game.h"
 
 static bool canSelect = false;
 
@@ -31,10 +30,11 @@ Menu::Menu(){
 		int h = g.getVertical()/2;
 		world.moveObject(this, Position(w, h));
 
-		setActive(true);
+		setVisible(true);
 
 		Menu::initalSpin = false;
 		Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4);
+		Menu::StartGame = true;
 	}
 	else {
 		log.writeLog("Menu::Menu(): Sprite \"square_spinning\" not found.");
@@ -42,10 +42,19 @@ Menu::Menu(){
 	}
 }
 
+Menu::~Menu(){
+	this->unregisterInterest(DF_STEP_EVENT);
+	this->unregisterInterest(DF_KEYBOARD_EVENT);
+
+	GameManager& game = GameManager::getInstance();
+	game.setGameOver();
+}
+
 int Menu::eventHandler(Event* e){
 	WorldManager& world = WorldManager::getInstance();
 	LogManager& log = LogManager::getInstance();
 	if (e->getType() == DF_STEP_EVENT){
+		log.writeLog("Stepping...");
 		int SpriteIndex = this->getSpriteIndex();
 		if (SpriteIndex == 0 && Menu::initalSpin){
 			this->setSpriteIndex(4);
@@ -65,7 +74,6 @@ int Menu::eventHandler(Event* e){
 		int key = keyboard->getKey();
 		LogManager& log = LogManager::getInstance();
 		GraphicsManager& g = GraphicsManager::getInstance();
-		log.writeLog("Key pressed.");
 
 		//TODO(Thompson): Need to add control instructions for the user to see what to press.
 		if (key == 'w'){
@@ -76,6 +84,34 @@ int Menu::eventHandler(Event* e){
 			Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 5);
 			Menu::StartGame = false;
 		}
+		else if (key == ' '){
+			WorldManager& world = WorldManager::getInstance();
+			ObjectList list = world.getAllObjects();
+			if (Menu::StartGame){
+				this->setVisible(false);
+				for (ObjectListIterator i(&list); !i.isDone(); i.next()){
+					Object* obj = i.currentObject();
+					if (obj->getType().compare(TYPE_GAME) == 0){
+						obj->setVisible(true);
+					}
+					if (obj->getType().compare(TYPE_LOGO) == 0){
+						obj->setVisible(false);
+					}
+				}
+				
+				
+				//TODO: Start game here.
+				//TODO: Need another object to activate this when it's no longer active.
+			}
+			else {
+				for (ObjectListIterator i(&list); !i.isDone(); i.next()){
+					Object* obj = i.currentObject();
+					obj->setVisible(false);
+					world.markForDelete(obj);
+				}
+			}
+		}
+		return 1;
 	}
 	return 0;
 }
@@ -104,7 +140,7 @@ Logo::Logo(){
 
 	Sprite* tempSprite = resource.getSprite("logo");
 	if (tempSprite){
-		log.writeLog("Successfully loaded sprite.");
+		log.writeLog("[LOGO] Successfully loaded sprite.");
 
 		setSprite(tempSprite);
 		setSpriteSlowdown(15);
@@ -117,7 +153,7 @@ Logo::Logo(){
 		WorldManager& world = WorldManager::getInstance();
 		world.moveObject(this, Position(w, h));
 
-		setActive(true);
+		setVisible(true);
 	}
 	else {
 		log.writeLog("Menu::Menu(): Sprite \"square_spinning\" not found.");
