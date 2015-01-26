@@ -85,25 +85,27 @@ int Menu::eventHandler(Event* e){
 		else if (key == ' '){
 			WorldManager& world = WorldManager::getInstance();
 			ObjectList list = world.getAllObjects();
-			if (Menu::StartGame && this->isVisible()){
-				this->setVisible(false);
-				for (ObjectListIterator i(&list); !i.isDone(); i.next()){
-					Object* obj = i.currentObject();
-					if (obj->getType().compare(TYPE_LOGO) == 0){
-						obj->setVisible(false);
+			if (this->isVisible()){
+				if (Menu::StartGame){
+					this->setVisible(false);
+					for (ObjectListIterator i(&list); !i.isDone(); i.next()){
+						Object* obj = i.currentObject();
+						if (obj->getType().compare(TYPE_LOGO) == 0){
+							obj->setVisible(false);
+						}
 					}
-				}
 				
-				//TODO: Start game here.
-				//TODO: Need another object to activate this when it's no longer active.
+					//TODO: Start game here.
+					//TODO: Need another object to activate this when it's no longer active.
 
-				new Game;
-			}
-			else {
-				for (ObjectListIterator i(&list); !i.isDone(); i.next()){
-					Object* obj = i.currentObject();
-					obj->setVisible(false);
-					world.markForDelete(obj);
+					new Game;
+				}
+				else {
+					for (ObjectListIterator i(&list); !i.isDone(); i.next()){
+						Object* obj = i.currentObject();
+						obj->setVisible(false);
+						world.markForDelete(obj);
+					}
 				}
 			}
 		}
