@@ -85,7 +85,7 @@ int Menu::eventHandler(Event* e){
 		else if (key == ' '){
 			WorldManager& world = WorldManager::getInstance();
 			ObjectList list = world.getAllObjects();
-			if (Menu::StartGame){
+			if (Menu::StartGame && this->isVisible()){
 				this->setVisible(false);
 				for (ObjectListIterator i(&list); !i.isDone(); i.next()){
 					Object* obj = i.currentObject();
@@ -107,7 +107,7 @@ int Menu::eventHandler(Event* e){
 				}
 			}
 		}
-		else if (key == 'r'){
+		/*else if (key == 'r'){
 			Object* menu;
 			Object* logo;
 			WorldManager& world = WorldManager::getInstance();
@@ -123,7 +123,7 @@ int Menu::eventHandler(Event* e){
 			}
 			menu->setVisible(true);
 			logo->setVisible(true);
-		}
+		}*/
 		return 1;
 	}
 	return 0;
