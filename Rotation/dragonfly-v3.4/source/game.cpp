@@ -2,6 +2,23 @@
 #include "..\header\Menu.h"
 
 
+inline bool GameTick(game_state* GameState, int Threshold){
+	bool Result = false;
+	tutorial* Tutorial = &GameState->TutorialState;
+	if (Tutorial->counterSpeed > GAME_TICK_SPEED){
+		Tutorial->counter++;
+		Tutorial->counterSpeed = 0;
+	}
+	else {
+		Tutorial->counterSpeed++;
+	}
+
+	if (Tutorial->counter > Threshold){
+		Result = true;
+	}
+	return Result;
+}
+
 Game::Game(){
 	this->GameState = {};
 	this->setCurrentState(State::TUTORIAL);
@@ -32,15 +49,7 @@ int Game::eventHandler(Event* e){
 				}
 			}
 
-			if (Tutorial->counterSpeed > GAME_TICK_SPEED){
-				Tutorial->counter++;
-				Tutorial->counterSpeed = 0;
-			}
-			else {
-				Tutorial->counterSpeed++;
-			}
-
-			if (Tutorial->counter > 3){
+			if (GameTick(&this->GameState, 3)){
 				Tutorial->floatUp = !Tutorial->floatUp;
 				Tutorial->counter = 0;
 			}
