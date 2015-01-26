@@ -109,23 +109,6 @@ int Menu::eventHandler(Event* e){
 				}
 			}
 		}
-		/*else if (key == 'r'){
-			Object* menu;
-			Object* logo;
-			WorldManager& world = WorldManager::getInstance();
-			ObjectList list = world.getAllObjects();
-			for (ObjectListIterator i(&list); !i.isDone(); i.next()){
-				Object* obj = i.currentObject();
-				if (obj->getType().compare(TYPE_MENU) == 0){
-					menu = obj;
-				}
-				else if (obj->getType().compare(TYPE_LOGO) == 0){
-					logo = obj;
-				}
-			}
-			menu->setVisible(true);
-			logo->setVisible(true);
-		}*/
 		return 1;
 	}
 	return 0;
