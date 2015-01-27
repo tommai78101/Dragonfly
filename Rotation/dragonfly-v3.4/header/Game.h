@@ -4,17 +4,7 @@
 #define TYPE_GAME "Game"
 #define GAME_TICK_SPEED 5
 
-struct tutorial {
-	int stringLength;
-	int stringX;
-	int stringY;
-	bool floatUp;
-	int counter;
-	int counterSpeed;
-};
-
 struct game_state {
-	tutorial TutorialState;
 };
 
 
