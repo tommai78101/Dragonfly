@@ -93,7 +93,6 @@ int Menu::eventHandler(Event* e){
 		LogManager& log = LogManager::getInstance();
 		GraphicsManager& g = GraphicsManager::getInstance();
 
-		//TODO(Thompson): Need to add control instructions for the user to see what to press.
 		if (key == 'w'){
 			Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4 + 2);
 			Menu::StartGame = true;
@@ -121,8 +120,6 @@ int Menu::eventHandler(Event* e){
 						}
 					}
 				
-					//TODO: Start game here.
-					//TODO: Need another object to activate this when it's no longer active.
 					if (!GameIsInWorld || !game){
 						new Game;
 					}

@@ -24,6 +24,8 @@ Player::Player(game_state* GameState){
 	setVisible(true);
 }
 
+
+//TODO: Add collision detection/response.
 int Player::eventHandler(Event* e){
 	LogManager& l = LogManager::getInstance();
 	if (e->getType() == DF_KEYBOARD_EVENT){
