@@ -8,6 +8,11 @@
 #define TYPE_GAME "Game"
 #define GAME_TICK_SPEED 5
 
+struct stage {
+	int size;
+	int* layout; //Array
+};
+
 struct player_state {
 	int x;
 	int y;
@@ -19,6 +24,7 @@ struct player_state {
 
 struct game_state {
 	player_state PlayerState;
+	stage Stage1;
 };
 
 enum State {

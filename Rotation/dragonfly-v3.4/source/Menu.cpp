@@ -195,6 +195,7 @@ Logo::Logo(Position pos){
 		setVisible(true);
 
 		Logo::goUp = 0;
+		log.writeLog("[LOGO] Finished initializing object.");
 	}
 	else {
 		log.writeLog("Menu::Menu(): Sprite \"square_spinning\" not found.");

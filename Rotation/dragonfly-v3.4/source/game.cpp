@@ -3,11 +3,6 @@
 #include "..\header\Player.h"
 #include "..\header\Border.h"
 
-//TODO(Thompson): Separate the game board (the box) from this class. 
-//The game must only handle resetting the game, or quiting the game.
-//The game should not manipulate the entities around, it will be up
-//for the smaller, specialized classes to work on.
-
 Game::Game(Menu* menu){
 	registerInterest(DF_STEP_EVENT);
 	registerInterest(DF_KEYBOARD_EVENT);
@@ -22,7 +17,7 @@ void Game::initializeGameState(){
 
 	this->GameState = {};
 	this->GameState.PlayerState.x = 40;
-	this->GameState.PlayerState.y = 15;
+	this->GameState.PlayerState.y = 16;
 
 	this->setCurrentState(State::TUTORIAL);
 
@@ -35,11 +30,13 @@ void Game::initializeGameState(){
 	ObjectList list = w.getAllObjects();
 	for (ObjectListIterator i(&list); !i.isDone(); i.next()){
 		Object* obj = i.currentObject();
-		if (obj->getType().compare(TYPE_PLAYER) == 0){
-			player = dynamic_cast<Player*>(obj);
-		}
-		else if (obj->getType().compare(TYPE_BORDER) == 0){
-			border = dynamic_cast<Border*>(obj);
+		if (obj){
+			if (obj->getType().compare(TYPE_PLAYER) == 0){
+				player = dynamic_cast<Player*>(obj);
+			}
+			else if (obj->getType().compare(TYPE_BORDER) == 0){
+				border = dynamic_cast<Border*>(obj);
+			}
 		}
 	}
 
@@ -63,6 +60,29 @@ void Game::initializeGameState(){
 	int height = border->getHeight() / 2;
 	player->setGameBounds(pos.getX() - width, pos.getY() - height, pos.getX() + width-1, pos.getY() + height-1);
 	
+	//GameState.Stage1 = createStage();
+	//GameState.Stage1.size = ArrayLength(map);
+	//GameState.Stage1.layout =  {
+	//	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+	//	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+	//	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+	//};
+	
+
+
+
 	l.writeLog("Finished initializing/resetting game state.");
 
 	border = 0;
@@ -114,5 +134,37 @@ void Game::setCurrentState(State value){
 }
 
 void Game::draw(){
-	Object::draw();
+	GraphicsManager& g = GraphicsManager::getInstance();
+	int layout[13][22] = {
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
+		0, 1, 1, 1, 1, 0, 0, 0, 0, 0,  0, 0, 0, 1, 1, 1, 1, 1, 1, 1,  1, 1,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
+		0, 0, 0, 0, 1, 0, 0, 0, 1, 1,  1, 1, 1, 1, 1, 1, 1, 1, 0, 0,  0, 0,
+		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 1, 0, 0,  0, 0,
+		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 1, 0, 0,  0, 0,
+		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 1, 0, 0,  0, 0
+	};
+
+	Position posBegin = Position(this->GameState.PlayerState.minX, this->GameState.PlayerState.minY);
+	for (int Row = 0; Row < 13; Row++){ 
+		for (int Column = 0; Column < 22; Column++){
+			int value = layout[Row][Column];
+			switch (value){
+				case 0:{
+					break;
+				}
+				case 1:{
+					g.drawCh(Position(posBegin.getX() + Column + 1, posBegin.getY() + Row + 1), '*', 3);
+					break;
+				}
+			}
+			continue;
+		}
+	}
 }
