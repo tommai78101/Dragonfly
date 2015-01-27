@@ -6,10 +6,6 @@
 //Remember, w = h = 256, which is large.
 //Our screen buffer w and h is around 256, 80 respectively.
 
-inline const char* BoolToString(bool value){
-	return value ? "true" : "false";
-}
-
 Menu::Menu(){
 	LogManager& log = LogManager::getInstance();
 	ResourceManager& resource = ResourceManager::getInstance();

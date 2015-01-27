@@ -15,4 +15,8 @@
 #include "..\include\ObjectList.h"
 #include "..\include\ObjectListIterator.h"
 
+inline const char* BoolToString(bool value){
+	return value ? "true" : "false";
+}
+
 #endif
