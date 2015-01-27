@@ -2,6 +2,11 @@
 #include "..\header\Menu.h"
 #include "..\header\Player.h"
 
+//TODO(Thompson): Separate the game board (the box) from this class. 
+//The game must only handle resetting the game, or quiting the game.
+//The game should not manipulate the entities around, it will be up
+//for the smaller, specialized classes to work on.
+
 Game::Game(){
 	LogManager& log = LogManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
