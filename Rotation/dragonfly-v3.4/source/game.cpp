@@ -1,6 +1,7 @@
 #include "..\header\Game.h"
 #include "..\header\Menu.h"
 #include "..\header\Player.h"
+#include "..\header\Border.h"
 
 //TODO(Thompson): Separate the game board (the box) from this class. 
 //The game must only handle resetting the game, or quiting the game.
@@ -8,34 +9,10 @@
 //for the smaller, specialized classes to work on.
 
 Game::Game(){
-	LogManager& log = LogManager::getInstance();
-	GraphicsManager& g = GraphicsManager::getInstance();
-	WorldManager& world = WorldManager::getInstance();
-	ResourceManager& resource = ResourceManager::getInstance();
-	if (!resource.isStarted() || !g.isStarted() || !world.isStarted()){
-		log.writeLog("Something is wrong with manager startups. Order: %s %s %s", BoolToString(resource.isStarted()), BoolToString(g.isStarted()), BoolToString(world.isStarted()));
-		world.markForDelete(this);
-		return;
-	}
+	registerInterest(DF_STEP_EVENT);
+	registerInterest(DF_KEYBOARD_EVENT);
 
-	Sprite* tempSprite = resource.getSprite("border");
-	if (tempSprite){
-		setSprite(tempSprite);
-		setSpriteSlowdown(5);
-		setTransparency();
-		setSolidness(Solidness::HARD);
-		setType(TYPE_GAME);
-
-		int w = g.getHorizontal() / 2;
-		int h = g.getVertical() / 2;
-		Position pos(w, h);
-		setPosition(pos);
-
-		registerInterest(DF_STEP_EVENT);
-		registerInterest(DF_KEYBOARD_EVENT);
-
-		initializeGameState();
-	}
+	initializeGameState();
 }
 
 void Game::initializeGameState(){
@@ -46,6 +23,9 @@ void Game::initializeGameState(){
 	this->setCurrentState(State::TUTORIAL);
 
 	Player* player = 0;
+	Border* border = 0;
+
+	//TODO(Thompson): May need to do an inline or something sort.
 	
 	WorldManager& w = WorldManager::getInstance();
 	ObjectList list = w.getAllObjects();
@@ -53,6 +33,9 @@ void Game::initializeGameState(){
 		Object* obj = i.currentObject();
 		if (obj->getType().compare(TYPE_PLAYER) == 0){
 			player = dynamic_cast<Player*>(obj);
+		}
+		else if (obj->getType().compare(TYPE_BORDER) == 0){
+			border = dynamic_cast<Border*>(obj);
 		}
 	}
 
@@ -62,6 +45,13 @@ void Game::initializeGameState(){
 	}
 	else {
 		new Player(&this->GameState);
+	}
+
+	if (border){
+		border->setVisible(true);
+	}
+	else {
+		new Border();
 	}
 }
 
@@ -94,7 +84,6 @@ int Game::eventHandler(Event* e){
 					obj->setVisible(false);
 				}
 			}
-			this->setVisible(false);
 		}
 		return 1;
 	}

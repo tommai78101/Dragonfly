@@ -1,5 +1,7 @@
 #ifndef BORDER_H
 
+#define TYPE_BORDER "Border"
+
 #include "Common.h"
 
 class Border : public Object {
