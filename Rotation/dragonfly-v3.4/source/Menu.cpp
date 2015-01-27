@@ -118,11 +118,12 @@ int Menu::eventHandler(Event* e){
 						else if (obj->getType().compare(TYPE_GAME) == 0){
 							game = obj;
 							GameIsInWorld = true;
+							Menu::StartGame = true;
 						}
 					}
 				
 					if (!GameIsInWorld || !game){
-						new Game;
+						new Game(this);
 					}
 					else {
 						Game* gameObject = dynamic_cast<Game*>(game);
@@ -212,4 +213,9 @@ int Logo::eventHandler(Event* e){
 
 void Logo::draw(){
 	Object::draw();
+}
+
+void Menu::reset(){
+	this->StartGame = true;
+	this->registerInterest(DF_KEYBOARD_EVENT);
 }

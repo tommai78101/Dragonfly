@@ -28,6 +28,7 @@ public:
 	~Menu();
 	int eventHandler(Event* e);
 	void draw();
+	void reset();
 };
 
 #endif

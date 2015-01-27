@@ -66,6 +66,8 @@ int Player::eventHandler(Event* e){
 		}
 		this->GameState->PlayerState.x = x;
 		this->GameState->PlayerState.y = y;
+		this->setPosition(Position(x, y));
+		l.writeLog("Player Pos: %d, %d, State %d %d, %d %d", x, y, GameState->PlayerState.minX, GameState->PlayerState.minY, GameState->PlayerState.maxX, GameState->PlayerState.maxY);
 		return 1;
 	}
 	return 0;
@@ -89,5 +91,7 @@ void Player::setGameBounds(int x, int y, int w, int h){
 		this->GameState->PlayerState.minY = y;
 		this->GameState->PlayerState.maxX = w;
 		this->GameState->PlayerState.maxY = h;
+		LogManager& l = LogManager::getInstance();
+		l.writeLog("setGameBounds = %d, %d, %d, %d", x, y, w, h);
 	}
 }

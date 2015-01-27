@@ -9,7 +9,7 @@ private:
 	int width;
 	int height;
 public:
-	Border();
+	Border(game_state* GameState);
 	int eventHandler(Event* e);
 	void draw();
 	int getWidth();

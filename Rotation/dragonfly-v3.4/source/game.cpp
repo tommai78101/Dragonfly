@@ -8,9 +8,11 @@
 //The game should not manipulate the entities around, it will be up
 //for the smaller, specialized classes to work on.
 
-Game::Game(){
+Game::Game(Menu* menu){
 	registerInterest(DF_STEP_EVENT);
 	registerInterest(DF_KEYBOARD_EVENT);
+	this->menu = menu;
+	menu->unregisterInterest(DF_KEYBOARD_EVENT);
 
 	initializeGameState();
 }
@@ -46,19 +48,25 @@ void Game::initializeGameState(){
 		player->initializeState(&GameState);
 	}
 	else {
-		new Player(&this->GameState);
+		player = new Player(&this->GameState);
 	}
 
 	if (border){
 		border->setVisible(true);
-		Position pos = border->getPosition();
-		player->setGameBounds(pos.getX(), pos.getY(), border->getWidth(), border->getHeight());
 	}
 	else {
-		new Border();
+		border = new Border(&GameState);
 	}
+
+	Position pos = border->getPosition();
+	int width = border->getWidth() / 2;
+	int height = border->getHeight() / 2;
+	player->setGameBounds(pos.getX() - width, pos.getY() - height, pos.getX() + width-1, pos.getY() + height-1);
 	
 	l.writeLog("Finished initializing/resetting game state.");
+
+	border = 0;
+	player = 0;
 }
 
 
@@ -90,6 +98,7 @@ int Game::eventHandler(Event* e){
 					obj->setVisible(false);
 				}
 			}
+			this->menu->reset();
 		}
 		return 1;
 	}
