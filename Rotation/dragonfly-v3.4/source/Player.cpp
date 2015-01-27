@@ -14,13 +14,13 @@ Player::Player(game_state* GameState){
 	setType(TYPE_PLAYER);
 	setTransparency();
 	setSolidness(Solidness::HARD);
-	setPlayerState(GameState->PlayerState);
-	Position pos(getPlayerState().x, getPlayerState().y);
+	Position pos(GameState->PlayerState.x, GameState->PlayerState.y);
 	setPosition(pos);
 
 	registerInterest(DF_KEYBOARD_EVENT);
 	registerInterest(DF_STEP_EVENT);
 
+	this->GameState = GameState;
 	setVisible(true);
 }
 
@@ -31,11 +31,13 @@ int Player::eventHandler(Event* e){
 		int key = keyboard->getKey();
 		switch (key){
 			case 'a':{
-				this->PlayerState.x--;
+				int x = this->getPosition().getX();
+				this->setPosition(Position(--x, this->getPosition().getY()));
 				break;
 			}
 			case 'd':{
-				this->PlayerState.x++;
+				int x = this->getPosition().getX();
+				this->setPosition(Position(++x, this->getPosition().getY()));
 				break;
 			}
 			default:{
@@ -45,8 +47,8 @@ int Player::eventHandler(Event* e){
 		return 1;
 	}
 	else if (e->getType() == DF_STEP_EVENT){
-		this->PlayerState.x = this->getPosition().getX();
-		this->PlayerState.y = this->getPosition().getY();
+		this->GameState->PlayerState.x = this->getPosition().getX();
+		this->GameState->PlayerState.y = this->getPosition().getY();
 		return 1;
 	}
 	return 0;
@@ -56,12 +58,10 @@ void Player::draw(){
 	LogManager& l = LogManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
 	g.drawCh(this->getPosition(), '@', 0);
+	return;
 }
 
-void Player::setPlayerState(player_state State){
-	this->PlayerState = State;
-}
-
-player_state Player::getPlayerState() const{
-	return this->PlayerState;
+void Player::initializeState(game_state* GameState){
+	this->GameState = GameState;
+	return;
 }

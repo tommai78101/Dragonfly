@@ -7,13 +7,12 @@
 
 class Player : public Object {
 private:
-	player_state PlayerState;
+	game_state* GameState;
 public:
 	Player(game_state* GameState);
 	int eventHandler(Event* e);
 	void draw();
-	void setPlayerState(player_state State);
-	player_state getPlayerState() const;
+	void initializeState(game_state* GameState);
 };
 
 #define PLAYER_H

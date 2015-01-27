@@ -53,6 +53,7 @@ void Game::initializeGameState(){
 
 	if (player){
 		player->setVisible(true);
+		player->initializeState(&GameState);
 	}
 	else {
 		new Player(&this->GameState);
