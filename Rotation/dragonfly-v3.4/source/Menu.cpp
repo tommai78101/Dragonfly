@@ -114,7 +114,9 @@ int Menu::eventHandler(Event* e){
 						new Game;
 					}
 					else {
-						game->setVisible(true);
+						Game* gameObject = dynamic_cast<Game*>(game);
+						gameObject->setVisible(true);
+						gameObject->initializeGameState();
 					}
 				}
 				else {

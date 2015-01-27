@@ -34,6 +34,7 @@ public:
 //functions
 	Game();
 	int eventHandler(Event* e);
+	void initializeGameState();
 	State getCurrentState();
 	void setCurrentState(State value);
 	void draw();

@@ -45,20 +45,22 @@ Game::Game(){
 		registerInterest(DF_STEP_EVENT);
 		registerInterest(DF_KEYBOARD_EVENT);
 
-		this->GameState = {};
-		this->setCurrentState(State::TUTORIAL);
-
-		GraphicsManager& g = GraphicsManager::getInstance();
-		tutorial* Tutorial = &this->GameState.TutorialState;
-		Tutorial->string = "Hello World.";
-		Tutorial->stringLength = ArrayLength(Tutorial->string.c_str());
-		Tutorial->stringX = g.getHorizontal() / 4;
-		Tutorial->stringY = g.getVertical() / 2;
-		Tutorial->floatUp = false;
-		Tutorial->counterSpeed = 5;
-
-		log.writeLog("String: %s - Length: %d", Tutorial->string.c_str(), Tutorial->stringLength);
+		initializeGameState();
 	}
+}
+
+void Game::initializeGameState(){
+	this->GameState = {};
+	this->setCurrentState(State::TUTORIAL);
+
+	GraphicsManager& g = GraphicsManager::getInstance();
+	tutorial* Tutorial = &this->GameState.TutorialState;
+	Tutorial->string = "Hello World.";
+	Tutorial->stringLength = ArrayLength(Tutorial->string.c_str());
+	Tutorial->stringX = g.getHorizontal() / 4;
+	Tutorial->stringY = g.getVertical() / 2;
+	Tutorial->floatUp = false;
+	Tutorial->counterSpeed = 5;
 }
 
 int Game::eventHandler(Event* e){
