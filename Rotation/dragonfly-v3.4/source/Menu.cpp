@@ -3,6 +3,19 @@
 #include "..\header\Menu.h"
 #include "..\header\Game.h"
 
+
+std::string Info[] {
+	"How to play:                ",
+		"----------------------------",
+		"Space - Confirm/Enter       ",
+		"R     - Cancel/Reset/Back   ",
+		"W     - Selection Up        ",
+		"S     - Selection Down      ",
+		"A     - Move Left           ",
+		"D     - Move Right          ",
+		"CTRL+C- Force quit          "
+};
+
 //Remember, w = h = 256, which is large.
 //Our screen buffer w and h is around 256, 80 respectively.
 
@@ -39,7 +52,7 @@ Menu::Menu(){
 
 		Menu::initalSpin = false;
 		Menu::canSelectOptions = false;
-		Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4);
+		Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4 + 2);
 		Menu::StartGame = true;
 	}
 	else {
@@ -69,7 +82,7 @@ int Menu::eventHandler(Event* e){
 			Menu::canSelectOptions = true;
 			setSpriteSlowdown(3);
 			GraphicsManager& g = GraphicsManager::getInstance();
-			Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4);
+			Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4 + 2);
 			new Logo(this->getPosition());
 		}
 		return 1;
@@ -82,7 +95,7 @@ int Menu::eventHandler(Event* e){
 
 		//TODO(Thompson): Need to add control instructions for the user to see what to press.
 		if (key == 'w'){
-			Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4);
+			Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4 + 2);
 			Menu::StartGame = true;
 		}
 		else if (key == 's'){
@@ -139,12 +152,16 @@ void Menu::draw(){
 		GraphicsManager& g = GraphicsManager::getInstance();
 		g.drawCh(Menu::cursorPosition, '>', 2);
 
-		Position text = Position(Menu::cursorPosition.getX() + 6, (g.getVertical() / 6) * 4);
+		Position text = Position(Menu::cursorPosition.getX() + 6, (g.getVertical() / 6) * 4 + 2);
 		g.drawString(text, "Start Game", Justification::LEFT_JUSTIFIED, 2);
 
 		text.setY((g.getVertical() / 6) * 5);
 		g.drawString(text, "Quit Game", Justification::LEFT_JUSTIFIED, 2);
 
+		int y = 1;
+		for (int i = 0; i < ArrayLength(Info); i++, y++){
+			g.drawString(Position(1, y), Info[i], Justification::LEFT_JUSTIFIED, 4);
+		}
 	}
 }
 

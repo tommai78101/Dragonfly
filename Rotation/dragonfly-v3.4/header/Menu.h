@@ -1,3 +1,6 @@
+#ifndef MENU_H
+#define MENU_H
+
 #include "..\include\ViewObject.h"
 #include "..\include\Object.h"
 #include "..\include\Event.h"
@@ -26,3 +29,5 @@ public:
 	int eventHandler(Event* e);
 	void draw();
 };
+
+#endif

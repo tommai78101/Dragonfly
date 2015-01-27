@@ -1,24 +1,6 @@
 #include "..\header\Game.h"
 #include "..\header\Menu.h"
 
-
-inline bool GameTick(game_state* GameState, int Threshold){
-	bool Result = false;
-	tutorial* Tutorial = &GameState->TutorialState;
-	if (Tutorial->counterSpeed > GAME_TICK_SPEED){
-		Tutorial->counter++;
-		Tutorial->counterSpeed = 0;
-	}
-	else {
-		Tutorial->counterSpeed++;
-	}
-
-	if (Tutorial->counter > Threshold){
-		Result = true;
-	}
-	return Result;
-}
-
 Game::Game(){
 	LogManager& log = LogManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
@@ -54,33 +36,11 @@ void Game::initializeGameState(){
 	this->setCurrentState(State::TUTORIAL);
 
 	GraphicsManager& g = GraphicsManager::getInstance();
-	tutorial* Tutorial = &this->GameState.TutorialState;
-	Tutorial->string = "Hello World.";
-	Tutorial->stringLength = ArrayLength(Tutorial->string.c_str());
-	Tutorial->stringX = g.getHorizontal() / 4;
-	Tutorial->stringY = g.getVertical() / 2;
-	Tutorial->floatUp = false;
-	Tutorial->counterSpeed = 5;
 }
 
 int Game::eventHandler(Event* e){
 	if (e->getType() == DF_STEP_EVENT){
-		if (this->getCurrentState() == State::TUTORIAL){
-			tutorial* Tutorial = &this->GameState.TutorialState;
-			if (Tutorial->counterSpeed == 0){
-				if (Tutorial->floatUp){
-					Tutorial->stringY--;
-				}
-				else {
-					Tutorial->stringY++;
-				}
-			}
-
-			if (GameTick(&this->GameState, 3)){
-				Tutorial->floatUp = !Tutorial->floatUp;
-				Tutorial->counter = 0;
-			}
-		}
+		return 1;
 	}
 	else if (e->getType() == DF_KEYBOARD_EVENT){
 		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
@@ -103,7 +63,9 @@ int Game::eventHandler(Event* e){
 			logo->setVisible(true);
 			this->setVisible(false);
 		}
+		return 1;
 	}
+	return 0;
 }
 
 State Game::getCurrentState(){
@@ -116,8 +78,4 @@ void Game::setCurrentState(State value){
 
 void Game::draw(){
 	Object::draw();
-
-	GraphicsManager& g = GraphicsManager::getInstance();
-	tutorial* t = &this->GameState.TutorialState;
-	g.drawString(Position(t->stringX, t->stringY), t->string, Justification::LEFT_JUSTIFIED, 4);
 }
