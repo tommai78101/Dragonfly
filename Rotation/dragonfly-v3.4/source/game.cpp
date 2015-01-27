@@ -16,6 +16,8 @@ Game::Game(){
 }
 
 void Game::initializeGameState(){
+	LogManager& l = LogManager::getInstance();
+
 	this->GameState = {};
 	this->GameState.PlayerState.x = 40;
 	this->GameState.PlayerState.y = 15;
@@ -49,10 +51,14 @@ void Game::initializeGameState(){
 
 	if (border){
 		border->setVisible(true);
+		Position pos = border->getPosition();
+		player->setGameBounds(pos.getX(), pos.getY(), border->getWidth(), border->getHeight());
 	}
 	else {
 		new Border();
 	}
+	
+	l.writeLog("Finished initializing/resetting game state.");
 }
 
 

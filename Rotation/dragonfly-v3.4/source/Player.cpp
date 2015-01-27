@@ -22,6 +22,7 @@ Player::Player(game_state* GameState){
 
 	this->GameState = GameState;
 	setVisible(true);
+	l.writeLog("Successfully loaded Player entity.");
 }
 
 
@@ -49,8 +50,22 @@ int Player::eventHandler(Event* e){
 		return 1;
 	}
 	else if (e->getType() == DF_STEP_EVENT){
-		this->GameState->PlayerState.x = this->getPosition().getX();
-		this->GameState->PlayerState.y = this->getPosition().getY();
+		int x = this->getPosition().getX();
+		int y = this->getPosition().getY();
+		if (x <= this->GameState->PlayerState.minX){
+			x = this->GameState->PlayerState.minX + 1;
+		}
+		if (y <= this->GameState->PlayerState.minY){
+			y = this->GameState->PlayerState.minY + 1;
+		}
+		if (x >= this->GameState->PlayerState.maxX){
+			x = this->GameState->PlayerState.maxX - 1;
+		}
+		if (y >= this->GameState->PlayerState.maxY){
+			y = this->GameState->PlayerState.maxY - 1;
+		}
+		this->GameState->PlayerState.x = x;
+		this->GameState->PlayerState.y = y;
 		return 1;
 	}
 	return 0;
@@ -66,4 +81,13 @@ void Player::draw(){
 void Player::initializeState(game_state* GameState){
 	this->GameState = GameState;
 	return;
+}
+
+void Player::setGameBounds(int x, int y, int w, int h){
+	if (this->GameState){
+		this->GameState->PlayerState.minX = x;
+		this->GameState->PlayerState.minY = y;
+		this->GameState->PlayerState.maxX = w;
+		this->GameState->PlayerState.maxY = h;
+	}
 }

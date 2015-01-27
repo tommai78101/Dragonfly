@@ -13,6 +13,7 @@ public:
 	int eventHandler(Event* e);
 	void draw();
 	void initializeState(game_state* GameState);
+	void setGameBounds(int x, int y, int w, int h);
 };
 
 #define PLAYER_H

@@ -33,7 +33,7 @@ Menu::Menu(){
 
 	Sprite* tempSprite = resource.getSprite("square_spinning");
 	if (tempSprite){
-		log.writeLog("Successfully loaded sprite.");
+		log.writeLog("Successfully loaded Menu sprite.");
 
 		setSprite(tempSprite);
 		setSpriteSlowdown(5);
@@ -54,6 +54,7 @@ Menu::Menu(){
 		Menu::canSelectOptions = false;
 		Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4 + 2);
 		Menu::StartGame = true;
+		log.writeLog("Finished loading Menu");
 	}
 	else {
 		log.writeLog("Menu::Menu(): Sprite \"square_spinning\" not found.");

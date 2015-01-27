@@ -13,6 +13,7 @@ Border::Border(){
 
 	Sprite* tempSprite = resource.getSprite("border");
 	if (tempSprite){
+		log.writeLog("Successfully loaded Border sprite.");
 		setSprite(tempSprite);
 		setSpriteSlowdown(5);
 		setTransparency();
@@ -27,6 +28,9 @@ Border::Border(){
 		registerInterest(DF_STEP_EVENT);
 
 		setVisible(true);
+
+		this->width = tempSprite->getWidth();
+		this->height = tempSprite->getHeight();
 	}
 }
 
@@ -39,4 +43,12 @@ int Border::eventHandler(Event* e){
 
 void Border::draw(){
 	Object::draw();
+}
+
+int Border::getWidth(){
+	return this->width;
+}
+
+int Border::getHeight(){
+	return this->height;
 }

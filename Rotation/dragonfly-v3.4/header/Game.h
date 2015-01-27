@@ -10,6 +10,10 @@
 struct player_state {
 	int x;
 	int y;
+	int maxX;
+	int maxY;
+	int minX;
+	int minY;
 };
 
 struct game_state {

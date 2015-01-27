@@ -12,6 +12,8 @@ public:
 	Border();
 	int eventHandler(Event* e);
 	void draw();
+	int getWidth();
+	int getHeight();
 };
 
 #define BORDER_H
