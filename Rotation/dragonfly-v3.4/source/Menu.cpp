@@ -95,17 +95,27 @@ int Menu::eventHandler(Event* e){
 			if (this->isVisible()){
 				if (Menu::StartGame){
 					this->setVisible(false);
+					bool GameIsInWorld = false;
+					Object* game = 0;
 					for (ObjectListIterator i(&list); !i.isDone(); i.next()){
 						Object* obj = i.currentObject();
 						if (obj->getType().compare(TYPE_LOGO) == 0){
 							obj->setVisible(false);
 						}
+						else if (obj->getType().compare(TYPE_GAME) == 0){
+							game = obj;
+							GameIsInWorld = true;
+						}
 					}
 				
 					//TODO: Start game here.
 					//TODO: Need another object to activate this when it's no longer active.
-
-					new Game;
+					if (!GameIsInWorld || !game){
+						new Game;
+					}
+					else {
+						game->setVisible(true);
+					}
 				}
 				else {
 					for (ObjectListIterator i(&list); !i.isDone(); i.next()){

@@ -50,10 +50,14 @@ Game::Game(){
 
 		GraphicsManager& g = GraphicsManager::getInstance();
 		tutorial* Tutorial = &this->GameState.TutorialState;
-		Tutorial->stringX = g.getHorizontal() / 4 + 2;
+		Tutorial->string = "Hello World.";
+		Tutorial->stringLength = ArrayLength(Tutorial->string.c_str());
+		Tutorial->stringX = g.getHorizontal() / 4;
 		Tutorial->stringY = g.getVertical() / 2;
 		Tutorial->floatUp = false;
 		Tutorial->counterSpeed = 5;
+
+		log.writeLog("String: %s - Length: %d", Tutorial->string.c_str(), Tutorial->stringLength);
 	}
 }
 
@@ -95,7 +99,7 @@ int Game::eventHandler(Event* e){
 			}
 			menu->setVisible(true);
 			logo->setVisible(true);
-			world.markForDelete(this);
+			this->setVisible(false);
 		}
 	}
 }
@@ -113,5 +117,5 @@ void Game::draw(){
 
 	GraphicsManager& g = GraphicsManager::getInstance();
 	tutorial* t = &this->GameState.TutorialState;
-	g.drawString(Position(t->stringX, t->stringY), "Hello World.", Justification::LEFT_JUSTIFIED, 4);
+	g.drawString(Position(t->stringX, t->stringY), t->string, Justification::LEFT_JUSTIFIED, 4);
 }

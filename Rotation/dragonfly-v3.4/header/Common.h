@@ -15,6 +15,8 @@
 #include "..\include\ObjectList.h"
 #include "..\include\ObjectListIterator.h"
 
+#define ArrayLength(Array) sizeof((Array))/sizeof((Array)[0])
+
 inline const char* BoolToString(bool value){
 	return value ? "true" : "false";
 }
