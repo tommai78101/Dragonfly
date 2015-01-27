@@ -12,7 +12,7 @@ Game::Game(){
 		return;
 	}
 
-	Sprite* tempSprite = resource.getSprite("test_box");
+	Sprite* tempSprite = resource.getSprite("border");
 	if (tempSprite){
 		setSprite(tempSprite);
 		setSpriteSlowdown(5);
