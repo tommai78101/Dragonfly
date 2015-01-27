@@ -5,7 +5,7 @@
 
 
 std::string Info[] {
-	"How to play:                ",
+		"How to play:                ",
 		"----------------------------",
 		"Space - Confirm/Enter       ",
 		"R     - Cancel/Reset/Back   ",
