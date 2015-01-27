@@ -132,6 +132,9 @@
     <ClInclude Include="dragonfly-v3.4\header\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\header\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dragonfly-v3.4\source\game.cpp">
@@ -141,6 +144,9 @@
       <Filter>Source Files\dragonfly-v3.4</Filter>
     </ClCompile>
     <ClCompile Include="dragonfly-v3.4\source\Menu.cpp">
+      <Filter>Source Files\dragonfly-v3.4\source</Filter>
+    </ClCompile>
+    <ClCompile Include="dragonfly-v3.4\source\Player.cpp">
       <Filter>Source Files\dragonfly-v3.4\source</Filter>
     </ClCompile>
   </ItemGroup>

@@ -14,6 +14,7 @@
     <ClInclude Include="dragonfly-v3.4\header\Common.h" />
     <ClInclude Include="dragonfly-v3.4\header\Game.h" />
     <ClInclude Include="dragonfly-v3.4\header\Menu.h" />
+    <ClInclude Include="dragonfly-v3.4\header\Player.h" />
     <ClInclude Include="dragonfly-v3.4\include\Box.h" />
     <ClInclude Include="dragonfly-v3.4\include\Circle.h" />
     <ClInclude Include="dragonfly-v3.4\include\Clock.h" />
@@ -52,6 +53,7 @@
     <ClCompile Include="dragonfly-v3.4\platform.cpp" />
     <ClCompile Include="dragonfly-v3.4\source\game.cpp" />
     <ClCompile Include="dragonfly-v3.4\source\Menu.cpp" />
+    <ClCompile Include="dragonfly-v3.4\source\Player.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A4840028-D1E7-4E0D-B2CF-3ECBFE526DA8}</ProjectGuid>

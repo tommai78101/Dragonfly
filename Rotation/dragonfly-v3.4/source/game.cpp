@@ -1,5 +1,6 @@
 #include "..\header\Game.h"
 #include "..\header\Menu.h"
+#include "..\header\Player.h"
 
 Game::Game(){
 	LogManager& log = LogManager::getInstance();
@@ -17,6 +18,7 @@ Game::Game(){
 		setSprite(tempSprite);
 		setSpriteSlowdown(5);
 		setTransparency();
+		setSolidness(Solidness::HARD);
 		setType(TYPE_GAME);
 
 		int w = g.getHorizontal() / 2;
@@ -33,10 +35,39 @@ Game::Game(){
 
 void Game::initializeGameState(){
 	this->GameState = {};
+	this->GameState.PlayerState.x = 40;
+	this->GameState.PlayerState.y = 15;
+
 	this->setCurrentState(State::TUTORIAL);
 
-	GraphicsManager& g = GraphicsManager::getInstance();
+	Player* player = 0;
+	
+	WorldManager& w = WorldManager::getInstance();
+	ObjectList list = w.getAllObjects();
+	for (ObjectListIterator i(&list); !i.isDone(); i.next()){
+		Object* obj = i.currentObject();
+		if (obj->getType().compare(TYPE_PLAYER) == 0){
+			player = dynamic_cast<Player*>(obj);
+		}
+	}
+
+	if (player){
+		player->setVisible(true);
+	}
+	else {
+		new Player(&this->GameState);
+	}
 }
+
+
+/*
+	NOTE(Thompson): Whenever things are added to the game, they are created on the stack.
+	When quitting or removing them, just make them invisible. Do not remove.
+	Only when the player really wants to quit, Menu will handle world deletion.
+
+	From Node -> Leaf:
+		Menu -> Game -> All game entities.
+*/
 
 int Game::eventHandler(Event* e){
 	if (e->getType() == DF_STEP_EVENT){
@@ -46,21 +77,17 @@ int Game::eventHandler(Event* e){
 		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
 		int key = keyboard->getKey();
 		if (key == 'r'){
-			Object* menu;
-			Object* logo;
 			WorldManager& world = WorldManager::getInstance();
 			ObjectList list = world.getAllObjects();
 			for (ObjectListIterator i(&list); !i.isDone(); i.next()){
 				Object* obj = i.currentObject();
-				if (obj->getType().compare(TYPE_MENU) == 0){
-					menu = obj;
+				if ((obj->getType().compare(TYPE_MENU) == 0) || (obj->getType().compare(TYPE_LOGO) == 0)){
+					obj->setVisible(true);
 				}
-				else if (obj->getType().compare(TYPE_LOGO) == 0){
-					logo = obj;
+				else {
+					obj->setVisible(false);
 				}
 			}
-			menu->setVisible(true);
-			logo->setVisible(true);
 			this->setVisible(false);
 		}
 		return 1;
