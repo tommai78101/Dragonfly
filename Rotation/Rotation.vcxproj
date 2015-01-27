@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dragonfly-v3.4\header\Border.h" />
     <ClInclude Include="dragonfly-v3.4\header\Common.h" />
     <ClInclude Include="dragonfly-v3.4\header\Game.h" />
     <ClInclude Include="dragonfly-v3.4\header\Menu.h" />
@@ -51,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dragonfly-v3.4\platform.cpp" />
+    <ClCompile Include="dragonfly-v3.4\source\Border.cpp" />
     <ClCompile Include="dragonfly-v3.4\source\game.cpp" />
     <ClCompile Include="dragonfly-v3.4\source\Menu.cpp" />
     <ClCompile Include="dragonfly-v3.4\source\Player.cpp" />
