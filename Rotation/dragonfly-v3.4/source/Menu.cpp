@@ -36,7 +36,8 @@ Menu::Menu(){
 
 		int w = g.getHorizontal()/2;
 		int h = g.getVertical()/2;
-		world.moveObject(this, Position(w, h));
+		Position pos(w, h);
+		setPosition(pos);
 
 		setVisible(true);
 
@@ -73,7 +74,7 @@ int Menu::eventHandler(Event* e){
 			setSpriteSlowdown(3);
 			GraphicsManager& g = GraphicsManager::getInstance();
 			Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4);
-			new Logo;
+			new Logo(this->getPosition());
 		}
 		return 1;
 	}
@@ -140,31 +141,32 @@ void Menu::draw(){
 }
 
 //TODO(Thompson): Find a way to mark the Logo for deletion when the user clicks on "Start Game" or "Quit Game".
-Logo::Logo(){
+Logo::Logo(Position pos){
 	LogManager& log = LogManager::getInstance();
 	ResourceManager& resource = ResourceManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
-	if (!resource.isStarted() || !g.isStarted()){
-		log.writeLog("Something is wrong with manager startups. Order: %s %s %s", BoolToString(resource.isStarted()), BoolToString(g.isStarted()));
-		WorldManager& w = WorldManager::getInstance();
-		w.markForDelete(this);
+	WorldManager& world = WorldManager::getInstance();
+	if (!resource.isStarted() || !g.isStarted() || !world.isStarted()){
+		log.writeLog("Something is wrong with manager startups. Order: %s %s %s", BoolToString(resource.isStarted()), BoolToString(g.isStarted()), BoolToString(world.isStarted()));
+		world.markForDelete(this);
 		return;
 	}
 
 	Sprite* tempSprite = resource.getSprite("logo");
 	if (tempSprite){
 		log.writeLog("[LOGO] Successfully loaded sprite.");
-		setType(TYPE_LOGO);
 		setSprite(tempSprite);
-		setSpriteSlowdown(15);
+		setSpriteSlowdown(1);
+		setType(TYPE_LOGO);
 		setTransparency();
-		//setLocation(CENTER_CENTER);
+
 		registerInterest(DF_STEP_EVENT);
+		registerInterest(DF_KEYBOARD_EVENT);
 
 		int w = g.getHorizontal() / 2;
 		int h = g.getVertical() / 2;
-		WorldManager& world = WorldManager::getInstance();
-		world.moveObject(this, Position(w, h));
+		Position pos(w, h);
+		setPosition(pos);
 
 		setVisible(true);
 
@@ -177,17 +179,12 @@ Logo::Logo(){
 
 int Logo::eventHandler(Event* e){
 	if (e->getType() == DF_STEP_EVENT){
-		if (Logo::goUp > 6){
-			getPosition().setXY(getPosition().getX(), getPosition().getY()-1);
-		}
-		else if (Logo::goUp > 3) {
-			getPosition().setXY(getPosition().getX(), getPosition().getY()+1);
-		}
-		Logo::goUp++;
-		if (Logo::goUp > 9){
-			Logo::goUp = 0;
-		}
+		return 1;
 	}
+	else if (e->getType() == DF_KEYBOARD_EVENT){
+		return 1;
+	}
+	return 0;
 }
 
 void Logo::draw(){

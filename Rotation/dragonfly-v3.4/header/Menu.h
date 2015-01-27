@@ -9,7 +9,7 @@ class Logo : public Object {
 private:
 	int goUp;
 public:
-	Logo();
+	Logo(Position pos);
 	int eventHandler(Event* e);
 	void draw();
 };
