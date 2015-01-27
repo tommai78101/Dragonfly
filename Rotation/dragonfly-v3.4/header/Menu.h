@@ -5,7 +5,7 @@
 #define TYPE_MENU "Menu"
 #define TYPE_LOGO "Logo"
 
-class Logo : public ViewObject {
+class Logo : public Object {
 private:
 	int goUp;
 public:
@@ -14,7 +14,7 @@ public:
 	void draw();
 };
 
-class Menu : public ViewObject {
+class Menu : public Object {
 private:
 	bool initalSpin;
 	Position cursorPosition;

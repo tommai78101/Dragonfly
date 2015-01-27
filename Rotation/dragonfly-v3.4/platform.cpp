@@ -14,9 +14,11 @@ bool PopulateWorld(){
 }
 
 bool LoadResources(){
-	ResourceManager& resource = ResourceManager::getInstance();
 	LogManager& log = LogManager::getInstance();
-	resource.startUp();
+	ResourceManager& resource = ResourceManager::getInstance();
+	if (!resource.isStarted()){
+		resource.startUp();
+	}
 	if (!resource.isStarted()){
 		log.writeLog("Error starting up resource manager.");
 		return false;
@@ -40,7 +42,10 @@ int main() {
 	}
 
 	GameManager& game = GameManager::getInstance();
-	game.startUp();
+	if (!game.isStarted()){
+		log.writeLog("Starting up game manager.");
+		game.startUp();
+	}
 	if (!game.isStarted()){
 		log.writeLog("Error starting up game manager.");
 		game.shutDown();
@@ -49,8 +54,10 @@ int main() {
 	}
 
 	WorldManager& world = WorldManager::getInstance();
-	log.writeLog("Starting up world manager.");
-	world.startUp();
+	if (!world.isStarted()){
+		log.writeLog("Starting up world manager.");
+		world.startUp();
+	}
 	if (!world.isStarted()){
 		log.writeLog("Error starting up world manager.");
 		world.shutDown();

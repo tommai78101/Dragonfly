@@ -6,11 +6,21 @@
 //Remember, w = h = 256, which is large.
 //Our screen buffer w and h is around 256, 80 respectively.
 
+inline const char* BoolToString(bool value){
+	return value ? "true" : "false";
+}
+
 Menu::Menu(){
 	LogManager& log = LogManager::getInstance();
 	ResourceManager& resource = ResourceManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
 	WorldManager& world = WorldManager::getInstance();
+	if (!resource.isStarted() || !g.isStarted() || !world.isStarted()){
+		log.writeLog("Something is wrong with manager startups. Order: %s %s %s", 
+		BoolToString(resource.isStarted()), BoolToString(g.isStarted()), BoolToString(world.isStarted()));
+		world.markForDelete(this);
+		return;
+	}
 
 	Sprite* tempSprite = resource.getSprite("square_spinning");
 	if (tempSprite){
@@ -134,6 +144,12 @@ Logo::Logo(){
 	LogManager& log = LogManager::getInstance();
 	ResourceManager& resource = ResourceManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
+	if (!resource.isStarted() || !g.isStarted()){
+		log.writeLog("Something is wrong with manager startups. Order: %s %s %s", BoolToString(resource.isStarted()), BoolToString(g.isStarted()));
+		WorldManager& w = WorldManager::getInstance();
+		w.markForDelete(this);
+		return;
+	}
 
 	Sprite* tempSprite = resource.getSprite("logo");
 	if (tempSprite){
@@ -151,11 +167,12 @@ Logo::Logo(){
 		world.moveObject(this, Position(w, h));
 
 		setVisible(true);
+
+		Logo::goUp = 0;
 	}
 	else {
 		log.writeLog("Menu::Menu(): Sprite \"square_spinning\" not found.");
 	}
-	Logo::goUp = 0;
 }
 
 int Logo::eventHandler(Event* e){
