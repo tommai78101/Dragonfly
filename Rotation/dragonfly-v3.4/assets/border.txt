@@ -1,0 +1,21 @@
+frames 1
+width 24
+height 15
+color red
+XXXXXXXXXXXXXXXXXXXXXXXX
+X                      X
+X                      X
+X                      X
+X                      X
+X                      X
+X                      X
+X                      X
+X                      X
+X                      X
+X                      X
+X                      X
+X                      X
+X                      X
+XXXXXXXXXXXXXXXXXXXXXXXX
+end
+eof
