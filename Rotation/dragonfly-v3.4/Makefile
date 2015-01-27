@@ -20,10 +20,13 @@ INCPATH= include						# path to engine includes
 ENG= lib/libdragonfly-cygwin64.a		# dragonfly engine
 GAMESRC= $(foreach d, $(wildcard source/*.cpp), $d)
 GAME= platform.cpp
-EXECUTABLE= game		
+EXECUTABLE= game
 OBJECTS= $(GAMESRC:.cpp=.o)
 
 all: $(EXECUTABLE) Makefile
+ifneq ("$(wildcard *.stackdump)","")
+	rm -rf $(foreach d, $(wildcard *.stackdump), $d)
+endif
 
 $(EXECUTABLE): $(ENG) $(OBJECTS) $(GAME) $(GAMESRC)
 	$(CC) $(GAME) $(OBJECTS) $(ENG) -o $@ -I$(INCPATH) $(LDFLAGS) 
