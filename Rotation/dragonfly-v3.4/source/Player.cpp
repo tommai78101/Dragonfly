@@ -35,26 +35,40 @@ int Player::eventHandler(Event* e){
 		switch (key){
 			case 'a':{
 				int x = this->getPosition().getX();
-				int* layout = this->GameState->Stage1.layout;
-				int width = this->GameState->Stage1.width;
-				int layoutX = x - this->GameState->PlayerState.minX - 1;
-				int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY;
-				int check = *(layout + (layoutY *width + layoutX));
-				if (check == 0){
-					x--;
+				int layoutX = (x-2) - this->GameState->PlayerState.minX;
+				if (layoutX >= 0){
+					int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY -1;
+					int width = this->GameState->Stage1.width;
+					int* layout = this->GameState->Stage1.layout;
+					if (layoutY*width + layoutX > 0){
+						int check = *(layout + (layoutY *width + layoutX));
+						if (check == 0){
+							x--;
+						}
+					}
+					else {
+						l.writeLog("[Player] Error calculating X and Y, size limit is 286, actual value: %d", layoutY*width + layoutX);
+					}
 				}
 				this->setPosition(Position(x, this->getPosition().getY()));
 				break;
 			}
 			case 'd':{
 				int x = this->getPosition().getX();
-				int* layout = this->GameState->Stage1.layout;
+				int layoutX = (x) - this->GameState->PlayerState.minX;
 				int width = this->GameState->Stage1.width;
-				int layoutX = x - this->GameState->PlayerState.minX + 1;
-				int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY;
-				int check = *(layout + (layoutY *width + layoutX));
-				if (check == 0){
-					x++;
+				if (layoutX < width){
+					int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY - 1;
+					int* layout = this->GameState->Stage1.layout;
+					if (layoutY*width+layoutX < 286){
+						int check = *(layout + (layoutY *width + layoutX));
+						if (check == 0){
+							x++;
+						}
+					}
+					else {
+						l.writeLog("[Player] Error calculating X and Y, size limit is 286, actual value: %d", layoutY*width + layoutX);
+					}
 				}
 				this->setPosition(Position(x, this->getPosition().getY()));
 				break;
@@ -71,13 +85,13 @@ int Player::eventHandler(Event* e){
 		int y = this->getPosition().getY();
 
 		if (this->GameState && this->GameState->Stage1.layout){
-			int layoutX = (x - this->GameState->PlayerState.minX);
-			int layoutY = (y - this->GameState->PlayerState.minY);
-			int width = this->GameState->Stage1.width;
-			int* layout = this->GameState->Stage1.layout;
+			int layoutY = (y - this->GameState->PlayerState.minY - 1);
 
 			//Gravity affected movement.
-			if (layoutY + 1 < this->GameState->PlayerState.maxY){
+			if (layoutY + 1 < this->GameState->Stage1.height){
+				int layoutX = (x - this->GameState->PlayerState.minX);
+				int width = this->GameState->Stage1.width;
+				int* layout = this->GameState->Stage1.layout;
 				int check = *(layout + ((layoutY+1)*width + layoutX));
 				l.writeLog("Test: %d", check);
 				if (check == 0 && check < 10 && check > -1){

@@ -10,7 +10,7 @@
 
 struct stage {
 	int size;
-	int* layout; //Array
+	int* layout;
 	int width;
 	int height;
 };
