@@ -8,10 +8,12 @@ std::string Info[] {
 		"How to play:                ",
 		"----------------------------",
 		"Space - Confirm/Enter       ",
+		"Q     - Rotate Left         ",
+		"W     - Start Game          ",
+		"E     - Rotate Right        ",
 		"R     - Cancel/Reset/Back   ",
-		"W     - Selection Up        ",
-		"S     - Selection Down      ",
 		"A     - Move Left           ",
+		"S     - Quit Game           ",
 		"D     - Move Right          ",
 		"CTRL+C- Force quit          "
 };
