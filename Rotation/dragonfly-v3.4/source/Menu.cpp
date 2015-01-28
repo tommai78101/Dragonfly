@@ -27,7 +27,7 @@ Menu::Menu(){
 	GraphicsManager& g = GraphicsManager::getInstance();
 	WorldManager& world = WorldManager::getInstance();
 	if (!resource.isStarted() || !g.isStarted() || !world.isStarted()){
-		log.writeLog("Something is wrong with manager startups. Order: %s %s %s", 
+		log.writeLog("[Menu] Something is wrong with manager startups. Order: %s %s %s", 
 		BoolToString(resource.isStarted()), BoolToString(g.isStarted()), BoolToString(world.isStarted()));
 		world.markForDelete(this);
 		return;
@@ -56,10 +56,10 @@ Menu::Menu(){
 		Menu::canSelectOptions = false;
 		Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4 + 2);
 		Menu::StartGame = true;
-		log.writeLog("Finished loading Menu");
+		log.writeLog("[Menu] Finished loading Menu");
 	}
 	else {
-		log.writeLog("Menu::Menu(): Sprite \"square_spinning\" not found.");
+		log.writeLog("[Menu] Sprite \"square_spinning\" not found.");
 		world.markForDelete(this);
 	}
 }
@@ -173,7 +173,7 @@ Logo::Logo(Position pos){
 	GraphicsManager& g = GraphicsManager::getInstance();
 	WorldManager& world = WorldManager::getInstance();
 	if (!resource.isStarted() || !g.isStarted() || !world.isStarted()){
-		log.writeLog("Something is wrong with manager startups. Order: %s %s %s", BoolToString(resource.isStarted()), BoolToString(g.isStarted()), BoolToString(world.isStarted()));
+		log.writeLog("[Logo] Something is wrong with manager startups. Order: %s %s %s", BoolToString(resource.isStarted()), BoolToString(g.isStarted()), BoolToString(world.isStarted()));
 		world.markForDelete(this);
 		return;
 	}
@@ -200,7 +200,7 @@ Logo::Logo(Position pos){
 		log.writeLog("[LOGO] Finished initializing object.");
 	}
 	else {
-		log.writeLog("Menu::Menu(): Sprite \"square_spinning\" not found.");
+		log.writeLog("[Logo] Sprite \"square_spinning\" not found.");
 	}
 }
 

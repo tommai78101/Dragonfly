@@ -5,7 +5,7 @@ Player::Player(game_state* GameState){
 	ResourceManager& r = ResourceManager::getInstance();
 	WorldManager& w = WorldManager::getInstance();
 	if (!l.isStarted() || !r.isStarted() || !w.isStarted()){
-		l.writeLog("Manager was not started. Order by: %s %s %s", BoolToString(l.isStarted()), BoolToString(r.isStarted()), BoolToString(w.isStarted()));
+		l.writeLog("[Player] Manager was not started. Order by: %s %s %s", BoolToString(l.isStarted()), BoolToString(r.isStarted()), BoolToString(w.isStarted()));
 		w.markForDelete(this);
 		return;
 	}
@@ -93,7 +93,6 @@ int Player::eventHandler(Event* e){
 				int width = this->GameState->Stage1.width;
 				int* layout = this->GameState->Stage1.layout;
 				int check = *(layout + ((layoutY+1)*width + layoutX));
-				l.writeLog("Test: %d", check);
 				if (check == 0 && check < 10 && check > -1){
 					y++;
 				}
@@ -143,6 +142,6 @@ void Player::setGameBounds(int x, int y, int w, int h){
 		this->GameState->PlayerState.maxX = w;
 		this->GameState->PlayerState.maxY = h;
 		LogManager& l = LogManager::getInstance();
-		l.writeLog("setGameBounds = %d, %d, %d, %d", x, y, w, h);
+		l.writeLog("[Player] Setting game boundaries for left, top, width, and height: %d, %d, %d, %d", x, y, w, h);
 	}
 }

@@ -8,7 +8,7 @@ Border::Border(game_state* GameState){
 	WorldManager& world = WorldManager::getInstance();
 	ResourceManager& resource = ResourceManager::getInstance();
 	if (!resource.isStarted() || !g.isStarted() || !world.isStarted()){
-		log.writeLog("Something is wrong with manager startups. Order: %s %s %s", BoolToString(resource.isStarted()), BoolToString(g.isStarted()), BoolToString(world.isStarted()));
+		log.writeLog("[Border] Something is wrong with manager startups. Order: %s %s %s", BoolToString(resource.isStarted()), BoolToString(g.isStarted()), BoolToString(world.isStarted()));
 		world.markForDelete(this);
 		return;
 	}
@@ -38,7 +38,7 @@ Border::Border(game_state* GameState){
 		GameState->PlayerState.maxY = h + (tempSprite->getHeight() / 2);
 	}
 	else {
-		log.writeLog("Something is wrong with loading the sprite. Aborting.");
+		log.writeLog("[Border] Something is wrong with loading the sprite. Aborting.");
 	}
 	return;
 }

@@ -20,19 +20,19 @@ bool LoadResources(){
 		resource.startUp();
 	}
 	if (!resource.isStarted()){
-		log.writeLog("Error starting up resource manager.");
+		log.writeLog("[Platform] Error starting up resource manager.");
 		return false;
 	}
 
 	int Result = 0;
 	if ((Result = resource.loadSprite("assets/square_spinning.txt", "square_spinning")) != 0){
-		log.writeLog("There's something wrong. Return value: %d", Result);
+		log.writeLog("[Platform] There's something wrong. Return value: %d", Result);
 	}
 	if ((Result = resource.loadSprite("assets/logo.txt", "logo")) != 0){
-		log.writeLog("There's something wrong. Return value: %d", Result);
+		log.writeLog("[Platform] There's something wrong. Return value: %d", Result);
 	}
 	if ((Result = resource.loadSprite("assets/border.txt", "border")) != 0){
-		log.writeLog("There's something wrong. Return value: %d", Result);
+		log.writeLog("[Platform] There's something wrong. Return value: %d", Result);
 	}
 	return true;
 }
@@ -46,11 +46,11 @@ int main() {
 
 	GameManager& game = GameManager::getInstance();
 	if (!game.isStarted()){
-		log.writeLog("Starting up game manager.");
+		log.writeLog("[Platform] Starting up game manager.");
 		game.startUp();
 	}
 	if (!game.isStarted()){
-		log.writeLog("Error starting up game manager.");
+		log.writeLog("[Platform] Error starting up game manager.");
 		game.shutDown();
 		log.shutDown();
 		return -1;
@@ -58,11 +58,11 @@ int main() {
 
 	WorldManager& world = WorldManager::getInstance();
 	if (!world.isStarted()){
-		log.writeLog("Starting up world manager.");
+		log.writeLog("[Platform] Starting up world manager.");
 		world.startUp();
 	}
 	if (!world.isStarted()){
-		log.writeLog("Error starting up world manager.");
+		log.writeLog("[Platform] Error starting up world manager.");
 		world.shutDown();
 		game.shutDown();
 		log.shutDown();
@@ -75,7 +75,7 @@ int main() {
 		return 0;
 	}
 	else {
-		log.writeLog("Something terrible has happened. This message should not appear.");
+		log.writeLog("[Platform] Something terrible has happened. This message should not appear.");
 		if (world.isStarted()){
 			world.shutDown();
 		}
