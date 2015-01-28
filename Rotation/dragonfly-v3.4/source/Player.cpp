@@ -26,7 +26,7 @@ Player::Player(game_state* GameState){
 }
 
 
-//TODO: Add collision detection/response.
+//TODO(Thompson): Start working on core mechanics (Rotation!)
 int Player::eventHandler(Event* e){
 	LogManager& l = LogManager::getInstance();
 	if (e->getType() == DF_KEYBOARD_EVENT){
