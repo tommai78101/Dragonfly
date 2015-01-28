@@ -8,7 +8,7 @@
 
 bool PopulateWorld(){
 	LogManager& log = LogManager::getInstance();
-	log.writeLog("Populating game world.");
+	log.writeLog("[Platform] Populating game world.");
 	new Menu;
 	return true;
 }

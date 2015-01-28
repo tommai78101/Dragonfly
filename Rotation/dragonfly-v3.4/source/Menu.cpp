@@ -35,7 +35,7 @@ Menu::Menu(){
 
 	Sprite* tempSprite = resource.getSprite("square_spinning");
 	if (tempSprite){
-		log.writeLog("Successfully loaded Menu sprite.");
+		log.writeLog("[Menu] Successfully loaded Menu sprite.");
 
 		setSprite(tempSprite);
 		setSpriteSlowdown(5);
