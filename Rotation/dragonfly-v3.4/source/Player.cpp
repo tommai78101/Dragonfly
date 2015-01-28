@@ -22,7 +22,7 @@ Player::Player(game_state* GameState){
 
 	this->GameState = GameState;
 	setVisible(true);
-	l.writeLog("Successfully loaded Player entity.");
+	l.writeLog("[Player] Successfully loaded Player entity.");
 }
 
 
@@ -50,8 +50,19 @@ int Player::eventHandler(Event* e){
 		return 1;
 	}
 	else if (e->getType() == DF_STEP_EVENT){
+		//Current location
 		int x = this->getPosition().getX();
 		int y = this->getPosition().getY();
+
+		if (this->GameState && this->GameState->Stage1.layout){
+			//Gravity affected movement.
+			int pitch = y * this->GameState->Stage1.width + x;
+			if (*((this->GameState->Stage1.layout) + pitch) == 0){
+				y++;
+			}
+		}
+
+		//Checks to see if the location is within bounds.
 		if (x <= this->GameState->PlayerState.minX){
 			x = this->GameState->PlayerState.minX + 1;
 		}
@@ -61,9 +72,11 @@ int Player::eventHandler(Event* e){
 		if (x >= this->GameState->PlayerState.maxX){
 			x = this->GameState->PlayerState.maxX - 1;
 		}
-		if (y >= this->GameState->PlayerState.maxY){
-			y = this->GameState->PlayerState.maxY - 1;
+		if (y > this->GameState->PlayerState.maxY){
+			y = this->GameState->PlayerState.maxY;
 		}
+
+		//Set new position.
 		this->GameState->PlayerState.x = x;
 		this->GameState->PlayerState.y = y;
 		this->setPosition(Position(x, y));

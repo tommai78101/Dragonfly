@@ -55,12 +55,13 @@ void Game::initializeGameState(){
 		border = new Border(&GameState);
 	}
 
+	l.writeLog("[Game] Setting player game boundaries.");
 	Position pos = border->getPosition();
 	int width = border->getWidth() / 2;
 	int height = border->getHeight() / 2;
 	player->setGameBounds(pos.getX() - width, pos.getY() - height, pos.getX() + width-1, pos.getY() + height-1);
 	
-	l.writeLog("Finished initializing/resetting game state.");
+	l.writeLog("[Game] Finished initializing/resetting game state.");
 
 	border = 0;
 	player = 0;
@@ -96,6 +97,7 @@ int Game::eventHandler(Event* e){
 				}
 			}
 			this->menu->reset();
+			this->initializeGameState();
 		}
 		return 1;
 	}
@@ -111,31 +113,35 @@ void Game::setCurrentState(State value){
 }
 
 void Game::draw(){
+	LogManager& l = LogManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
-	static int layout[13][22] = {
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
-		0, 1, 1, 1, 1, 0, 0, 0, 0, 0,  0, 0, 0, 1, 1, 1, 1, 1, 1, 1,  1, 1,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  0, 0,
-		0, 0, 0, 0, 1, 0, 0, 0, 1, 1,  1, 1, 1, 1, 1, 1, 1, 1, 0, 0,  0, 0,
-		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 1, 0, 0,  0, 0,
-		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 1, 0, 0,  0, 0,
-		0, 0, 0, 0, 1, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 1, 0, 0,  0, 0
-	};
-	if (!this->GameState.Stage1.layout){
-		this->GameState.Stage1.layout = (int*) layout;
-		this->GameState.Stage1.size = 13 * 22;
+
+	stage* Stage = &this->GameState.Stage1;
+	if (!Stage->layout){
+		Stage->layout = new int[13 * 22] {
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+			0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+			0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+			0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0
+		};
+		Stage->size = 13 * 22;
+		Stage->width = 22;
+		Stage->height = 13;
 	}
 
 	Position posBegin = Position(this->GameState.PlayerState.minX, this->GameState.PlayerState.minY);
 	for (int Row = 0; Row < 13; Row++){ 
 		for (int Column = 0; Column < 22; Column++){
-			int value = layout[Row][Column];
+			int value = Stage->layout[Row * 22 + Column];
 			switch (value){
 				case 0:{
 					break;

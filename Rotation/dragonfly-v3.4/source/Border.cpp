@@ -3,6 +3,7 @@
 
 Border::Border(game_state* GameState){
 	LogManager& log = LogManager::getInstance();
+	log.writeLog("[Border] Initializing Border.");
 	GraphicsManager& g = GraphicsManager::getInstance();
 	WorldManager& world = WorldManager::getInstance();
 	ResourceManager& resource = ResourceManager::getInstance();
@@ -14,7 +15,7 @@ Border::Border(game_state* GameState){
 
 	Sprite* tempSprite = resource.getSprite("border");
 	if (tempSprite){
-		log.writeLog("Successfully loaded Border sprite.");
+		log.writeLog("[Border] Successfully loaded Border sprite.");
 		setSprite(tempSprite);
 		setSpriteSlowdown(5);
 		setTransparency();

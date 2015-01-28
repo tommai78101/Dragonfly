@@ -11,6 +11,8 @@
 struct stage {
 	int size;
 	int* layout; //Array
+	int width;
+	int height;
 };
 
 struct player_state {
