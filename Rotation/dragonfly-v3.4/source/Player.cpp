@@ -35,12 +35,28 @@ int Player::eventHandler(Event* e){
 		switch (key){
 			case 'a':{
 				int x = this->getPosition().getX();
-				this->setPosition(Position(--x, this->getPosition().getY()));
+				int* layout = this->GameState->Stage1.layout;
+				int width = this->GameState->Stage1.width;
+				int layoutX = x - this->GameState->PlayerState.minX - 1;
+				int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY;
+				int check = *(layout + (layoutY *width + layoutX));
+				if (check == 0){
+					x--;
+				}
+				this->setPosition(Position(x, this->getPosition().getY()));
 				break;
 			}
 			case 'd':{
 				int x = this->getPosition().getX();
-				this->setPosition(Position(++x, this->getPosition().getY()));
+				int* layout = this->GameState->Stage1.layout;
+				int width = this->GameState->Stage1.width;
+				int layoutX = x - this->GameState->PlayerState.minX + 1;
+				int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY;
+				int check = *(layout + (layoutY *width + layoutX));
+				if (check == 0){
+					x++;
+				}
+				this->setPosition(Position(x, this->getPosition().getY()));
 				break;
 			}
 			default:{
@@ -55,10 +71,18 @@ int Player::eventHandler(Event* e){
 		int y = this->getPosition().getY();
 
 		if (this->GameState && this->GameState->Stage1.layout){
+			int layoutX = (x - this->GameState->PlayerState.minX);
+			int layoutY = (y - this->GameState->PlayerState.minY);
+			int width = this->GameState->Stage1.width;
+			int* layout = this->GameState->Stage1.layout;
+
 			//Gravity affected movement.
-			int pitch = y * this->GameState->Stage1.width + x;
-			if (*((this->GameState->Stage1.layout) + pitch) == 0){
-				y++;
+			if (layoutY + 1 < this->GameState->PlayerState.maxY){
+				int check = *(layout + ((layoutY+1)*width + layoutX));
+				l.writeLog("Test: %d", check);
+				if (check == 0 && check < 10 && check > -1){
+					y++;
+				}
 			}
 		}
 
@@ -80,7 +104,6 @@ int Player::eventHandler(Event* e){
 		this->GameState->PlayerState.x = x;
 		this->GameState->PlayerState.y = y;
 		this->setPosition(Position(x, y));
-		l.writeLog("Player Pos: %d, %d, State %d %d, %d %d", x, y, GameState->PlayerState.minX, GameState->PlayerState.minY, GameState->PlayerState.maxX, GameState->PlayerState.maxY);
 		return 1;
 	}
 	return 0;
@@ -95,6 +118,7 @@ void Player::draw(){
 
 void Player::initializeState(game_state* GameState){
 	this->GameState = GameState;
+	this->setPosition(Position(GameState->PlayerState.x, GameState->PlayerState.y));
 	return;
 }
 
