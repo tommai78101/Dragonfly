@@ -1,21 +1,21 @@
 frames 1
-width 24
+width 15
 height 15
 color red
-XXXXXXXXXXXXXXXXXXXXXXXX
-X                      X
-X                      X
-X                      X
-X                      X
-X                      X
-X                      X
-X                      X
-X                      X
-X                      X
-X                      X
-X                      X
-X                      X
-X                      X
-XXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXX
+X             X
+X             X
+X             X
+X             X
+X             X
+X             X
+X             X
+X             X
+X             X
+X             X
+X             X
+X             X
+X             X
+XXXXXXXXXXXXXXX
 end
 eof

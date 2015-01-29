@@ -12,6 +12,11 @@ Game::Game(Menu* menu){
 	initializeGameState();
 }
 
+Game::~Game(){
+	//Object::~Object();
+	delete [] this->GameState.Stage1.layout;
+}
+
 void Game::initializeGameState(){
 	LogManager& l = LogManager::getInstance();
 
@@ -19,7 +24,33 @@ void Game::initializeGameState(){
 	this->GameState.PlayerState.x = 40;
 	this->GameState.PlayerState.y = 16;
 
+	this->GameState.Stage1 = {};
+	//NOTE(Thompson): We're going to go with 13x13 square.
+	stage* Stage = &this->GameState.Stage1;
+	Stage->width = 13;
+	Stage->height = 13;
+	Stage->size = Stage->height*Stage->width;
+	Stage->layout = (int*) new int[Stage->size] { 
+		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+		1, 1, 1, 1, 1,	 0, 0, 0, 0, 0,		0, 0, 0,
+		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+
+		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+		0, 0, 0, 0, 1,	 0, 0, 0, 1, 1,		1, 1, 1,
+
+		0, 0, 0, 0, 1,	 0, 0, 0, 0, 0,		0, 0, 0,
+		0, 0, 0, 0, 1,	 0, 0, 0, 0, 0,		0, 0, 0,
+		0, 0, 0, 0, 1,	 0, 0, 0, 0, 0,		0, 0, 0,
+	};
+
 	this->setCurrentState(State::TUTORIAL);
+
+	this->GameState.Board = {};
 
 	Player* player = 0;
 	Border* border = 0;
@@ -83,9 +114,6 @@ int Game::eventHandler(Event* e){
 		ResourceManager& r = ResourceManager::getInstance();
 		GraphicsManager& g = GraphicsManager::getInstance();
 		if (!this->GameState.Board.isRotating){
-			if (this->GameState.Board.rotateCCW || this->GameState.Board.rotateCW){
-				l.writeLog("It is rotating!  %d", this->getSpriteIndex());
-			}
 			if (this->GameState.Board.rotateCCW){
 				this->GameState.Board.rotateCCW = false;
 				Sprite* rccw = r.getSprite("rotate-ccw");
@@ -94,6 +122,10 @@ int Game::eventHandler(Event* e){
 					setSpriteIndex(0);
 					setSpriteSlowdown(3);
 					setPosition(Position(g.getHorizontal()/2, g.getVertical()/2));
+					this->GameState.Board.arrayOrder--;
+					if (this->GameState.Board.arrayOrder < 0){
+						this->GameState.Board.arrayOrder = 3;
+					}
 					this->GameState.Board.isRotating = true;
 				}
 			}
@@ -105,6 +137,10 @@ int Game::eventHandler(Event* e){
 					setSpriteIndex(0);
 					setSpriteSlowdown(3);
 					setPosition(Position(g.getHorizontal() / 2, g.getVertical() / 2));
+					this->GameState.Board.arrayOrder++;
+					if (this->GameState.Board.arrayOrder > 3){
+						this->GameState.Board.arrayOrder = 0;
+					}
 					this->GameState.Board.isRotating = true;
 				}
 			}
@@ -160,44 +196,51 @@ void Game::draw(){
 		GraphicsManager& g = GraphicsManager::getInstance();
 
 		stage* Stage = &this->GameState.Stage1;
-		if (!Stage->layout){
-			Stage->layout = (int*) new int[286] {
-				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-				2, 9, 3, 8, 5,    7, 6, 5, 8, 9,    4, 5, 6, 9, 7,    8, 5, 4, 8, 9,     5, 6,
-				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-				0, 1, 1, 1, 1,    0, 0, 0, 0, 0,    0, 0, 0, 1, 1,    1, 1, 1, 1, 1,     1, 1,
-				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
+		//TODO(Thompson): Fix this rotation issue caused by rectangular arrays.
+		//float(286/square size)    := This is the ratio for pinpointing arrays to the screen.
+		//Floor function. floor()   := Get a value that is within the array size.
+		//Use the value obtained to draw on the screen.
+		if (Stage->layout){
+			Position posBegin = Position(this->GameState.PlayerState.minX, this->GameState.PlayerState.minY);
 
-				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-				0, 0, 0, 0, 1,    0, 0, 0, 1, 1,    1, 1, 1, 1, 1,    1, 1, 1, 0, 0,     0, 0,
-
-				0, 0, 0, 0, 1,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 1, 0, 0,     0, 0,
-				0, 0, 0, 0, 1,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 1, 0, 0,     0, 0,
-				0, 0, 0, 0, 1,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 1, 0, 0,     0, 9
-			};
-			Stage->size = 13 * 22;
-			Stage->width = 22;
-			Stage->height = 13;
-		}
-
-		Position posBegin = Position(this->GameState.PlayerState.minX, this->GameState.PlayerState.minY);
-		for (int Row = 0; Row < 13; Row++){ 
-			for (int Column = 0; Column < 22; Column++){
-				int value = Stage->layout[Row * 22 + Column];
-				switch (value){
-					case 0:{
-						break;
+			for (int Row = 0; Row < Stage->height; Row++){ 
+				for (int Column = 0; Column < Stage->width; Column++){
+					int value;
+					switch (this->GameState.Board.arrayOrder){
+						case 0:{
+							value = Stage->layout[Row * Stage->width + Column];
+							break;
+						}
+						case 1:{
+							value = Stage->layout[Column * Stage->width + Row];
+							break;
+						}
+						case 2:{
+							value = Stage->layout[((Stage->height - 1) - Row) * Stage->width + Column];
+							break;
+						}
+						case 3:{
+							value = Stage->layout[((Stage->height - 1) - Row) * Stage->width + ((Stage->width - 1) - Column)];
+							break;
+						}
+						default: {
+							l.writeLog("[Game] Wrong value: %d", (int)(this->GameState.Board.arrayOrder));
+							break;
+						}
 					}
-					case 1:{
-						g.drawCh(Position(posBegin.getX() + Column + 1, posBegin.getY() + Row + 1), '*', 3);
-						break;
+					switch (value){
+						case 0:{
+							break;
+						}
+						case 1:{
+							g.drawCh(Position(posBegin.getX() + Column + 1, posBegin.getY() + Row + 1), '*', 3);
+							break;
+						}
 					}
+					continue;
 				}
-				continue;
 			}
 		}
+
 	}
 }

@@ -12,6 +12,7 @@ struct board {
 	bool rotateCCW;
 	bool rotateCW;
 	bool isRotating;
+	int arrayOrder;
 };
 
 struct stage {
@@ -51,6 +52,7 @@ public:
 	game_state GameState;
 //functions
 	Game(Menu* menu);
+	~Game();
 	int eventHandler(Event* e);
 	void initializeGameState();
 	State getCurrentState();
