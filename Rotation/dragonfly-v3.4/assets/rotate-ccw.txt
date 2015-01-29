@@ -1,0 +1,96 @@
+frames 5
+width 32
+height 17
+color red
+                                
+                                
+                XXXXXXXXXXX     
+    XXXXXXXXXXXX          X     
+    X                     X     
+    X                     X     
+    XX                    XX    
+     X                     X    
+     X                     X    
+     X                     X    
+     X                     XX   
+     X                      X   
+     XX                     X   
+      X            XXXXXXXXXX   
+      XXXXXXXXXXXXX             
+                                
+                                
+end
+                  XXXX          
+              XXXXX  XX         
+           XXXX       XX        
+      XXXXX            XX       
+  XXXXX                 XX      
+ XX                      XX     
+ XX                       XX    
+  XX                       XX   
+   XX                       XX  
+    XX                       XX 
+     XX                      XXX
+      XXX                 XXXXX 
+       XX            XXXXX      
+        XX        XXXX          
+         XX   XXXXX             
+           XXXX                 
+                                
+end
+                XX              
+             XXXX XX            
+           XXX     XX           
+        XXXX        XXX         
+      XXX             XX        
+   XXXX                XXX      
+ XXX                     XXX    
+XX                         XX   
+XXX                         XXX 
+  XX                          XX
+    XX                      XXX 
+     XX                   XXX   
+      XXX              XXXX     
+        XXX         XXXX        
+          XX     XXXX           
+           XXX XXX              
+             XXX                
+end
+                                
+         X                      
+        XXXXXXX                 
+       XX     XXXXXXX           
+       X            XXXXXXX     
+      XX                  XXXXX 
+     XX                      X  
+    XX                      XX  
+    X                      XX   
+   XX                     XX    
+  XX                      X     
+   XXX                   XX     
+    XXXXX               XX      
+        XXXXX          XX       
+            XXXXXX    XX        
+                 XXXXXX         
+                                
+end
+                                
+     XXXXXXXXXXX                
+     X          XXXXXXXXXXX     
+     X                    X     
+     X                    X     
+    X                     X     
+    X                    X      
+    X                    X      
+    X                    X      
+    X                    X      
+   X                     X      
+   X                    X       
+   X                    X       
+   XXXXXXXXXXX          X       
+              XXXXXXXXXXX       
+                                
+                                
+end
+eof
+

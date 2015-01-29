@@ -73,6 +73,14 @@ int Player::eventHandler(Event* e){
 				this->setPosition(Position(x, this->getPosition().getY()));
 				break;
 			}
+			case 'q':{
+				l.writeLog("This is Q. Rotates the arena counterclockwise.");
+				break;
+			}
+			case 'e': {
+				l.writeLog("This is E. Rotates the arena clockwise.");
+				break;
+			}
 			default:{
 				return 0;
 			}
