@@ -8,6 +8,12 @@
 #define TYPE_GAME "Game"
 #define GAME_TICK_SPEED 5
 
+struct board {
+	bool rotateCCW;
+	bool rotateCW;
+	bool isRotating;
+};
+
 struct stage {
 	int size;
 	int* layout;
@@ -27,6 +33,7 @@ struct player_state {
 struct game_state {
 	player_state PlayerState;
 	stage Stage1;
+	board Board;
 };
 
 enum State {

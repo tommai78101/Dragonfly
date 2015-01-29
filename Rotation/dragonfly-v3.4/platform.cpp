@@ -34,6 +34,12 @@ bool LoadResources(){
 	if ((Result = resource.loadSprite("assets/border.txt", "border")) != 0){
 		log.writeLog("[Platform] There's something wrong. Return value: %d", Result);
 	}
+	if ((Result = resource.loadSprite("assets/rotate-ccw.txt", "rotate-ccw")) != 0){
+		log.writeLog("[Platform] There's something wrong. Return value: %d", Result);
+	}
+	if ((Result = resource.loadSprite("assets/rotate-cw.txt", "rotate-cw")) != 0){
+		log.writeLog("[Platform] There's something wrong. Return value: %d", Result);
+	}
 	return true;
 }
 

@@ -20,7 +20,7 @@ color red
                                 
                                 
 end
-
+                                
          X                      
         XXXXXXX                 
        XX     XXXXXXX           
@@ -72,7 +72,7 @@ end
         XX        XXXX          
          XX   XXXXX             
            XXXX                 
-
+                                
 end
                                 
                                 

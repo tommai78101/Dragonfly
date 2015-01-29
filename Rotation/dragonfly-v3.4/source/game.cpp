@@ -78,7 +78,45 @@ void Game::initializeGameState(){
 */
 
 int Game::eventHandler(Event* e){
+	LogManager& l = LogManager::getInstance();
 	if (e->getType() == DF_STEP_EVENT){
+		ResourceManager& r = ResourceManager::getInstance();
+		GraphicsManager& g = GraphicsManager::getInstance();
+		if (!this->GameState.Board.isRotating){
+			if (this->GameState.Board.rotateCCW || this->GameState.Board.rotateCW){
+				l.writeLog("It is rotating!  %d", this->getSpriteIndex());
+			}
+			if (this->GameState.Board.rotateCCW){
+				this->GameState.Board.rotateCCW = false;
+				Sprite* rccw = r.getSprite("rotate-ccw");
+				if (rccw){
+					setSprite(rccw);
+					setSpriteIndex(0);
+					setSpriteSlowdown(3);
+					setPosition(Position(g.getHorizontal()/2, g.getVertical()/2));
+					this->GameState.Board.isRotating = true;
+				}
+			}
+			else if (this->GameState.Board.rotateCW){
+				this->GameState.Board.rotateCW = false;
+				Sprite* rcw = r.getSprite("rotate-cw");
+				if (rcw){
+					setSprite(rcw);
+					setSpriteIndex(0);
+					setSpriteSlowdown(3);
+					setPosition(Position(g.getHorizontal() / 2, g.getVertical() / 2));
+					this->GameState.Board.isRotating = true;
+				}
+			}
+		}
+		else {
+			int index = this->getSpriteIndex();
+			if (index == this->getSprite()->getFrameCount()-1){
+				this->GameState.Board.isRotating = false;
+				this->GameState.Board.rotateCCW = false;
+				this->GameState.Board.rotateCW = false;
+			}
+		}
 		return 1;
 	}
 	else if (e->getType() == DF_KEYBOARD_EVENT){
@@ -114,47 +152,52 @@ void Game::setCurrentState(State value){
 }
 
 void Game::draw(){
-	LogManager& l = LogManager::getInstance();
-	GraphicsManager& g = GraphicsManager::getInstance();
-
-	stage* Stage = &this->GameState.Stage1;
-	if (!Stage->layout){
-		Stage->layout = (int*) new int[286] {
-			0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-			2, 9, 3, 8, 5,    7, 6, 5, 8, 9,    4, 5, 6, 9, 7,    8, 5, 4, 8, 9,     5, 6,
-			0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-			0, 1, 1, 1, 1,    0, 0, 0, 0, 0,    0, 0, 0, 1, 1,    1, 1, 1, 1, 1,     1, 1,
-			0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-
-			0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-			0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-			0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-			0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
-			0, 0, 0, 0, 1,    0, 0, 0, 1, 1,    1, 1, 1, 1, 1,    1, 1, 1, 0, 0,     0, 0,
-
-			0, 0, 0, 0, 1,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 1, 0, 0,     0, 0,
-			0, 0, 0, 0, 1,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 1, 0, 0,     0, 0,
-			0, 0, 0, 0, 1,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 1, 0, 0,     0, 9
-		};
-		Stage->size = 13 * 22;
-		Stage->width = 22;
-		Stage->height = 13;
+	if (this->GameState.Board.isRotating){
+		Object::draw();
 	}
+	else {
+		LogManager& l = LogManager::getInstance();
+		GraphicsManager& g = GraphicsManager::getInstance();
 
-	Position posBegin = Position(this->GameState.PlayerState.minX, this->GameState.PlayerState.minY);
-	for (int Row = 0; Row < 13; Row++){ 
-		for (int Column = 0; Column < 22; Column++){
-			int value = Stage->layout[Row * 22 + Column];
-			switch (value){
-				case 0:{
-					break;
+		stage* Stage = &this->GameState.Stage1;
+		if (!Stage->layout){
+			Stage->layout = (int*) new int[286] {
+				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
+				2, 9, 3, 8, 5,    7, 6, 5, 8, 9,    4, 5, 6, 9, 7,    8, 5, 4, 8, 9,     5, 6,
+				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
+				0, 1, 1, 1, 1,    0, 0, 0, 0, 0,    0, 0, 0, 1, 1,    1, 1, 1, 1, 1,     1, 1,
+				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
+
+				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
+				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
+				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
+				0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,     0, 0,
+				0, 0, 0, 0, 1,    0, 0, 0, 1, 1,    1, 1, 1, 1, 1,    1, 1, 1, 0, 0,     0, 0,
+
+				0, 0, 0, 0, 1,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 1, 0, 0,     0, 0,
+				0, 0, 0, 0, 1,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 1, 0, 0,     0, 0,
+				0, 0, 0, 0, 1,    0, 0, 0, 0, 0,    0, 0, 0, 0, 0,    0, 0, 1, 0, 0,     0, 9
+			};
+			Stage->size = 13 * 22;
+			Stage->width = 22;
+			Stage->height = 13;
+		}
+
+		Position posBegin = Position(this->GameState.PlayerState.minX, this->GameState.PlayerState.minY);
+		for (int Row = 0; Row < 13; Row++){ 
+			for (int Column = 0; Column < 22; Column++){
+				int value = Stage->layout[Row * 22 + Column];
+				switch (value){
+					case 0:{
+						break;
+					}
+					case 1:{
+						g.drawCh(Position(posBegin.getX() + Column + 1, posBegin.getY() + Row + 1), '*', 3);
+						break;
+					}
 				}
-				case 1:{
-					g.drawCh(Position(posBegin.getX() + Column + 1, posBegin.getY() + Row + 1), '*', 3);
-					break;
-				}
+				continue;
 			}
-			continue;
 		}
 	}
 }

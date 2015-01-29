@@ -75,10 +75,14 @@ int Player::eventHandler(Event* e){
 			}
 			case 'q':{
 				l.writeLog("This is Q. Rotates the arena counterclockwise.");
+				this->GameState->Board.rotateCCW = true;
+				this->GameState->Board.rotateCW = false;
 				break;
 			}
 			case 'e': {
 				l.writeLog("This is E. Rotates the arena clockwise.");
+				this->GameState->Board.rotateCW = true;
+				this->GameState->Board.rotateCCW = false;
 				break;
 			}
 			default:{
