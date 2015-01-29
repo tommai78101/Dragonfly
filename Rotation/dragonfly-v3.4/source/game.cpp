@@ -30,23 +30,25 @@ void Game::initializeGameState(){
 	Stage->width = 13;
 	Stage->height = 13;
 	Stage->size = Stage->height*Stage->width;
-	Stage->layout = (int*) new int[Stage->size] { 
-		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
-		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
-		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
-		1, 1, 1, 1, 1,	 0, 0, 0, 0, 0,		0, 0, 0,
-		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+	if (!Stage->layout){
+		Stage->layout = (int*) new int[Stage->size] { 
+			0, 0, 0, 0, 0,	 0, 0, 0, 0, 1,		0, 0, 0,
+			0, 0, 0, 0, 0,	 0, 0, 0, 0, 1,		0, 0, 0,
+			0, 0, 0, 0, 0,	 0, 0, 0, 0, 1,		0, 0, 0,
+			1, 1, 1, 1, 0,	 0, 0, 0, 0, 1,		0, 0, 0,
+			0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
 
-		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
-		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
-		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
-		0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
-		0, 0, 0, 0, 1,	 0, 0, 0, 1, 1,		1, 1, 1,
+			0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+			0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+			0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+			0, 0, 0, 0, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+			0, 0, 0, 1, 0,	 0, 0, 0, 0, 1,		1, 1, 1,
 
-		0, 0, 0, 0, 1,	 0, 0, 0, 0, 0,		0, 0, 0,
-		0, 0, 0, 0, 1,	 0, 0, 0, 0, 0,		0, 0, 0,
-		0, 0, 0, 0, 1,	 0, 0, 0, 0, 0,		0, 0, 0,
-	};
+			0, 0, 0, 1, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+			0, 0, 0, 1, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+			0, 0, 0, 1, 0,	 0, 0, 0, 0, 0,		0, 0, 0,
+		};
+	}
 
 	this->setCurrentState(State::TUTORIAL);
 
@@ -203,24 +205,24 @@ void Game::draw(){
 		if (Stage->layout){
 			Position posBegin = Position(this->GameState.PlayerState.minX, this->GameState.PlayerState.minY);
 
-			for (int Row = 0; Row < Stage->height; Row++){ 
-				for (int Column = 0; Column < Stage->width; Column++){
+			for (int Column = 0; Column < Stage->width; Column++){
+				for (int Row = 0; Row < Stage->height; Row++){ 
 					int value;
 					switch (this->GameState.Board.arrayOrder){
 						case 0:{
-							value = Stage->layout[Row * Stage->width + Column];
-							break;
-						}
-						case 1:{
 							value = Stage->layout[Column * Stage->width + Row];
 							break;
 						}
-						case 2:{
-							value = Stage->layout[((Stage->height - 1) - Row) * Stage->width + Column];
+						case 1:{
+							value = Stage->layout[Row*Stage->width + ((Stage->width - 1) - Column)];
+							break;
+						}
+						case 2: {
+							value = Stage->layout[((Stage->width - 1) - Column)*Stage->width + ((Stage->height - 1) - Row)];
 							break;
 						}
 						case 3:{
-							value = Stage->layout[((Stage->height - 1) - Row) * Stage->width + ((Stage->width - 1) - Column)];
+							value = Stage->layout[((Stage->height - 1) - Row) * Stage->width + Column];
 							break;
 						}
 						default: {
