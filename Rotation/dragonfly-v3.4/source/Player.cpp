@@ -79,14 +79,14 @@ int Player::eventHandler(Event* e){
 				break;
 			}
 			case 'q':{
-				l.writeLog("This is Q. Rotates the arena counterclockwise.");
+				l.writeLog("This is Q. Rotates the arena counterclockwise. ");
 				this->GameState->Board.rotateCCW = true;
 				this->GameState->Board.rotateCW = false;
 				this->GameState->Stage1.layout[this->GameState->PlayerState.y * this->GameState->Stage1.width + this->GameState->PlayerState.x] = 999;
 				break;
 			}
 			case 'e': {
-				l.writeLog("This is E. Rotates the arena clockwise.");
+				l.writeLog("This is E. Rotates the arena clockwise. ");
 				this->GameState->Board.rotateCW = true;
 				this->GameState->Board.rotateCCW = false;
 				this->GameState->Stage1.layout[this->GameState->PlayerState.y * this->GameState->Stage1.width + this->GameState->PlayerState.x] = 999;
@@ -99,21 +99,69 @@ int Player::eventHandler(Event* e){
 		return 1;
 	}
 	else if (e->getType() == DF_STEP_EVENT){
+		if (this->GameState->Board.isRotating){
+			return 1;
+		}
 		//Current location
 		int x = this->getPosition().getX();
 		int y = this->getPosition().getY();
 
 		if (this->GameState && this->GameState->Stage1.layout){
-			int layoutY = (y - this->GameState->PlayerState.minY - 1);
-
 			//Gravity affected movement.
-			if (layoutY + 1 < this->GameState->Stage1.height){
-				int layoutX = (x - this->GameState->PlayerState.minX);
-				int width = this->GameState->Stage1.width;
-				int* layout = this->GameState->Stage1.layout;
-				int check = *(layout + ((layoutY + 1)*width + layoutX));
-				if (check == 0 && check < 10 && check > -1){
-					y++;
+			switch (this->GameState->Board.arrayOrder){
+				case 0:{
+					int layoutY = (y - this->GameState->PlayerState.minY - 1);
+					if (layoutY + 1 < this->GameState->Stage1.height){
+						int layoutX = (x - this->GameState->PlayerState.minX);
+						int width = this->GameState->Stage1.width;
+						int* layout = this->GameState->Stage1.layout;
+						int check = *(layout + ((layoutY + 1)*width + layoutX));
+						if (check == 0 && check < 10 && check > -1){
+							y++;
+						}
+					}
+					break;
+				}
+				case 1:{
+					int layoutX = (x - this->GameState->PlayerState.minX - 2);
+					if (layoutX + 1 < this->GameState->Stage1.width){
+						int layoutY = (y - this->GameState->PlayerState.minY - 1);
+						int width = this->GameState->Stage1.width;
+						int check = this->GameState->Stage1.layout[layoutY*width + (layoutX+1)];
+						if (check == 0){
+							x++;
+						}
+					}
+					break;
+				}
+				case 2:{
+					int layoutY = (y - this->GameState->PlayerState.minY - 1);
+					l.writeLog("Player abs pos: %d, %d  -----  minX, minY, layoutY: %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minX, layoutY);
+					if (layoutY > 0){
+						int layoutX = (this->GameState->PlayerState.maxX - x + 1);
+						int width = this->GameState->Stage1.width;
+						int* layout = this->GameState->Stage1.layout;
+						int check = *(layout + ((layoutY - 1)*width + layoutX));
+						if (check == 0 && check < 10 && check > -1){
+							y--;
+						}
+						l.writeLog("layoutX, check: %d, %d", layoutX, check);
+					}
+					break;
+				}
+				case 3:{
+					int layoutX = (x - this->GameState->PlayerState.minX - 1);
+					//l.writeLog("Player abs pos: %d, %d  -----  minX, minY, layoutX: %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minX, layoutX);
+					if (layoutX > 0){
+						int layoutY = (y - this->GameState->PlayerState.minY - 1);
+						int width = this->GameState->Stage1.width;
+						int check = this->GameState->Stage1.layout[layoutY*width + (layoutX - 1)];
+						if (check == 0){
+							x--;
+						}
+						//l.writeLog("layoutY, check: %d, %d", layoutY, check);
+					}
+					break;
 				}
 			}
 		}
@@ -142,6 +190,9 @@ int Player::eventHandler(Event* e){
 }
 
 void Player::draw(){
+	if (this->GameState->Board.isRotating){
+		return;
+	}
 	LogManager& l = LogManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
 	int width = this->GameState->Stage1.width;

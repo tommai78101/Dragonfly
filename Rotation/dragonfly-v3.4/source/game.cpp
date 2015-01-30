@@ -9,6 +9,8 @@ Game::Game(Menu* menu){
 	this->menu = menu;
 	menu->unregisterInterest(DF_KEYBOARD_EVENT);
 
+	new Pause('p');
+
 	initializeGameState();
 }
 
@@ -21,8 +23,16 @@ void Game::initializeGameState(){
 	LogManager& l = LogManager::getInstance();
 
 	this->GameState = {};
+	
+	this->GameState.Board = {};
+	this->GameState.Board.arrayOrder = 0;
+	this->GameState.Board.isRotating = false;
+
+	this->GameState.PlayerState = {};
 	this->GameState.PlayerState.initialX = 40;
 	this->GameState.PlayerState.initialY = 16;
+	this->GameState.PlayerState.x = this->GameState.PlayerState.initialX;
+	this->GameState.PlayerState.y = this->GameState.PlayerState.initialY;
 
 	this->GameState.Stage1 = {};
 	//NOTE(Thompson): We're going to go with 13x13 square.
@@ -51,8 +61,6 @@ void Game::initializeGameState(){
 	}
 
 	this->setCurrentState(State::TUTORIAL);
-
-	this->GameState.Board = {};
 
 	Player* player = 0;
 	Border* border = 0;
@@ -247,6 +255,7 @@ void Game::draw(){
 			for (; playerPosY < Stage->height; playerPosY++){
 				for (; playerPosX < Stage->width; playerPosX++){
 					if (Stage->layout[playerPosY * Stage->width + playerPosX] == 999){
+						Stage->layout[playerPosY * Stage->width + playerPosX] = 0;
 						break;
 					}
 				}

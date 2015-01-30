@@ -14,6 +14,7 @@
 #include "..\include\ViewObject.h"
 #include "..\include\ObjectList.h"
 #include "..\include\ObjectListIterator.h"
+#include "..\include\Pause.h"
 
 #define ArrayLength(Array) sizeof((Array))/sizeof((Array)[0])
 
