@@ -35,6 +35,7 @@ int Player::eventHandler(Event* e){
 		switch (key){
 			case 'a':{
 				int x = this->getPosition().getX();
+				int y = this->getPosition().getY();
 				int layoutX = (x - 2) - this->GameState->PlayerState.minX;
 				int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY - 1;
 				if (layoutX >= 0){

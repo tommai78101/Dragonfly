@@ -209,19 +209,19 @@ void Game::draw(){
 					int value;
 					switch (this->GameState.Board.arrayOrder){
 						case 0:{
-							value = Stage->layout[Column * Stage->width + Row];
+							value = Stage->layout[Row * Stage->width + Column];
 							break;
 						}
 						case 1:{
-							value = Stage->layout[Row*Stage->width + ((Stage->width - 1) - Column)];
+							value = Stage->layout[Column*Stage->width + ((Stage->height - 1) - Row)];
 							break;
 						}
 						case 2: {
-							value = Stage->layout[((Stage->width - 1) - Column)*Stage->width + ((Stage->height - 1) - Row)];
+							value = Stage->layout[((Stage->height - 1) - Row)*Stage->width + ((Stage->width - 1) - Column)];
 							break;
 						}
 						case 3:{
-							value = Stage->layout[((Stage->height - 1) - Row) * Stage->width + Column];
+							value = Stage->layout[((Stage->width - 1) - Column) * Stage->width + Row];
 							break;
 						}
 						default: {
