@@ -141,7 +141,7 @@ int Player::eventHandler(Event* e){
 						if (check == 0){
 							x++;
 						}
-						//
+						//l.writeLog("layoutX, layoutY, check: %d, %d, %d", layoutX, layoutY, check);
 					}
 					break;
 				}
