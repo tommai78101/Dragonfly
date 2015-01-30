@@ -29,6 +29,8 @@ struct player_state {
 	int maxY;
 	int minX;
 	int minY;
+	int initialX;
+	int initialY;
 };
 
 struct game_state {

@@ -9,12 +9,12 @@ Player::Player(game_state* GameState){
 		w.markForDelete(this);
 		return;
 	}
-	
+
 	//No need for a sprite. A simple character will do.
 	setType(TYPE_PLAYER);
 	setTransparency();
 	setSolidness(Solidness::HARD);
-	Position pos(GameState->PlayerState.x, GameState->PlayerState.y);
+	Position pos(GameState->PlayerState.initialX, GameState->PlayerState.initialY);
 	setPosition(pos);
 
 	registerInterest(DF_KEYBOARD_EVENT);
@@ -35,9 +35,9 @@ int Player::eventHandler(Event* e){
 		switch (key){
 			case 'a':{
 				int x = this->getPosition().getX();
-				int layoutX = (x-2) - this->GameState->PlayerState.minX;
+				int layoutX = (x - 2) - this->GameState->PlayerState.minX;
+				int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY - 1;
 				if (layoutX >= 0){
-					int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY -1;
 					int width = this->GameState->Stage1.width;
 					int* layout = this->GameState->Stage1.layout;
 					if (layoutY*width + layoutX > 0){
@@ -51,16 +51,18 @@ int Player::eventHandler(Event* e){
 					}
 				}
 				this->setPosition(Position(x, this->getPosition().getY()));
+				this->GameState->PlayerState.x = layoutX;
+				this->GameState->PlayerState.y = layoutY;
 				break;
 			}
 			case 'd':{
 				int x = this->getPosition().getX();
-				int layoutX = (x) - this->GameState->PlayerState.minX;
+				int layoutX = (x) -this->GameState->PlayerState.minX;
 				int width = this->GameState->Stage1.width;
+				int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY - 1;
 				if (layoutX < width){
-					int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY - 1;
 					int* layout = this->GameState->Stage1.layout;
-					if (layoutY*width+layoutX < 286){
+					if (layoutY*width + layoutX < 286){
 						int check = *(layout + (layoutY *width + layoutX));
 						if (check == 0){
 							x++;
@@ -71,18 +73,22 @@ int Player::eventHandler(Event* e){
 					}
 				}
 				this->setPosition(Position(x, this->getPosition().getY()));
+				this->GameState->PlayerState.x = layoutX;
+				this->GameState->PlayerState.y = layoutY;
 				break;
 			}
 			case 'q':{
 				l.writeLog("This is Q. Rotates the arena counterclockwise.");
 				this->GameState->Board.rotateCCW = true;
 				this->GameState->Board.rotateCW = false;
+				this->GameState->Stage1.layout[this->GameState->PlayerState.y * this->GameState->Stage1.width + this->GameState->PlayerState.x] = 999;
 				break;
 			}
 			case 'e': {
 				l.writeLog("This is E. Rotates the arena clockwise.");
 				this->GameState->Board.rotateCW = true;
 				this->GameState->Board.rotateCCW = false;
+				this->GameState->Stage1.layout[this->GameState->PlayerState.y * this->GameState->Stage1.width + this->GameState->PlayerState.x] = 999;
 				break;
 			}
 			default:{
@@ -104,7 +110,7 @@ int Player::eventHandler(Event* e){
 				int layoutX = (x - this->GameState->PlayerState.minX);
 				int width = this->GameState->Stage1.width;
 				int* layout = this->GameState->Stage1.layout;
-				int check = *(layout + ((layoutY+1)*width + layoutX));
+				int check = *(layout + ((layoutY + 1)*width + layoutX));
 				if (check == 0 && check < 10 && check > -1){
 					y++;
 				}
@@ -137,7 +143,47 @@ int Player::eventHandler(Event* e){
 void Player::draw(){
 	LogManager& l = LogManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
-	g.drawCh(this->getPosition(), '@', 0);
+	int width = this->GameState->Stage1.width;
+	int height = this->GameState->Stage1.height;
+	Position pos = this->getPosition();
+	switch (this->GameState->Board.arrayOrder){
+		case 0:{
+			g.drawCh(pos, '@', 0);
+			break; 
+		}
+		case 1:{
+			int x = this->GameState->PlayerState.x;
+			int newY = this->GameState->PlayerState.minY + (x - this->GameState->PlayerState.minX);
+			int y = this->GameState->PlayerState.y;
+			int newX = this->GameState->PlayerState.minX + (this->GameState->PlayerState.maxY - y + 1);
+			Position newPos(newX, newY);
+			g.drawCh(newPos, '@', 0);
+			break;
+		}
+		case 2:{
+			int x = this->GameState->PlayerState.x;
+			int newX = this->GameState->PlayerState.maxX - (x - this->GameState->PlayerState.minX - 1);
+			int y = this->GameState->PlayerState.y;
+			int newY = this->GameState->PlayerState.minY + (this->GameState->PlayerState.maxY - y + 1);
+			Position newPos(newX, newY);
+			g.drawCh(newPos, '@', 0);
+			break;
+		}
+		case 3:{
+			int x = this->GameState->PlayerState.x;
+			int newY = this->GameState->PlayerState.maxY - (x - this->GameState->PlayerState.minX - 1);
+			int y = this->GameState->PlayerState.y;
+			int newX = this->GameState->PlayerState.maxX - (this->GameState->PlayerState.maxY - y);
+			Position newPos(newX, newY);
+			g.drawCh(newPos, '@', 0);
+			break; 
+		}
+		default:{
+			l.writeLog("[Player] Wrong array order: %d", (int)(this->GameState->Board.arrayOrder));
+			break; 
+		}
+	}
+	
 	return;
 }
 

@@ -21,8 +21,8 @@ void Game::initializeGameState(){
 	LogManager& l = LogManager::getInstance();
 
 	this->GameState = {};
-	this->GameState.PlayerState.x = 40;
-	this->GameState.PlayerState.y = 16;
+	this->GameState.PlayerState.initialX = 40;
+	this->GameState.PlayerState.initialY = 16;
 
 	this->GameState.Stage1 = {};
 	//NOTE(Thompson): We're going to go with 13x13 square.
@@ -173,8 +173,6 @@ int Game::eventHandler(Event* e){
 				}
 			}
 			this->menu->reset();
-			this->GameState.PlayerState.x = 40;
-			this->GameState.PlayerState.y = 16;
 		}
 		return 1;
 	}
@@ -205,8 +203,9 @@ void Game::draw(){
 		if (Stage->layout){
 			Position posBegin = Position(this->GameState.PlayerState.minX, this->GameState.PlayerState.minY);
 
-			for (int Column = 0; Column < Stage->width; Column++){
-				for (int Row = 0; Row < Stage->height; Row++){ 
+			//TODO(Thompson): Fix orientation being left-right mirrored.
+			for (int Row = 0; Row < Stage->height; Row++){ 
+				for (int Column = 0; Column < Stage->width; Column++){
 					int value;
 					switch (this->GameState.Board.arrayOrder){
 						case 0:{
@@ -242,7 +241,18 @@ void Game::draw(){
 					continue;
 				}
 			}
-		}
 
+			int playerPosX = 0;
+			int playerPosY = 0;
+			for (; playerPosY < Stage->height; playerPosY++){
+				for (; playerPosX < Stage->width; playerPosX++){
+					if (Stage->layout[playerPosY * Stage->width + playerPosX] == 999){
+						break;
+					}
+				}
+			}
+			this->GameState.PlayerState.x = playerPosX;
+			this->GameState.PlayerState.y = playerPosY;
+		}
 	}
 }
