@@ -15,6 +15,7 @@ std::string Info[] {
 		"A     - Move Left           ",
 		"S     - Quit Game           ",
 		"D     - Move Right          ",
+		"P     - Pause               ",
 		"CTRL+C- Force quit          "
 };
 
