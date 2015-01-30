@@ -32,6 +32,11 @@ Border::Border(game_state* GameState){
 
 		this->width = tempSprite->getWidth();
 		this->height = tempSprite->getHeight();
+
+		//Border is 15x15.
+		//Layout is 13x13.
+
+
 		GameState->PlayerState.minX = w - (tempSprite->getWidth() / 2);
 		GameState->PlayerState.minX = h - (tempSprite->getHeight() / 2);
 		GameState->PlayerState.maxX = w + (tempSprite->getWidth() / 2);
