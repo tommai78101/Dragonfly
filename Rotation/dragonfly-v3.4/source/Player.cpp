@@ -125,8 +125,8 @@ int Player::eventHandler(Event* e){
 		if (y <= this->GameState->PlayerState.minY){
 			y = this->GameState->PlayerState.minY + 1;
 		}
-		if (x >= this->GameState->PlayerState.maxX){
-			x = this->GameState->PlayerState.maxX - 1;
+		if (x > this->GameState->PlayerState.maxX){
+			x = this->GameState->PlayerState.maxX;
 		}
 		if (y > this->GameState->PlayerState.maxY){
 			y = this->GameState->PlayerState.maxY;
