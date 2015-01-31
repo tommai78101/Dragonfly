@@ -179,7 +179,6 @@ int Player::eventHandler(Event* e){
 							y--;
 						}
 					}
-					l.writeLog("layoutX, layoutY, new X: %d %d %d", layoutX, layoutY, x);
 					break;
 				}
 				case 3:{
@@ -194,6 +193,11 @@ int Player::eventHandler(Event* e){
 					//	}
 					//	//l.writeLog("layoutY, check: %d, %d", layoutY, check);
 					//}
+					if (layoutX - 1 >= 0){
+						if (layout[layoutY * this->GameState->Stage1.width + (layoutX - 1)] == 0){
+							x--;
+						}
+					}
 					break;
 				}
 			}
