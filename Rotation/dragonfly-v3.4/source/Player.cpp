@@ -105,6 +105,9 @@ int Player::eventHandler(Event* e){
 		//Current location
 		int x = this->getPosition().getX();
 		int y = this->getPosition().getY();
+		int layoutY = (y - this->GameState->PlayerState.minY - 1);
+		int layoutX = (x - this->GameState->PlayerState.minX - 1);
+		int* layout = this->GameState->Stage1.layout;
 
 		if (this->GameState && this->GameState->Stage1.layout){
 			//Gravity affected movement.
@@ -115,38 +118,46 @@ int Player::eventHandler(Event* e){
 
 			switch (this->GameState->Board.arrayOrder){
 				case 0:{
-					int layoutY = (y - this->GameState->PlayerState.minY - 1);
-					//l.writeLog("Player abs pos: %d, %d  -----  minX, minY, maxX, maxY:  %d, %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minY, this->GameState->PlayerState.maxX, this->GameState->PlayerState.maxY);
-					//l.writeLog("layoutX: %d", layoutY);
+					//int layoutY = (y - this->GameState->PlayerState.minY - 1);
+					////l.writeLog("Player abs pos: %d, %d  -----  minX, minY, maxX, maxY:  %d, %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minY, this->GameState->PlayerState.maxX, this->GameState->PlayerState.maxY);
+					////l.writeLog("layoutX: %d", layoutY);
+					//if (layoutY + 1 < this->GameState->Stage1.height){
+					//	int layoutX = (x - this->GameState->PlayerState.minX - 1);
+					//	int width = this->GameState->Stage1.width;
+					//	int* layout = this->GameState->Stage1.layout;
+					//	int check = *(layout + ((layoutY + 1)*width + layoutX));
+					//	if (check == 0 && check < 10 && check > -1){
+					//		y++;
+					//	}
+					//	//l.writeLog("layoutX, layoutY, check: %d, %d, %d", layoutX, layoutY, check);
+					//}
 					if (layoutY + 1 < this->GameState->Stage1.height){
-						int layoutX = (x - this->GameState->PlayerState.minX - 1);
-						int width = this->GameState->Stage1.width;
-						int* layout = this->GameState->Stage1.layout;
-						int check = *(layout + ((layoutY + 1)*width + layoutX));
-						if (check == 0 && check < 10 && check > -1){
+						if (layout[(layoutY + 1)*this->GameState->Stage1.width + layoutX] == 0){
 							y++;
 						}
-						//l.writeLog("layoutX, layoutY, check: %d, %d, %d", layoutX, layoutY, check);
 					}
 					break;
 				}
 				case 1:{
-					int layoutX = (x - this->GameState->PlayerState.minX - 1);
-					/*l.writeLog("Player abs pos: %d, %d  -----  minX, minY, maxX, maxY:  %d, %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minY, this->GameState->PlayerState.maxX, this->GameState->PlayerState.maxY);
-					l.writeLog("layoutX: %d", layoutX);*/
-					if (layoutX + 1 < this->GameState->Stage1.width){
-						int layoutY = (y - this->GameState->PlayerState.minY - 1);
-						int width = this->GameState->Stage1.width;
-						int check = this->GameState->Stage1.layout[layoutY*width + (layoutX+1)];
-						if (check == 0){
-							x++;
-						}
-						//l.writeLog("layoutX, layoutY, check: %d, %d, %d", layoutX, layoutY, check);
-					}
+					//int layoutX = (x - this->GameState->PlayerState.minX - 1);
+					///*l.writeLog("Player abs pos: %d, %d  -----  minX, minY, maxX, maxY:  %d, %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minY, this->GameState->PlayerState.maxX, this->GameState->PlayerState.maxY);
+					//l.writeLog("layoutX: %d", layoutX);*/
+					//if (layoutX + 1 < this->GameState->Stage1.width){
+					//	int layoutY = (y - this->GameState->PlayerState.minY - 1);
+					//	int width = this->GameState->Stage1.width;
+					//	int check = this->GameState->Stage1.layout[layoutY*width + (layoutX+1)];
+					//	if (check == 0){
+					//		x++;
+					//	}
+					//	//l.writeLog("layoutX, layoutY, check: %d, %d, %d", layoutX, layoutY, check);
+					//}
+
+
+
 					break;
 				}
 				case 2:{
-					int layoutY = (this->GameState->PlayerState.maxY - y);
+					/*int layoutY = (this->GameState->PlayerState.maxY - y);
 					l.writeLog("Player abs pos: %d, %d  -----  minX, minY, maxX, maxY:  %d, %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minY, this->GameState->PlayerState.maxX, this->GameState->PlayerState.maxY);
 					l.writeLog("layoutY: %d", layoutY);
 					if (layoutY >= 0){
@@ -158,21 +169,21 @@ int Player::eventHandler(Event* e){
 							y--;
 						}
 						l.writeLog("layoutX, layoutY, check: %d, %d, %d", layoutX, layoutY, check);
-					}
+					}*/
 					break;
 				}
 				case 3:{
-					int layoutX = (x - this->GameState->PlayerState.minX - 1);
-					//l.writeLog("Player abs pos: %d, %d  -----  minX, minY, layoutX: %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minX, layoutX);
-					if (layoutX >= 0){
-						int layoutY = (y - this->GameState->PlayerState.minY - 1);
-						int width = this->GameState->Stage1.width;
-						int check = this->GameState->Stage1.layout[layoutY*width + (layoutX - 1)];
-						if (check == 0){
-							x--;
-						}
-						//l.writeLog("layoutY, check: %d, %d", layoutY, check);
-					}
+					//int layoutX = (x - this->GameState->PlayerState.minX - 1);
+					////l.writeLog("Player abs pos: %d, %d  -----  minX, minY, layoutX: %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minX, layoutX);
+					//if (layoutX >= 0){
+					//	int layoutY = (y - this->GameState->PlayerState.minY - 1);
+					//	int width = this->GameState->Stage1.width;
+					//	int check = this->GameState->Stage1.layout[layoutY*width + (layoutX - 1)];
+					//	if (check == 0){
+					//		x--;
+					//	}
+					//	//l.writeLog("layoutY, check: %d, %d", layoutY, check);
+					//}
 					break;
 				}
 			}
