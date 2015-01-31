@@ -138,6 +138,9 @@
     <ClInclude Include="dragonfly-v3.4\header\Border.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="dragonfly-v3.4\header\Block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dragonfly-v3.4\source\game.cpp">
@@ -153,6 +156,9 @@
       <Filter>Source Files\dragonfly-v3.4\source</Filter>
     </ClCompile>
     <ClCompile Include="dragonfly-v3.4\source\Border.cpp">
+      <Filter>Source Files\dragonfly-v3.4\source</Filter>
+    </ClCompile>
+    <ClCompile Include="dragonfly-v3.4\source\Block.cpp">
       <Filter>Source Files\dragonfly-v3.4\source</Filter>
     </ClCompile>
   </ItemGroup>
