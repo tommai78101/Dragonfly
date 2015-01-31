@@ -32,50 +32,97 @@ int Player::eventHandler(Event* e){
 	if (e->getType() == DF_KEYBOARD_EVENT){
 		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
 		int key = keyboard->getKey();
+
+		int x = this->getPosition().getX();
+		int y = this->getPosition().getY();
+		int layoutY = (y - this->GameState->PlayerState.minY - 1);
+		int layoutX = (x - this->GameState->PlayerState.minX - 1);
+		int* layout = this->GameState->Stage1.layout;
+		int width = this->GameState->Stage1.width;
+
 		switch (key){
 			case 'a':{
-				int x = this->getPosition().getX();
-				int y = this->getPosition().getY();
-				int layoutX = (x - 2) - this->GameState->PlayerState.minX;
-				int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY - 1;
-				if (layoutX >= 0){
-					int width = this->GameState->Stage1.width;
-					int* layout = this->GameState->Stage1.layout;
-					if (layoutY*width + layoutX > 0){
-						int check = *(layout + (layoutY *width + layoutX));
-						if (check == 0){
-							x--;
+				switch (this->GameState->Board.arrayOrder){
+					case 0:{
+						if (layoutX - 1 >= 0){
+							if (layout[layoutY * width + (layoutX - 1)] == 0){
+								x--;
+								this->GameState->PlayerState.x = x;
+							}
 						}
+						break;
 					}
-					else {
-						l.writeLog("[Player] Error calculating X and Y, size limit is 286, actual value: %d", layoutY*width + layoutX);
+					case 1:{
+						if (layoutY + 1 < this->GameState->Stage1.height){
+							if (layout[(layoutY + 1)*width + layoutX] == 0){
+								y++;
+								this->GameState->PlayerState.y = y;
+							}
+						}
+						break;
+					}
+					case 2:{
+						if (layoutX + 1 < this->GameState->Stage1.width){
+							if (layout[layoutY * width + (layoutX + 1)] == 0){
+								x++;
+								this->GameState->PlayerState.x = x;
+							}
+						}
+						break;
+					}
+					case 3:{
+						if (layoutY - 1 >= 0){
+							if (layout[(layoutY - 1)*width + layoutX] == 0){
+								y--;
+								this->GameState->PlayerState.y = y;
+							}
+						}
+						break;
 					}
 				}
-				this->setPosition(Position(x, this->getPosition().getY()));
-				this->GameState->PlayerState.x = layoutX;
-				this->GameState->PlayerState.y = layoutY;
+				this->setPosition(Position(x, y));
 				break;
 			}
 			case 'd':{
-				int x = this->getPosition().getX();
-				int layoutX = (x) -this->GameState->PlayerState.minX;
-				int width = this->GameState->Stage1.width;
-				int layoutY = this->getPosition().getY() - this->GameState->PlayerState.minY - 1;
-				if (layoutX < width){
-					int* layout = this->GameState->Stage1.layout;
-					if (layoutY*width + layoutX < 286){
-						int check = *(layout + (layoutY *width + layoutX));
-						if (check == 0){
-							x++;
+				switch (this->GameState->Board.arrayOrder){
+					case 0:{
+						if (layoutX + 1 < this->GameState->Stage1.width){
+							if (layout[layoutY * width + (layoutX + 1)] == 0){
+								x++;
+								this->GameState->PlayerState.x = x;
+							}
 						}
+						break;
 					}
-					else {
-						l.writeLog("[Player] Error calculating X and Y, size limit is 286, actual value: %d", layoutY*width + layoutX);
+					case 1:{
+						if (layoutY - 1 >= 0){
+							if (layout[(layoutY - 1)*width + layoutX] == 0){
+								y--;
+								this->GameState->PlayerState.y = y;
+							}
+						}
+						break;
+					}
+					case 2:{
+						if (layoutX - 1 >= 0){
+							if (layout[layoutY*width + (layoutX - 1)] == 0){
+								x--;
+								this->GameState->PlayerState.x = x;
+							}
+						}
+						break;
+					}
+					case 3:{
+						if (layoutY + 1 < this->GameState->Stage1.height){
+							if (layout[(layoutY + 1)* width + layoutX] == 0){
+								y++;
+								this->GameState->PlayerState.y = y;
+							}
+						}
+						break;
 					}
 				}
-				this->setPosition(Position(x, this->getPosition().getY()));
-				this->GameState->PlayerState.x = layoutX;
-				this->GameState->PlayerState.y = layoutY;
+				this->setPosition(Position(x, y));
 				break;
 			}
 			case 'q':{
@@ -111,26 +158,8 @@ int Player::eventHandler(Event* e){
 
 		if (this->GameState && this->GameState->Stage1.layout){
 			//Gravity affected movement.
-			//l.writeLog("Current Order: %d", this->GameState->Board.arrayOrder);
-
-			//TODO(Thompson): Make all of the gravity movements be matching with 1 coordinates system.
-
-
 			switch (this->GameState->Board.arrayOrder){
 				case 0:{
-					//int layoutY = (y - this->GameState->PlayerState.minY - 1);
-					////l.writeLog("Player abs pos: %d, %d  -----  minX, minY, maxX, maxY:  %d, %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minY, this->GameState->PlayerState.maxX, this->GameState->PlayerState.maxY);
-					////l.writeLog("layoutX: %d", layoutY);
-					//if (layoutY + 1 < this->GameState->Stage1.height){
-					//	int layoutX = (x - this->GameState->PlayerState.minX - 1);
-					//	int width = this->GameState->Stage1.width;
-					//	int* layout = this->GameState->Stage1.layout;
-					//	int check = *(layout + ((layoutY + 1)*width + layoutX));
-					//	if (check == 0 && check < 10 && check > -1){
-					//		y++;
-					//	}
-					//	//l.writeLog("layoutX, layoutY, check: %d, %d, %d", layoutX, layoutY, check);
-					//}
 					if (layoutY + 1 < this->GameState->Stage1.height){
 						if (layout[(layoutY + 1)*this->GameState->Stage1.width + layoutX] == 0){
 							y++;
@@ -139,19 +168,6 @@ int Player::eventHandler(Event* e){
 					break;
 				}
 				case 1:{
-					//int layoutX = (x - this->GameState->PlayerState.minX - 1);
-					///*l.writeLog("Player abs pos: %d, %d  -----  minX, minY, maxX, maxY:  %d, %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minY, this->GameState->PlayerState.maxX, this->GameState->PlayerState.maxY);
-					//l.writeLog("layoutX: %d", layoutX);*/
-					//if (layoutX + 1 < this->GameState->Stage1.width){
-					//	int layoutY = (y - this->GameState->PlayerState.minY - 1);
-					//	int width = this->GameState->Stage1.width;
-					//	int check = this->GameState->Stage1.layout[layoutY*width + (layoutX+1)];
-					//	if (check == 0){
-					//		x++;
-					//	}
-					//	//l.writeLog("layoutX, layoutY, check: %d, %d, %d", layoutX, layoutY, check);
-					//}
-
 					if (layoutX + 1 < this->GameState->Stage1.width){
 						if (layout[layoutY*this->GameState->Stage1.width + (layoutX + 1)] == 0){
 							x++;
@@ -160,20 +176,6 @@ int Player::eventHandler(Event* e){
 					break;
 				}
 				case 2:{
-					/*int layoutY = (this->GameState->PlayerState.maxY - y);
-					l.writeLog("Player abs pos: %d, %d  -----  minX, minY, maxX, maxY:  %d, %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minY, this->GameState->PlayerState.maxX, this->GameState->PlayerState.maxY);
-					l.writeLog("layoutY: %d", layoutY);
-					if (layoutY >= 0){
-						int layoutX = (this->GameState->PlayerState.maxX - x);
-						int width = this->GameState->Stage1.width;
-						int* layout = this->GameState->Stage1.layout;
-						int check = *(layout + ((layoutY + 1)*width + layoutX));
-						if (check == 0 && check < 10 && check > -1){
-							y--;
-						}
-						l.writeLog("layoutX, layoutY, check: %d, %d, %d", layoutX, layoutY, check);
-					}*/
-
 					if (layoutY - 1 >= 0){
 						if (layout[(layoutY - 1)*this->GameState->Stage1.width + layoutX] == 0){
 							y--;
@@ -182,17 +184,6 @@ int Player::eventHandler(Event* e){
 					break;
 				}
 				case 3:{
-					//int layoutX = (x - this->GameState->PlayerState.minX - 1);
-					////l.writeLog("Player abs pos: %d, %d  -----  minX, minY, layoutX: %d, %d, %d", x, y, this->GameState->PlayerState.minX, this->GameState->PlayerState.minX, layoutX);
-					//if (layoutX >= 0){
-					//	int layoutY = (y - this->GameState->PlayerState.minY - 1);
-					//	int width = this->GameState->Stage1.width;
-					//	int check = this->GameState->Stage1.layout[layoutY*width + (layoutX - 1)];
-					//	if (check == 0){
-					//		x--;
-					//	}
-					//	//l.writeLog("layoutY, check: %d, %d", layoutY, check);
-					//}
 					if (layoutX - 1 >= 0){
 						if (layout[layoutY * this->GameState->Stage1.width + (layoutX - 1)] == 0){
 							x--;
