@@ -26,10 +26,12 @@ Player::Player(game_state* GameState){
 }
 
 
-//TODO(Thompson): Start working on core mechanics (Rotation!)
 int Player::eventHandler(Event* e){
 	LogManager& l = LogManager::getInstance();
 	if (e->getType() == DF_KEYBOARD_EVENT){
+		if (this->GameState->Board.isRotating){
+			return 1;
+		}
 		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
 		int key = keyboard->getKey();
 
