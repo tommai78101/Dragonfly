@@ -3,6 +3,9 @@
 #include "..\header\Common.h"
 #include "..\header\Game.h"
 
+#define TYPE_BLOCK "Block"
+
+
 class Block : public Object {
 private:
 	game_state* GameState;
