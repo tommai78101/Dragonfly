@@ -2,10 +2,9 @@
 
 Player::Player(game_state* GameState){
 	LogManager& l = LogManager::getInstance();
-	ResourceManager& r = ResourceManager::getInstance();
 	WorldManager& w = WorldManager::getInstance();
-	if (!l.isStarted() || !r.isStarted() || !w.isStarted()){
-		l.writeLog("[Player] Manager was not started. Order by: %s %s %s", BoolToString(l.isStarted()), BoolToString(r.isStarted()), BoolToString(w.isStarted()));
+	if (!l.isStarted() || !w.isStarted()){
+		l.writeLog("[Player] Manager was not started. Order by: %s %s %s", BoolToString(l.isStarted()), BoolToString(w.isStarted()));
 		w.markForDelete(this);
 		return;
 	}
