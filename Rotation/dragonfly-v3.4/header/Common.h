@@ -22,4 +22,10 @@ inline const char* BoolToString(bool value){
 	return value ? "true" : "false";
 }
 
+inline void Assert(bool expression){
+	if (!expression){
+		*(int*) 0 = 0;
+	}
+}
+
 #endif
