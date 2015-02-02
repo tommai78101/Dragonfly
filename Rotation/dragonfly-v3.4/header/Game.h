@@ -15,13 +15,6 @@ struct board {
 	int arrayOrder;
 };
 
-struct stage {
-	int size;
-	int* layout;
-	int width;
-	int height;
-};
-
 struct player_state {
 	int x;
 	int y;
@@ -31,6 +24,18 @@ struct player_state {
 	int minY;
 	int initialX;
 	int initialY;
+};
+
+struct block_state : public player_state {
+	bool isMoving;
+};
+
+struct stage {
+	int size;
+	int* layout;
+	int width;
+	int height;
+	block_state* blocks;
 };
 
 struct game_state {

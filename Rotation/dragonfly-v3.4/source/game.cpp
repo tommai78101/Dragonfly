@@ -15,8 +15,8 @@ Game::Game(Menu* menu){
 }
 
 Game::~Game(){
-	//Object::~Object();
-	delete [] this->GameState.Stage1.layout;
+	delete[] this->GameState.Stage1.layout;
+	delete[] this->GameState.Stage1.blocks;
 }
 
 void Game::initializeGameState(){
@@ -57,6 +57,13 @@ void Game::initializeGameState(){
 			0,0,0,0,0,0,0,0,0,0,0,1,1
 		};
 	}
+	Stage->blocks = (block_state*) new block_state[1]{
+		{}
+	};
+	Stage->blocks[0].initialX = 2;
+	Stage->blocks[0].initialY = 4;
+	Stage->blocks[0].x = Stage->blocks[0].initialX;
+	Stage->blocks[0].y = Stage->blocks[0].initialY;
 
 	this->setCurrentState(State::TUTORIAL);
 

@@ -3,15 +3,19 @@
 Block::Block(game_state* GameState){
 	LogManager& l = LogManager::getInstance();
 	WorldManager& w = WorldManager::getInstance();
-	/*if (!l.isStarted() || !w.isStarted()){
-		TODO(Thompson): Replace these with Asserts().
-	}*/
+
+	Assert(l.isStarted() && w.isStarted());
 
 	setType(TYPE_BLOCK);
 	setTransparency();
 	setSolidness(Solidness::HARD);
 
 	//TODO(Thompson): Add blocks in each stage. Must not have overlapping data in the game state.
+	block_state* blocks = GameState->Stage1.blocks;
+	for (int i = 0; i < ArrayLength(blocks); i++){
+		Position pos(blocks[i].initialX, blocks[i].initialY);
+		setPosition(pos);
+	}
 
 	registerInterest(DF_STEP_EVENT);
 	setVisible(true);
@@ -27,6 +31,8 @@ int Block::eventHandler(Event* e){
 			//TODO(Thompson): Do something to save the block position data.
 			//This data will then be used to draw to the screen.
 			//Must follow the coordinate system used by the Player object.
+
+
 		}
 		return 1;
 	}

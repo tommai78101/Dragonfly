@@ -1,4 +1,4 @@
-#ifndef BLOCK_H.
+#ifndef BLOCK_H
 
 #include "..\header\Common.h"
 #include "..\header\Game.h"
