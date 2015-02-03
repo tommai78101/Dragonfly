@@ -37,10 +37,10 @@ Border::Border(game_state* GameState){
 		//Layout is 13x13.
 
 
-		GameState->PlayerState.minX = w - (tempSprite->getWidth() / 2);
-		GameState->PlayerState.minX = h - (tempSprite->getHeight() / 2);
-		GameState->PlayerState.maxX = w + (tempSprite->getWidth() / 2);
-		GameState->PlayerState.maxY = h + (tempSprite->getHeight() / 2);
+		GameState->Bounds.minX = w - (tempSprite->getWidth() / 2);
+		GameState->Bounds.minX = h - (tempSprite->getHeight() / 2);
+		GameState->Bounds.maxX = w + (tempSprite->getWidth() / 2);
+		GameState->Bounds.maxY = h + (tempSprite->getHeight() / 2);
 	}
 	else {
 		log.writeLog("[Border] Something is wrong with loading the sprite. Aborting.");

@@ -8,6 +8,13 @@
 #define TYPE_GAME "Game"
 #define GAME_TICK_SPEED 5
 
+struct bounds {
+	int minX;
+	int minY;
+	int maxX;
+	int maxY;
+};
+
 struct board {
 	bool rotateCCW;
 	bool rotateCW;
@@ -18,10 +25,6 @@ struct board {
 struct player_state {
 	int x;
 	int y;
-	int maxX;
-	int maxY;
-	int minX;
-	int minY;
 	int initialX;
 	int initialY;
 };
@@ -32,16 +35,17 @@ struct block_state : public player_state {
 
 struct stage {
 	int size;
-	int* layout;
 	int width;
 	int height;
+	int* layout;
 	block_state* blocks;
 };
 
 struct game_state {
+	bounds Bounds;
+	board Board;
 	player_state PlayerState;
 	stage Stage1;
-	board Board;
 };
 
 enum State {

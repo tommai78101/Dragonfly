@@ -40,6 +40,11 @@ void Game::initializeGameState(){
 	Stage->width = 13;
 	Stage->height = 13;
 	Stage->size = Stage->height*Stage->width;
+	Stage->blocks = (block_state*) new block_state[1];
+	Stage->blocks[0].initialX = 2;
+	Stage->blocks[0].initialY = 4;
+	Stage->blocks[0].x = Stage->blocks[0].initialX;
+	Stage->blocks[0].y = Stage->blocks[0].initialY;
 	if (!Stage->layout){
 		Stage->layout = (int*) new int[Stage->size] { 
 			0,0,0,0,0,0,0,0,0,1,0,0,0,
@@ -57,13 +62,6 @@ void Game::initializeGameState(){
 			0,0,0,0,0,0,0,0,0,0,0,1,1
 		};
 	}
-	Stage->blocks = (block_state*) new block_state[1]{
-		{}
-	};
-	Stage->blocks[0].initialX = 2;
-	Stage->blocks[0].initialY = 4;
-	Stage->blocks[0].x = Stage->blocks[0].initialX;
-	Stage->blocks[0].y = Stage->blocks[0].initialY;
 
 	this->setCurrentState(State::TUTORIAL);
 
@@ -214,7 +212,7 @@ void Game::draw(){
 		//Floor function. floor()   := Get a value that is within the array size.
 		//Use the value obtained to draw on the screen.
 		if (Stage->layout){
-			Position posBegin = Position(this->GameState.PlayerState.minX, this->GameState.PlayerState.minY);
+			Position posBegin = Position(this->GameState.Bounds.minX, this->GameState.Bounds.minY);
 
 			//TODO(Thompson): Fix orientation being left-right mirrored.
 			for (int Row = 0; Row < Stage->height; Row++){ 

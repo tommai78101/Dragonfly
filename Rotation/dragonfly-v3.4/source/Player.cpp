@@ -37,8 +37,8 @@ int Player::eventHandler(Event* e){
 
 		int x = this->getPosition().getX();
 		int y = this->getPosition().getY();
-		int layoutY = (y - this->GameState->PlayerState.minY - 1);
-		int layoutX = (x - this->GameState->PlayerState.minX - 1);
+		int layoutY = (y - this->GameState->Bounds.minY - 1);
+		int layoutX = (x - this->GameState->Bounds.minX - 1);
 		int* layout = this->GameState->Stage1.layout;
 		int width = this->GameState->Stage1.width;
 
@@ -154,8 +154,8 @@ int Player::eventHandler(Event* e){
 		//Current location
 		int x = this->getPosition().getX();
 		int y = this->getPosition().getY();
-		int layoutY = (y - this->GameState->PlayerState.minY - 1);
-		int layoutX = (x - this->GameState->PlayerState.minX - 1);
+		int layoutY = (y - this->GameState->Bounds.minY - 1);
+		int layoutX = (x - this->GameState->Bounds.minX - 1);
 		int* layout = this->GameState->Stage1.layout;
 
 		if (this->GameState && this->GameState->Stage1.layout){
@@ -197,17 +197,17 @@ int Player::eventHandler(Event* e){
 		}
 
 		//Checks to see if the location is within bounds.
-		if (x <= this->GameState->PlayerState.minX){
-			x = this->GameState->PlayerState.minX + 1;
+		if (x <= this->GameState->Bounds.minX){
+			x = this->GameState->Bounds.minX + 1;
 		}
-		if (y <= this->GameState->PlayerState.minY){
-			y = this->GameState->PlayerState.minY + 1;
+		if (y <= this->GameState->Bounds.minY){
+			y = this->GameState->Bounds.minY + 1;
 		}
-		if (x > this->GameState->PlayerState.maxX){
-			x = this->GameState->PlayerState.maxX;
+		if (x > this->GameState->Bounds.maxX){
+			x = this->GameState->Bounds.maxX;
 		}
-		if (y > this->GameState->PlayerState.maxY){
-			y = this->GameState->PlayerState.maxY;
+		if (y > this->GameState->Bounds.maxY){
+			y = this->GameState->Bounds.maxY;
 		}
 
 		//Set new position.
@@ -235,27 +235,27 @@ void Player::draw(){
 		}
 		case 1:{
 			int x = this->GameState->PlayerState.x;
-			int newY = this->GameState->PlayerState.minY + (x - this->GameState->PlayerState.minX);
+			int newY = this->GameState->Bounds.minY + (x - this->GameState->Bounds.minX);
 			int y = this->GameState->PlayerState.y;
-			int newX = this->GameState->PlayerState.minX + (this->GameState->PlayerState.maxY - y + 1);
+			int newX = this->GameState->Bounds.minX + (this->GameState->Bounds.maxY - y + 1);
 			Position newPos(newX, newY);
 			g.drawCh(newPos, '@', 0);
 			break;
 		}
 		case 2:{
 			int x = this->GameState->PlayerState.x;
-			int newX = this->GameState->PlayerState.maxX - (x - this->GameState->PlayerState.minX - 1);
+			int newX = this->GameState->Bounds.maxX - (x - this->GameState->Bounds.minX - 1);
 			int y = this->GameState->PlayerState.y;
-			int newY = this->GameState->PlayerState.minY + (this->GameState->PlayerState.maxY - y + 1);
+			int newY = this->GameState->Bounds.minY + (this->GameState->Bounds.maxY - y + 1);
 			Position newPos(newX, newY);
 			g.drawCh(newPos, '@', 0);
 			break;
 		}
 		case 3:{
 			int x = this->GameState->PlayerState.x;
-			int newY = this->GameState->PlayerState.maxY - (x - this->GameState->PlayerState.minX - 1);
+			int newY = this->GameState->Bounds.maxY - (x - this->GameState->Bounds.minX - 1);
 			int y = this->GameState->PlayerState.y;
-			int newX = this->GameState->PlayerState.maxX - (this->GameState->PlayerState.maxY - y);
+			int newX = this->GameState->Bounds.maxX - (this->GameState->Bounds.maxY - y);
 			Position newPos(newX, newY);
 			g.drawCh(newPos, '@', 0);
 			break; 
@@ -277,10 +277,10 @@ void Player::initializeState(game_state* GameState){
 
 void Player::setGameBounds(int x, int y, int w, int h){
 	if (this->GameState){
-		this->GameState->PlayerState.minX = x;
-		this->GameState->PlayerState.minY = y;
-		this->GameState->PlayerState.maxX = w;
-		this->GameState->PlayerState.maxY = h;
+		this->GameState->Bounds.minX = x;
+		this->GameState->Bounds.minY = y;
+		this->GameState->Bounds.maxX = w;
+		this->GameState->Bounds.maxY = h;
 		LogManager& l = LogManager::getInstance();
 		l.writeLog("[Player] Setting game boundaries for left, top, width, and height: %d, %d, %d, %d", x, y, w, h);
 	}
