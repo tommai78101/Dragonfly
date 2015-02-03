@@ -12,8 +12,12 @@ Block::Block(game_state* GameState, int id){
 	setBlockID(id);
 	//TODO(Thompson): Add blocks in each stage. Must not have overlapping data in the game state.
 	block_state* blocks = GameState->Stage1.blocks;
-	Position pos(blocks[id].initialX, blocks[id].initialY);
+	Position pos(blocks[id].initialX + GameState->Bounds.minX, blocks[id].initialY + GameState->Bounds.minY);
+	blocks[id].x = pos.getX();
+	blocks[id].y = pos.getY();
 	setPosition(pos);
+
+	l.writeLog("[block init()] Block pos: %d %d", pos.getX(), pos.getY());
 
 	registerInterest(DF_STEP_EVENT);
 	setVisible(true);

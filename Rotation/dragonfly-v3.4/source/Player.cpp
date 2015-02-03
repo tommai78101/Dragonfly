@@ -275,13 +275,3 @@ void Player::initializeState(game_state* GameState){
 	return;
 }
 
-void Player::setGameBounds(int x, int y, int w, int h){
-	if (this->GameState){
-		this->GameState->Bounds.minX = x;
-		this->GameState->Bounds.minY = y;
-		this->GameState->Bounds.maxX = w;
-		this->GameState->Bounds.maxY = h;
-		LogManager& l = LogManager::getInstance();
-		l.writeLog("[Player] Setting game boundaries for left, top, width, and height: %d, %d, %d, %d", x, y, w, h);
-	}
-}

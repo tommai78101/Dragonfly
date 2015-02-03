@@ -4,6 +4,17 @@
 #include "..\header\Border.h"
 #include "..\header\Block.h"
 
+void setGameBounds(game_state* GameState, int x, int y, int w, int h){
+	if (GameState){
+		GameState->Bounds.minX = x;
+		GameState->Bounds.minY = y;
+		GameState->Bounds.maxX = w;
+		GameState->Bounds.maxY = h;
+		LogManager& l = LogManager::getInstance();
+		l.writeLog("[Game] Setting game boundaries for left, top, width, and height: %d, %d, %d, %d", x, y, w, h);
+	}
+}
+
 Game::Game(Menu* menu){
 	registerInterest(DF_STEP_EVENT);
 	registerInterest(DF_KEYBOARD_EVENT);
@@ -65,11 +76,6 @@ void Game::initializeGameState(){
 		};
 	}
 
-	for (int i = 0; i < Stage->blockStateSize; i++){
-		new Block(&this->GameState, i);
-	}
-	l.writeLog("Block length: %d", ArrayLength(Stage->blocks));
-
 	this->setCurrentState(State::TUTORIAL);
 
 	Player* player = 0;
@@ -110,8 +116,12 @@ void Game::initializeGameState(){
 	Position pos = border->getPosition();
 	int width = border->getWidth() / 2;
 	int height = border->getHeight() / 2;
-	player->setGameBounds(pos.getX() - width, pos.getY() - height, pos.getX() + width-1, pos.getY() + height-1);
+	setGameBounds(&this->GameState, pos.getX() - width, pos.getY() - height, pos.getX() + width-1, pos.getY() + height-1);
 	
+	for (int i = 0; i < Stage->blockStateSize; i++){
+		new Block(&this->GameState, i);
+	}
+
 	l.writeLog("[Game] Finished initializing/resetting game state.");
 
 	border = 0;
