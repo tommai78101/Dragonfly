@@ -54,10 +54,12 @@ void Game::initializeGameState(){
 	Stage->size = Stage->height*Stage->width;
 	Stage->blockStateSize = 1;
 	Stage->blocks = new block_state[Stage->blockStateSize];
-	Stage->blocks[0].initialX = 2;
-	Stage->blocks[0].initialY = 4;
-	Stage->blocks[0].x = Stage->blocks[0].initialX;
-	Stage->blocks[0].y = Stage->blocks[0].initialY;
+	for (int i = 0; i < Stage->blockStateSize; i++){
+		Stage->blocks[i].initialX = 2 + i;
+		Stage->blocks[i].initialY = 4;
+		Stage->blocks[i].x = Stage->blocks[i].initialX;
+		Stage->blocks[i].y = Stage->blocks[i].initialY;
+	}
 	if (!Stage->layout){
 		Stage->layout = (int*) new int[Stage->size] { 
 			0,0,0,0,0,0,0,0,0,1,0,0,0,
@@ -80,8 +82,6 @@ void Game::initializeGameState(){
 
 	Player* player = 0;
 	Border* border = 0;
-
-	//TODO(Thompson): May need to do an inline or something sort.
 	
 	WorldManager& w = WorldManager::getInstance();
 	ObjectList list = w.getAllObjects();

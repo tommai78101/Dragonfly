@@ -3,12 +3,7 @@
 Player::Player(game_state* GameState){
 	LogManager& l = LogManager::getInstance();
 	WorldManager& w = WorldManager::getInstance();
-	//TODO(Thompson): Replace all of these checks with Assert().
-	if (!l.isStarted() || !w.isStarted()){
-		l.writeLog("[Player] Manager was not started. Order by: %s %s %s", BoolToString(l.isStarted()), BoolToString(w.isStarted()));
-		w.markForDelete(this);
-		return;
-	}
+	Assert(l.isStarted() && w.isStarted());
 
 	//No need for a sprite. A simple character will do.
 	setType(TYPE_PLAYER);
