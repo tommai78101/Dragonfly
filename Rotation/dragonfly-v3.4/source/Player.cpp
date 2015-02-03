@@ -32,8 +32,8 @@ int Player::eventHandler(Event* e){
 
 		int x = this->getPosition().getX();
 		int y = this->getPosition().getY();
-		int layoutY = (y - this->GameState->Bounds.minY - 1);
 		int layoutX = (x - this->GameState->Bounds.minX - 1);
+		int layoutY = (y - this->GameState->Bounds.minY - 1);
 		int* layout = this->GameState->Stage1.layout;
 		int width = this->GameState->Stage1.width;
 
