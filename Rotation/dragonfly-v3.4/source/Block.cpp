@@ -1,6 +1,6 @@
 #include "..\header\Block.h"
 
-Block::Block(game_state* GameState){
+Block::Block(game_state* GameState, int id){
 	LogManager& l = LogManager::getInstance();
 	WorldManager& w = WorldManager::getInstance();
 
@@ -9,13 +9,11 @@ Block::Block(game_state* GameState){
 	setType(TYPE_BLOCK);
 	setTransparency();
 	setSolidness(Solidness::HARD);
-
+	setBlockID(id);
 	//TODO(Thompson): Add blocks in each stage. Must not have overlapping data in the game state.
 	block_state* blocks = GameState->Stage1.blocks;
-	for (int i = 0; i < ArrayLength(blocks); i++){
-		Position pos(blocks[i].initialX, blocks[i].initialY);
-		setPosition(pos);
-	}
+	Position pos(blocks[id].initialX, blocks[id].initialY);
+	setPosition(pos);
 
 	registerInterest(DF_STEP_EVENT);
 	setVisible(true);
@@ -46,7 +44,23 @@ void Block::draw(){
 	}
 	LogManager& l = LogManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
+
 	Position pos = this->getPosition();
+	//TODO(Thompson): Do something about falling after rotating the board here.
 	g.drawCh(pos, 'O', 7);
+	l.writeLog("Block pos: %d %d", pos.getX(), pos.getY());
+
+	block_state* blocks = this->GameState->Stage1.blocks;
+	blocks[this->getBlockID()].x = pos.getX();
+	blocks[this->getBlockID()].y = pos.getY();
 	return;
+}
+
+void Block::setBlockID(int value){
+	this->id = value;
+	return;
+}
+
+int Block::getBlockID() const {
+	return this->id;
 }

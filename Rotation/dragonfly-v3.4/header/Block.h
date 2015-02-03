@@ -9,10 +9,14 @@
 class Block : public Object {
 private:
 	game_state* GameState;
+	int id;
 public:
-	Block(game_state* GameState);
+	Block(game_state* GameState, int id);
 	int eventHandler(Event* event);
 	void draw();
+
+	void setBlockID(int value);
+	int getBlockID() const;
 };
 
 #endif

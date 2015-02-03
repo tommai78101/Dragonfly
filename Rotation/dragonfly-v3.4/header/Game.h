@@ -39,6 +39,7 @@ struct stage {
 	int height;
 	int* layout;
 	block_state* blocks;
+	int blockStateSize;
 };
 
 struct game_state {

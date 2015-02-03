@@ -2,6 +2,7 @@
 #include "..\header\Menu.h"
 #include "..\header\Player.h"
 #include "..\header\Border.h"
+#include "..\header\Block.h"
 
 Game::Game(Menu* menu){
 	registerInterest(DF_STEP_EVENT);
@@ -40,7 +41,8 @@ void Game::initializeGameState(){
 	Stage->width = 13;
 	Stage->height = 13;
 	Stage->size = Stage->height*Stage->width;
-	Stage->blocks = (block_state*) new block_state[1];
+	Stage->blockStateSize = 1;
+	Stage->blocks = new block_state[Stage->blockStateSize];
 	Stage->blocks[0].initialX = 2;
 	Stage->blocks[0].initialY = 4;
 	Stage->blocks[0].x = Stage->blocks[0].initialX;
@@ -62,6 +64,11 @@ void Game::initializeGameState(){
 			0,0,0,0,0,0,0,0,0,0,0,1,1
 		};
 	}
+
+	for (int i = 0; i < Stage->blockStateSize; i++){
+		new Block(&this->GameState, i);
+	}
+	l.writeLog("Block length: %d", ArrayLength(Stage->blocks));
 
 	this->setCurrentState(State::TUTORIAL);
 
