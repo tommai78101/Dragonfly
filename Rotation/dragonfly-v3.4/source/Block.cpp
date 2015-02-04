@@ -1,7 +1,5 @@
 #include "..\header\Block.h"
 
-//TODO(Thompson): Continue finishing this check. This is to detect if the block collided with the 
-//player. Another main game mechanic that needs to be fleshed out.
 bool checkPlayerCollision(game_state* GameState, int blockX, int blockY){
 	bool result = true;
 	if (GameState->PlayerState.x == blockX && GameState->PlayerState.y == blockY){
@@ -43,9 +41,6 @@ int Block::eventHandler(Event* e){
 	GraphicsManager& g = GraphicsManager::getInstance();
 	if (e->getType() == DF_STEP_EVENT){
 		if (!this->GameState->Board.isRotating){
-			//TODO(Thompson): Do something to save the block position data.
-			//This data will then be used to draw to the screen.
-			//Must follow the coordinate system used by the Player object.
 			Position pos = this->getPosition();
 			int x = pos.getX();
 			int y = pos.getY();
@@ -114,7 +109,6 @@ int Block::eventHandler(Event* e){
 	return 0;
 }
 
-//TODO(Thompson): Do more testing on drawing the blocks. Requires strenuous testing.
 void Block::draw(){
 	if (this->GameState->Board.isRotating){
 		return;

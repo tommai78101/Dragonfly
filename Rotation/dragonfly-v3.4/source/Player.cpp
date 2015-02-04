@@ -1,6 +1,5 @@
 #include "..\header\Player.h"
 
-//TODO(Thompson): Add player->block collision.
 bool checkBlockCollision(game_state* GameState, int playerX, int playerY){
 	bool result = true;
 	block_state* blocks = GameState->Stage1.blocks;
@@ -31,6 +30,11 @@ Player::Player(game_state* GameState){
 	this->GameState = GameState;
 	setVisible(true);
 	l.writeLog("[Player] Successfully loaded Player entity.");
+}
+
+Player::~Player(){
+	unregisterInterest(DF_KEYBOARD_EVENT);
+	unregisterInterest(DF_STEP_EVENT);
 }
 
 

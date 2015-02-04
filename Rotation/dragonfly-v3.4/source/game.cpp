@@ -224,14 +224,8 @@ void Game::draw(){
 		GraphicsManager& g = GraphicsManager::getInstance();
 
 		stage* Stage = &this->GameState.Stage1;
-		//TODO(Thompson): Fix this rotation issue caused by rectangular arrays.
-		//float(286/square size)    := This is the ratio for pinpointing arrays to the screen.
-		//Floor function. floor()   := Get a value that is within the array size.
-		//Use the value obtained to draw on the screen.
 		if (Stage->layout){
 			Position posBegin = Position(this->GameState.Bounds.minX, this->GameState.Bounds.minY);
-
-			//TODO(Thompson): Fix orientation being left-right mirrored.
 			for (int Row = 0; Row < Stage->height; Row++){ 
 				for (int Column = 0; Column < Stage->width; Column++){
 					int value;

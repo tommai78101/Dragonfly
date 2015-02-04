@@ -41,7 +41,6 @@ Menu::Menu(){
 		setSprite(tempSprite);
 		setSpriteSlowdown(5);
 		setTransparency();
-		//setLocation(CENTER_CENTER);
 		setType(TYPE_MENU);
 		registerInterest(DF_STEP_EVENT);
 		registerInterest(DF_KEYBOARD_EVENT);
