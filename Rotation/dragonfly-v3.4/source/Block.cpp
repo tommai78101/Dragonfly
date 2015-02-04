@@ -3,8 +3,13 @@
 //TODO(Thompson): Continue finishing this check. This is to detect if the block collided with the 
 //player. Another main game mechanic that needs to be fleshed out.
 bool checkPlayerCollision(game_state* GameState, int blockX, int blockY){
+	LogManager& l = LogManager::getInstance();
 	bool result = true;
 	
+	if (GameState->PlayerState.x == blockX && GameState->PlayerState.y == blockY){
+		result = false;
+	}
+
 	return result;
 }
 
@@ -57,7 +62,7 @@ int Block::eventHandler(Event* e){
 				switch (this->GameState->Board.arrayOrder){
 					case 0:{
 						if (layoutY + 1 < height){
-							if (layout[(layoutY + 1) * width + layoutX] == 0 && checkPlayerCollision(this->GameState, layoutX, layoutY)){
+							if (layout[(layoutY + 1) * width + layoutX] == 0 && checkPlayerCollision(this->GameState, x, y+1)){
 								y++;
 							}
 						}
@@ -65,7 +70,7 @@ int Block::eventHandler(Event* e){
 					}
 					case 1:{
 						if (layoutX + 1 < width){
-							if (layout[layoutY * width + (layoutX + 1)] == 0 && checkPlayerCollision(this->GameState, layoutX, layoutY)){
+							if (layout[layoutY * width + (layoutX + 1)] == 0 && checkPlayerCollision(this->GameState, x+1, y)){
 								x++;
 							}
 						}
@@ -73,7 +78,7 @@ int Block::eventHandler(Event* e){
 					}
 					case 2:{
 						if (layoutY - 1 >= 0){
-							if (layout[(layoutY - 1)* width + layoutX] == 0){
+							if (layout[(layoutY - 1)* width + layoutX] == 0 && checkPlayerCollision(this->GameState, x, y-1)){
 								y--;
 							}
 						}
@@ -81,7 +86,7 @@ int Block::eventHandler(Event* e){
 					}
 					case 3:{
 						if (layoutX - 1 >= 0){
-							if (layout[layoutY*width + (layoutX - 1)] == 0){
+							if (layout[layoutY*width + (layoutX - 1)] == 0 && checkPlayerCollision(this->GameState, x-1, y)){
 								x--;
 							}
 						}
@@ -89,6 +94,8 @@ int Block::eventHandler(Event* e){
 					}
 				}
 			}
+
+			l.writeLog("block pos: %d, %d, layout: %d, %d   mins: %d, %d   player: %d, %d", x, y, layoutX, layoutY, GameState->Bounds.minX, GameState->Bounds.minY, GameState->PlayerState.x, GameState->PlayerState.y);
 
 			if (x <= this->GameState->Bounds.minX){
 				x = this->GameState->Bounds.minX + 1;
@@ -102,6 +109,7 @@ int Block::eventHandler(Event* e){
 			if (y > this->GameState->Bounds.maxY){
 				y = this->GameState->Bounds.maxY;
 			}
+
 
 			this->GameState->Stage1.blocks[this->getBlockID()].x = x;
 			this->GameState->Stage1.blocks[this->getBlockID()].y = y;
