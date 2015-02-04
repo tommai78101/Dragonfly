@@ -3,13 +3,10 @@
 //TODO(Thompson): Continue finishing this check. This is to detect if the block collided with the 
 //player. Another main game mechanic that needs to be fleshed out.
 bool checkPlayerCollision(game_state* GameState, int blockX, int blockY){
-	LogManager& l = LogManager::getInstance();
 	bool result = true;
-	
 	if (GameState->PlayerState.x == blockX && GameState->PlayerState.y == blockY){
 		result = false;
 	}
-
 	return result;
 }
 
@@ -95,8 +92,6 @@ int Block::eventHandler(Event* e){
 				}
 			}
 
-			l.writeLog("block pos: %d, %d, layout: %d, %d   mins: %d, %d   player: %d, %d", x, y, layoutX, layoutY, GameState->Bounds.minX, GameState->Bounds.minY, GameState->PlayerState.x, GameState->PlayerState.y);
-
 			if (x <= this->GameState->Bounds.minX){
 				x = this->GameState->Bounds.minX + 1;
 			}
@@ -109,7 +104,6 @@ int Block::eventHandler(Event* e){
 			if (y > this->GameState->Bounds.maxY){
 				y = this->GameState->Bounds.maxY;
 			}
-
 
 			this->GameState->Stage1.blocks[this->getBlockID()].x = x;
 			this->GameState->Stage1.blocks[this->getBlockID()].y = y;

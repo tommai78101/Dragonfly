@@ -1,5 +1,18 @@
 #include "..\header\Player.h"
 
+//TODO(Thompson): Add player->block collision.
+bool checkBlockCollision(game_state* GameState, int playerX, int playerY){
+	bool result = true;
+	block_state* blocks = GameState->Stage1.blocks;
+	for (int i = 0; i<GameState->Stage1.blockStateSize; i++){
+		if (blocks[i].x == playerX && blocks[i].y == playerY){
+			result = false;
+			break;
+		}
+	}
+	return result;
+}
+
 Player::Player(game_state* GameState){
 	LogManager& l = LogManager::getInstance();
 	WorldManager& w = WorldManager::getInstance();
@@ -42,7 +55,7 @@ int Player::eventHandler(Event* e){
 				switch (this->GameState->Board.arrayOrder){
 					case 0:{
 						if (layoutX - 1 >= 0){
-							if (layout[layoutY * width + (layoutX - 1)] == 0){
+							if (layout[layoutY * width + (layoutX - 1)] == 0 && checkBlockCollision(this->GameState, x-1, y)){
 								x--;
 								this->GameState->PlayerState.x = x;
 							}
@@ -51,7 +64,7 @@ int Player::eventHandler(Event* e){
 					}
 					case 1:{
 						if (layoutY + 1 < this->GameState->Stage1.height){
-							if (layout[(layoutY + 1)*width + layoutX] == 0){
+							if (layout[(layoutY + 1)*width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y+1)){
 								y++;
 								this->GameState->PlayerState.y = y;
 							}
@@ -60,7 +73,7 @@ int Player::eventHandler(Event* e){
 					}
 					case 2:{
 						if (layoutX + 1 < this->GameState->Stage1.width){
-							if (layout[layoutY * width + (layoutX + 1)] == 0){
+							if (layout[layoutY * width + (layoutX + 1)] == 0 && checkBlockCollision(this->GameState, x+1, y)){
 								x++;
 								this->GameState->PlayerState.x = x;
 							}
@@ -69,7 +82,7 @@ int Player::eventHandler(Event* e){
 					}
 					case 3:{
 						if (layoutY - 1 >= 0){
-							if (layout[(layoutY - 1)*width + layoutX] == 0){
+							if (layout[(layoutY - 1)*width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y-1)){
 								y--;
 								this->GameState->PlayerState.y = y;
 							}
@@ -84,7 +97,7 @@ int Player::eventHandler(Event* e){
 				switch (this->GameState->Board.arrayOrder){
 					case 0:{
 						if (layoutX + 1 < this->GameState->Stage1.width){
-							if (layout[layoutY * width + (layoutX + 1)] == 0){
+							if (layout[layoutY * width + (layoutX + 1)] == 0 && checkBlockCollision(this->GameState, x+1, y)){
 								x++;
 								this->GameState->PlayerState.x = x;
 							}
@@ -93,7 +106,7 @@ int Player::eventHandler(Event* e){
 					}
 					case 1:{
 						if (layoutY - 1 >= 0){
-							if (layout[(layoutY - 1)*width + layoutX] == 0){
+							if (layout[(layoutY - 1)*width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y-1)){
 								y--;
 								this->GameState->PlayerState.y = y;
 							}
@@ -102,7 +115,7 @@ int Player::eventHandler(Event* e){
 					}
 					case 2:{
 						if (layoutX - 1 >= 0){
-							if (layout[layoutY*width + (layoutX - 1)] == 0){
+							if (layout[layoutY*width + (layoutX - 1)] == 0 && checkBlockCollision(this->GameState, x-1, y)){
 								x--;
 								this->GameState->PlayerState.x = x;
 							}
@@ -111,7 +124,7 @@ int Player::eventHandler(Event* e){
 					}
 					case 3:{
 						if (layoutY + 1 < this->GameState->Stage1.height){
-							if (layout[(layoutY + 1)* width + layoutX] == 0){
+							if (layout[(layoutY + 1)* width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y+1)){
 								y++;
 								this->GameState->PlayerState.y = y;
 							}
@@ -158,7 +171,7 @@ int Player::eventHandler(Event* e){
 			switch (this->GameState->Board.arrayOrder){
 				case 0:{
 					if (layoutY + 1 < this->GameState->Stage1.height){
-						if (layout[(layoutY + 1)*this->GameState->Stage1.width + layoutX] == 0){
+						if (layout[(layoutY + 1)*this->GameState->Stage1.width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y+1)){
 							y++;
 						}
 					}
@@ -166,7 +179,7 @@ int Player::eventHandler(Event* e){
 				}
 				case 1:{
 					if (layoutX + 1 < this->GameState->Stage1.width){
-						if (layout[layoutY*this->GameState->Stage1.width + (layoutX + 1)] == 0){
+						if (layout[layoutY*this->GameState->Stage1.width + (layoutX + 1)] == 0 && checkBlockCollision(this->GameState, x+1, y)){
 							x++;
 						}
 					}
@@ -174,7 +187,7 @@ int Player::eventHandler(Event* e){
 				}
 				case 2:{
 					if (layoutY - 1 >= 0){
-						if (layout[(layoutY - 1)*this->GameState->Stage1.width + layoutX] == 0){
+						if (layout[(layoutY - 1)*this->GameState->Stage1.width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y-1)){
 							y--;
 						}
 					}
@@ -182,7 +195,7 @@ int Player::eventHandler(Event* e){
 				}
 				case 3:{
 					if (layoutX - 1 >= 0){
-						if (layout[layoutY * this->GameState->Stage1.width + (layoutX - 1)] == 0){
+						if (layout[layoutY * this->GameState->Stage1.width + (layoutX - 1)] == 0 && checkBlockCollision(this->GameState, x-1, y)){
 							x--;
 						}
 					}
