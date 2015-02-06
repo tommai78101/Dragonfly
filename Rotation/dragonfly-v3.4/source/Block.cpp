@@ -8,6 +8,21 @@ bool checkPlayerCollision(game_state* GameState, int blockX, int blockY){
 	return result;
 }
 
+bool checkBlockCollision(game_state* GameState, int blockX, int blockY){
+	//blockX, blockY represents the block that is currently being updated on.
+	//Any blocks from GameState must be treated as different from this block being worked on.
+	//If block is the same as this block, continue.
+
+	bool result = true;
+	return result;
+}
+
+bool checkCollision(game_state* GameState, int blockX, int blockY){
+	bool result = true;
+	result = (checkPlayerCollision(GameState, blockX, blockY) && checkBlockCollision(GameState, blockX, blockY));
+	return result;
+}
+
 
 Block::Block(game_state* GameState, int id){
 	LogManager& l = LogManager::getInstance();
@@ -54,7 +69,7 @@ int Block::eventHandler(Event* e){
 				switch (this->GameState->Board.arrayOrder){
 					case 0:{
 						if (layoutY + 1 < height){
-							if (layout[(layoutY + 1) * width + layoutX] == 0 && checkPlayerCollision(this->GameState, x, y+1)){
+							if (layout[(layoutY + 1) * width + layoutX] == 0 && checkCollision(this->GameState, x, y+1)){
 								y++;
 							}
 						}
@@ -62,7 +77,7 @@ int Block::eventHandler(Event* e){
 					}
 					case 1:{
 						if (layoutX + 1 < width){
-							if (layout[layoutY * width + (layoutX + 1)] == 0 && checkPlayerCollision(this->GameState, x+1, y)){
+							if (layout[layoutY * width + (layoutX + 1)] == 0 && checkCollision(this->GameState, x+1, y)){
 								x++;
 							}
 						}
@@ -70,7 +85,7 @@ int Block::eventHandler(Event* e){
 					}
 					case 2:{
 						if (layoutY - 1 >= 0){
-							if (layout[(layoutY - 1)* width + layoutX] == 0 && checkPlayerCollision(this->GameState, x, y-1)){
+							if (layout[(layoutY - 1)* width + layoutX] == 0 && checkCollision(this->GameState, x, y-1)){
 								y--;
 							}
 						}
@@ -78,7 +93,7 @@ int Block::eventHandler(Event* e){
 					}
 					case 3:{
 						if (layoutX - 1 >= 0){
-							if (layout[layoutY*width + (layoutX - 1)] == 0 && checkPlayerCollision(this->GameState, x-1, y)){
+							if (layout[layoutY*width + (layoutX - 1)] == 0 && checkCollision(this->GameState, x-1, y)){
 								x--;
 							}
 						}
