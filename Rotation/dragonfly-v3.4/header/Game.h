@@ -31,6 +31,7 @@ struct player_state {
 
 struct block_state : public player_state {
 	bool isMoving;
+	int id;
 };
 
 struct stage {

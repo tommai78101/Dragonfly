@@ -1,6 +1,6 @@
 #include "..\header\Block.h"
 
-bool checkPlayerCollision(game_state* GameState, int blockX, int blockY){
+bool checkPlayerCollision(game_state* GameState, int blockX, int blockY, int blockID){
 	bool result = true;
 	if (GameState->PlayerState.x == blockX && GameState->PlayerState.y == blockY){
 		result = false;
@@ -8,18 +8,30 @@ bool checkPlayerCollision(game_state* GameState, int blockX, int blockY){
 	return result;
 }
 
-bool checkBlockCollision(game_state* GameState, int blockX, int blockY){
+bool checkBlockCollision(game_state* GameState, int blockX, int blockY, int blockID){
 	//blockX, blockY represents the block that is currently being updated on.
 	//Any blocks from GameState must be treated as different from this block being worked on.
 	//If block is the same as this block, continue.
 
 	bool result = true;
+
+	block_state* Blocks = GameState->Stage1.blocks;
+	for (int i = 0; i < GameState->Stage1.blockStateSize; i++){
+		if (Blocks[i].id == blockID){
+			continue;
+		}
+		if (Blocks[i].x == blockX && Blocks[i].y == blockY){
+			result = false;
+			break;
+		}
+	}
+
 	return result;
 }
 
-bool checkCollision(game_state* GameState, int blockX, int blockY){
+bool checkCollision(game_state* GameState, int blockX, int blockY, int blockID){
 	bool result = true;
-	result = (checkPlayerCollision(GameState, blockX, blockY) && checkBlockCollision(GameState, blockX, blockY));
+	result = (checkPlayerCollision(GameState, blockX, blockY, blockID) && checkBlockCollision(GameState, blockX, blockY, blockID));
 	return result;
 }
 
@@ -39,6 +51,7 @@ Block::Block(game_state* GameState, int id){
 	Position pos(blocks[id].initialX + GameState->Bounds.minX, blocks[id].initialY + GameState->Bounds.minY);
 	blocks[id].x = pos.getX();
 	blocks[id].y = pos.getY();
+	blocks[id].id = id;
 	setPosition(pos);
 
 	l.writeLog("[block init()] Block pos: %d %d", pos.getX(), pos.getY());
@@ -69,7 +82,7 @@ int Block::eventHandler(Event* e){
 				switch (this->GameState->Board.arrayOrder){
 					case 0:{
 						if (layoutY + 1 < height){
-							if (layout[(layoutY + 1) * width + layoutX] == 0 && checkCollision(this->GameState, x, y+1)){
+							if (layout[(layoutY + 1) * width + layoutX] == 0 && checkCollision(this->GameState, x, y+1, this->getBlockID())){
 								y++;
 							}
 						}
@@ -77,7 +90,7 @@ int Block::eventHandler(Event* e){
 					}
 					case 1:{
 						if (layoutX + 1 < width){
-							if (layout[layoutY * width + (layoutX + 1)] == 0 && checkCollision(this->GameState, x+1, y)){
+							if (layout[layoutY * width + (layoutX + 1)] == 0 && checkCollision(this->GameState, x + 1, y, this->getBlockID())){
 								x++;
 							}
 						}
@@ -85,7 +98,7 @@ int Block::eventHandler(Event* e){
 					}
 					case 2:{
 						if (layoutY - 1 >= 0){
-							if (layout[(layoutY - 1)* width + layoutX] == 0 && checkCollision(this->GameState, x, y-1)){
+							if (layout[(layoutY - 1)* width + layoutX] == 0 && checkCollision(this->GameState, x, y - 1, this->getBlockID())){
 								y--;
 							}
 						}
@@ -93,7 +106,7 @@ int Block::eventHandler(Event* e){
 					}
 					case 3:{
 						if (layoutX - 1 >= 0){
-							if (layout[layoutY*width + (layoutX - 1)] == 0 && checkCollision(this->GameState, x-1, y)){
+							if (layout[layoutY*width + (layoutX - 1)] == 0 && checkCollision(this->GameState, x - 1, y, this->getBlockID())){
 								x--;
 							}
 						}
