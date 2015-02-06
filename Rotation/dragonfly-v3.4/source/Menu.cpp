@@ -166,7 +166,6 @@ void Menu::draw(){
 	}
 }
 
-//TODO(Thompson): Find a way to mark the Logo for deletion when the user clicks on "Start Game" or "Quit Game".
 Logo::Logo(Position pos){
 	LogManager& log = LogManager::getInstance();
 	ResourceManager& resource = ResourceManager::getInstance();
