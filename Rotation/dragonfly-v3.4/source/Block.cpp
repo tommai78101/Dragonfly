@@ -54,14 +54,14 @@ Block::Block(game_state* GameState, int id){
 	blocks[id].id = id;
 	setPosition(pos);
 
-	l.writeLog("[block init()] Block pos: %d %d", pos.getX(), pos.getY());
+	l.writeLog("[Block %d] Block pos: %d %d", id, pos.getX(), pos.getY());
 
 	registerInterest(DF_STEP_EVENT);
 	setVisible(true);
 
 	this->GameState = GameState;
 
-	l.writeLog("[Block] Successfully loaded blocks.");
+	l.writeLog("[Block %d] Successfully loaded blocks.", id);
 }
 
 int Block::eventHandler(Event* e){
