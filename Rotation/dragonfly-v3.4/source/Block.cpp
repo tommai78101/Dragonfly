@@ -17,12 +17,11 @@ bool checkBlockCollision(game_state* GameState, int blockX, int blockY, int bloc
 
 	block_state* Blocks = GameState->Stage1.blocks;
 	for (int i = 0; i < GameState->Stage1.blockStateSize; i++){
-		if (Blocks[i].id == blockID){
-			continue;
-		}
-		if (Blocks[i].x == blockX && Blocks[i].y == blockY){
-			result = false;
-			break;
+		if (Blocks[i].id != blockID){
+			if (Blocks[i].x == blockX && Blocks[i].y == blockY){
+				result = false;
+				break;
+			}
 		}
 	}
 

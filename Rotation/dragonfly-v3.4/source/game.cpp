@@ -52,7 +52,7 @@ void Game::initializeGameState(){
 	Stage->width = 13;
 	Stage->height = 13;
 	Stage->size = Stage->height*Stage->width;
-	Stage->blockStateSize = 1;
+	Stage->blockStateSize = 3;
 	Stage->blocks = new block_state[Stage->blockStateSize];
 	for (int i = 0; i < Stage->blockStateSize; i++){
 		Stage->blocks[i].initialX = 2 + i;
