@@ -143,8 +143,6 @@ void Block::draw(){
 	LogManager& l = LogManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
 
-	int width = this->GameState->Stage1.width;
-	int height = this->GameState->Stage1.height;
 	Position pos = this->getPosition();
 	block_state* BlockState = &(this->GameState->Stage1.blocks[this->getBlockID()]);
 

@@ -8,6 +8,7 @@
 
 class Exit : public Object {
 private:
+	game_state* GameState;
 public:
 	Exit(game_state* GameState);
 	~Exit();
