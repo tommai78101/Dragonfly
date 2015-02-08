@@ -3,6 +3,7 @@
 #include "..\header\Player.h"
 #include "..\header\Border.h"
 #include "..\header\Block.h"
+#include "..\header\Exit.h"
 
 void setGameBounds(game_state* GameState, int x, int y, int w, int h){
 	if (GameState){
@@ -63,7 +64,7 @@ void Game::initializeGameState(){
 	if (!Stage->layout){
 		Stage->layout = (int*) new int[Stage->size] { 
 			0,0,0,0,0,0,0,0,0,1,0,0,0,
-			0,0,0,0,0,0,0,0,0,1,0,0,0,
+			0,0,0,0,0,0,0,0,0,1,0,9,0,
 			0,0,0,0,0,0,0,0,0,1,0,0,0,
 			0,0,0,0,0,0,0,0,0,1,1,1,1,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -77,6 +78,20 @@ void Game::initializeGameState(){
 			0,0,0,0,0,0,0,0,0,0,0,1,1
 		};
 	}
+	Stage->exit = {};
+	Stage->exit.isBlocked = false;
+	bool exitCheck = false;
+	for (int i = 0; i < Stage->size; i++){
+		if (Stage->layout[i] == 9){
+			int exitX = i % Stage->width;
+			int exitY = i / Stage->width;
+			Stage->exit.x = exitX;
+			Stage->exit.y = exitY;
+			exitCheck = true;
+			break;
+		}
+	}
+	Assert(exitCheck);
 
 	this->setCurrentState(State::TUTORIAL);
 
@@ -122,6 +137,8 @@ void Game::initializeGameState(){
 		new Block(&this->GameState, i);
 	}
 
+	new Exit(&GameState);
+	
 	l.writeLog("[Game] Finished initializing/resetting game state.");
 
 	border = 0;

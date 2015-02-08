@@ -8,6 +8,12 @@
 #define TYPE_GAME "Game"
 #define GAME_TICK_SPEED 5
 
+struct exit_state{
+	int x;
+	int y;
+	bool isBlocked;
+};
+
 struct bounds {
 	int minX;
 	int minY;
@@ -41,6 +47,7 @@ struct stage {
 	int* layout;
 	block_state* blocks;
 	int blockStateSize;
+	exit_state exit;
 };
 
 struct game_state {
