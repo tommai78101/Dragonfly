@@ -67,9 +67,6 @@ Menu::Menu(){
 Menu::~Menu(){
 	this->unregisterInterest(DF_STEP_EVENT);
 	this->unregisterInterest(DF_KEYBOARD_EVENT);
-
-	GameManager& game = GameManager::getInstance();
-	game.setGameOver();
 }
 
 int Menu::eventHandler(Event* e){
@@ -139,6 +136,8 @@ int Menu::eventHandler(Event* e){
 						obj->setVisible(false);
 						world.markForDelete(obj);
 					}
+					GameManager& game = GameManager::getInstance();
+					game.setGameOver();
 				}
 			}
 		}

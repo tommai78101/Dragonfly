@@ -4,6 +4,7 @@
 #include "..\header\Border.h"
 #include "..\header\Block.h"
 #include "..\header\Exit.h"
+#include "..\header\GameWin.h"
 
 void setGameBounds(game_state* GameState, int x, int y, int w, int h){
 	if (GameState){
@@ -52,7 +53,6 @@ void Game::initializeGameState(){
 	stage* Stage = &this->GameState.Stage1;
 	Stage->width = 13;
 	Stage->height = 13;
-	Stage->win = false;
 	Stage->size = Stage->height*Stage->width;
 	Stage->blockStateSize = 3;
 	Stage->blocks = new block_state[Stage->blockStateSize];
@@ -79,6 +79,11 @@ void Game::initializeGameState(){
 			0,0,0,0,0,0,0,0,0,0,0,1,1
 		};
 	}
+
+	Stage->win = {};
+	Stage->win.win = false;
+	Stage->win.isGameWinCreated = false;
+
 	Stage->exit = {};
 	Stage->exit.isBlocked = false;
 	bool exitCheck = false;
@@ -161,7 +166,13 @@ int Game::eventHandler(Event* e){
 	if (e->getType() == DF_STEP_EVENT){
 		ResourceManager& r = ResourceManager::getInstance();
 		GraphicsManager& g = GraphicsManager::getInstance();
-		if (!this->GameState.Board.isRotating){
+		if (this->GameState.Stage1.win.win){
+			if (!this->GameState.Stage1.win.isGameWinCreated){
+				new GameWin(&this->GameState, this);
+				this->GameState.Stage1.win.isGameWinCreated = true;
+			}
+		}
+		else if (!this->GameState.Board.isRotating){
 			if (this->GameState.Board.rotateCCW){
 				this->GameState.Board.rotateCCW = false;
 				Sprite* rccw = r.getSprite("rotate-ccw");
@@ -207,22 +218,29 @@ int Game::eventHandler(Event* e){
 		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
 		int key = keyboard->getKey();
 		if (key == 'r'){
-			WorldManager& world = WorldManager::getInstance();
-			ObjectList list = world.getAllObjects();
-			for (ObjectListIterator i(&list); !i.isDone(); i.next()){
-				Object* obj = i.currentObject();
-				if ((obj->getType().compare(TYPE_MENU) == 0) || (obj->getType().compare(TYPE_LOGO) == 0)){
-					obj->setVisible(true);
-				}
-				else {
-					obj->setVisible(false);
-				}
+			if (this->GameState.Stage1.win.win){
+				return 0;
 			}
-			this->menu->reset();
+			reset();
 		}
 		return 1;
 	}
 	return 0;
+}
+
+void Game::reset(){
+	WorldManager& world = WorldManager::getInstance();
+	ObjectList list = world.getAllObjects();
+	for (ObjectListIterator i(&list); !i.isDone(); i.next()){
+		Object* obj = i.currentObject();
+		if ((obj->getType().compare(TYPE_MENU) == 0) || (obj->getType().compare(TYPE_LOGO) == 0)){
+			obj->setVisible(true);
+		}
+		else {
+			obj->setVisible(false);
+		}
+	}
+	this->menu->reset();
 }
 
 State Game::getCurrentState(){
@@ -296,4 +314,8 @@ void Game::draw(){
 			this->GameState.PlayerState.y = playerPosY;
 		}
 	}
+}
+
+Menu* Game::getMenu() const {
+	return this->menu;
 }

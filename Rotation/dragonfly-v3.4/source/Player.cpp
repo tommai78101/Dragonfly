@@ -11,7 +11,7 @@ bool checkTile(int* layout, int x, int y, int width, int value){
 bool checkForExit(game_state* GameState, int playerX, int playerY){
 	bool result = false;
 	if ((GameState->Stage1.exit.x == playerX) && (GameState->Stage1.exit.y == playerY)){
-		GameState->Stage1.win = true;
+		GameState->Stage1.win.win = true;
 		result = true;
 	}
 	return result;
@@ -61,7 +61,7 @@ int Player::eventHandler(Event* e){
 		if (this->GameState->Board.isRotating){
 			return 1;
 		}
-		if (this->GameState->Stage1.win){
+		if (this->GameState->Stage1.win.win){
 			return 1;
 		}
 		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
@@ -193,10 +193,10 @@ int Player::eventHandler(Event* e){
 	}
 	else if (e->getType() == DF_STEP_EVENT){
 		if (this->GameState->Board.isRotating){
-			return 1;
+			return 0;
 		}
-		if (this->GameState->Stage1.win){
-			return 1;
+		if (this->GameState->Stage1.win.win){
+			return 0;
 		}
 
 		//Current location

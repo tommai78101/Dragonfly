@@ -8,6 +8,11 @@
 #define TYPE_GAME "Game"
 #define GAME_TICK_SPEED 5
 
+struct win_state {
+	bool win;
+	bool isGameWinCreated;
+};
+
 struct exit_state{
 	int x;
 	int y;
@@ -48,7 +53,7 @@ struct stage {
 	block_state* blocks;
 	int blockStateSize;
 	exit_state exit;
-	bool win;
+	win_state win;
 };
 
 struct game_state {
@@ -79,6 +84,8 @@ public:
 	State getCurrentState();
 	void setCurrentState(State value);
 	void draw();
+	Menu* getMenu() const;
+	void reset();
 };
 
 #endif
