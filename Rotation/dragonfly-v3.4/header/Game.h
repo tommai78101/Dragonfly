@@ -48,6 +48,7 @@ struct stage {
 	block_state* blocks;
 	int blockStateSize;
 	exit_state exit;
+	bool win;
 };
 
 struct game_state {

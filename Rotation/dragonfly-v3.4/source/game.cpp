@@ -52,6 +52,7 @@ void Game::initializeGameState(){
 	stage* Stage = &this->GameState.Stage1;
 	Stage->width = 13;
 	Stage->height = 13;
+	Stage->win = false;
 	Stage->size = Stage->height*Stage->width;
 	Stage->blockStateSize = 3;
 	Stage->blocks = new block_state[Stage->blockStateSize];
@@ -64,10 +65,10 @@ void Game::initializeGameState(){
 	if (!Stage->layout){
 		Stage->layout = (int*) new int[Stage->size] { 
 			0,0,0,0,0,0,0,0,0,1,0,0,0,
-			0,0,0,0,0,0,0,0,0,1,0,9,0,
+			0,0,0,0,0,0,0,0,0,1,0,0,0,
 			0,0,0,0,0,0,0,0,0,1,0,0,0,
 			0,0,0,0,0,0,0,0,0,1,1,1,1,
-			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,9,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,

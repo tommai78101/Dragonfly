@@ -1,5 +1,22 @@
 #include "..\header\Player.h"
 
+bool checkTile(int* layout, int x, int y, int width, int value){
+	bool result = false;
+	if (layout[y * width + x] == value){
+		result = true;
+	}
+	return result;
+}
+
+bool checkForExit(game_state* GameState, int playerX, int playerY){
+	bool result = false;
+	if ((GameState->Stage1.exit.x == playerX) && (GameState->Stage1.exit.y == playerY)){
+		GameState->Stage1.win = true;
+		result = true;
+	}
+	return result;
+}
+
 bool checkBlockCollision(game_state* GameState, int playerX, int playerY){
 	bool result = true;
 	block_state* blocks = GameState->Stage1.blocks;
@@ -44,6 +61,9 @@ int Player::eventHandler(Event* e){
 		if (this->GameState->Board.isRotating){
 			return 1;
 		}
+		if (this->GameState->Stage1.win){
+			return 1;
+		}
 		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
 		int key = keyboard->getKey();
 
@@ -59,7 +79,8 @@ int Player::eventHandler(Event* e){
 				switch (this->GameState->Board.arrayOrder){
 					case 0:{
 						if (layoutX - 1 >= 0){
-							if (layout[layoutY * width + (layoutX - 1)] == 0 && checkBlockCollision(this->GameState, x-1, y)){
+							//if (layout[layoutY * width + (layoutX - 1)] == 0 && checkBlockCollision(this->GameState, x-1, y)){
+							if ((checkTile(layout, layoutX - 1, layoutY, width, 0) || checkTile(layout, layoutX - 1, layoutY, width, 9)) && checkBlockCollision(this->GameState, x - 1, y)){
 								x--;
 								this->GameState->PlayerState.x = x;
 							}
@@ -68,7 +89,8 @@ int Player::eventHandler(Event* e){
 					}
 					case 1:{
 						if (layoutY + 1 < this->GameState->Stage1.height){
-							if (layout[(layoutY + 1)*width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y+1)){
+							//if (layout[(layoutY + 1)*width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y+1)){
+							if ((checkTile(layout, layoutX, layoutY + 1, width, 0) || checkTile(layout, layoutX, layoutY + 1, width, 9)) && checkBlockCollision(this->GameState, x, y + 1)){
 								y++;
 								this->GameState->PlayerState.y = y;
 							}
@@ -77,7 +99,8 @@ int Player::eventHandler(Event* e){
 					}
 					case 2:{
 						if (layoutX + 1 < this->GameState->Stage1.width){
-							if (layout[layoutY * width + (layoutX + 1)] == 0 && checkBlockCollision(this->GameState, x+1, y)){
+							//if (layout[layoutY * width + (layoutX + 1)] == 0 && checkBlockCollision(this->GameState, x+1, y)){
+							if ((checkTile(layout, layoutX+1, layoutY, width, 0) || checkTile(layout, layoutX+1, layoutY, width, 9)) && checkBlockCollision(this->GameState, x + 1, y)){
 								x++;
 								this->GameState->PlayerState.x = x;
 							}
@@ -86,7 +109,8 @@ int Player::eventHandler(Event* e){
 					}
 					case 3:{
 						if (layoutY - 1 >= 0){
-							if (layout[(layoutY - 1)*width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y-1)){
+							//if (layout[(layoutY - 1)*width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y-1)){
+							if ((checkTile(layout, layoutX, layoutY-1, width, 0) || checkTile(layout, layoutX, layoutY-1, width, 9)) && checkBlockCollision(this->GameState, x, y - 1)){
 								y--;
 								this->GameState->PlayerState.y = y;
 							}
@@ -94,14 +118,17 @@ int Player::eventHandler(Event* e){
 						break;
 					}
 				}
-				this->setPosition(Position(x, y));
+				if (!checkForExit(this->GameState, x, y)){
+					this->setPosition(Position(x, y));
+				}
 				break;
 			}
 			case 'd':{
 				switch (this->GameState->Board.arrayOrder){
 					case 0:{
 						if (layoutX + 1 < this->GameState->Stage1.width){
-							if (layout[layoutY * width + (layoutX + 1)] == 0 && checkBlockCollision(this->GameState, x+1, y)){
+							//if (layout[layoutY * width + (layoutX + 1)] == 0 && checkBlockCollision(this->GameState, x+1, y)){
+							if ((checkTile(layout, layoutX+1, layoutY, width, 0) || checkTile(layout, layoutX+1, layoutY, width, 9)) && checkBlockCollision(this->GameState, x + 1, y)){
 								x++;
 								this->GameState->PlayerState.x = x;
 							}
@@ -110,7 +137,8 @@ int Player::eventHandler(Event* e){
 					}
 					case 1:{
 						if (layoutY - 1 >= 0){
-							if (layout[(layoutY - 1)*width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y-1)){
+							//if (layout[(layoutY - 1)*width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y-1)){
+							if ((checkTile(layout, layoutX, layoutY-1, width, 0) || checkTile(layout, layoutX, layoutY-1, width, 9)) && checkBlockCollision(this->GameState, x, y - 1)){
 								y--;
 								this->GameState->PlayerState.y = y;
 							}
@@ -119,7 +147,8 @@ int Player::eventHandler(Event* e){
 					}
 					case 2:{
 						if (layoutX - 1 >= 0){
-							if (layout[layoutY*width + (layoutX - 1)] == 0 && checkBlockCollision(this->GameState, x-1, y)){
+							//if (layout[layoutY*width + (layoutX - 1)] == 0 && checkBlockCollision(this->GameState, x - 1, y)){
+							if ((checkTile(layout, layoutX-1, layoutY, width, 0) || checkTile(layout, layoutX-1, layoutY, width, 9)) && checkBlockCollision(this->GameState, x - 1, y)){
 								x--;
 								this->GameState->PlayerState.x = x;
 							}
@@ -128,7 +157,8 @@ int Player::eventHandler(Event* e){
 					}
 					case 3:{
 						if (layoutY + 1 < this->GameState->Stage1.height){
-							if (layout[(layoutY + 1)* width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y+1)){
+							//if (layout[(layoutY + 1)* width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y+1)){
+							if ((checkTile(layout, layoutX, layoutY+1, width, 0) || checkTile(layout, layoutX, layoutY+1, width, 9)) && checkBlockCollision(this->GameState, x, y + 1)){
 								y++;
 								this->GameState->PlayerState.y = y;
 							}
@@ -136,7 +166,9 @@ int Player::eventHandler(Event* e){
 						break;
 					}
 				}
-				this->setPosition(Position(x, y));
+				if (!checkForExit(this->GameState, x, y)){
+					this->setPosition(Position(x, y));
+				}
 				break;
 			}
 			case 'q':{
@@ -163,6 +195,10 @@ int Player::eventHandler(Event* e){
 		if (this->GameState->Board.isRotating){
 			return 1;
 		}
+		if (this->GameState->Stage1.win){
+			return 1;
+		}
+
 		//Current location
 		int x = this->getPosition().getX();
 		int y = this->getPosition().getY();
