@@ -26,19 +26,22 @@ bool LoadResources(){
 
 	int Result = 0;
 	if ((Result = resource.loadSprite("assets/square_spinning.txt", "square_spinning")) != 0){
-		log.writeLog("[Platform] There's something wrong. Return value: %d", Result);
+		log.writeLog("[Platform - %s] There's something wrong. Return value: %d", "square_spinning", Result);
 	}
 	if ((Result = resource.loadSprite("assets/logo.txt", "logo")) != 0){
-		log.writeLog("[Platform] There's something wrong. Return value: %d", Result);
+		log.writeLog("[Platform - %s] There's something wrong. Return value: %d", "logo", Result);
 	}
 	if ((Result = resource.loadSprite("assets/border.txt", "border")) != 0){
-		log.writeLog("[Platform] There's something wrong. Return value: %d", Result);
+		log.writeLog("[Platform - %s] There's something wrong. Return value: %d", "border", Result);
 	}
 	if ((Result = resource.loadSprite("assets/rotate-ccw.txt", "rotate-ccw")) != 0){
-		log.writeLog("[Platform] There's something wrong. Return value: %d", Result);
+		log.writeLog("[Platform - %s] There's something wrong. Return value: %d", "rotate-ccw", Result);
 	}
 	if ((Result = resource.loadSprite("assets/rotate-cw.txt", "rotate-cw")) != 0){
-		log.writeLog("[Platform] There's something wrong. Return value: %d", Result);
+		log.writeLog("[Platform - %s] There's something wrong. Return value: %d", "rotate-cw", Result);
+	}
+	if ((Result = resource.loadSprite("assets/game-win.txt", "game-win")) != 0){
+		log.writeLog("[Platform - %s] There's something wrong. Return value: %d", "game-win", Result);
 	}
 	return true;
 }
