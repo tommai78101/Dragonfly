@@ -49,12 +49,6 @@ Player::Player(game_state* GameState){
 	l.writeLog("[Player] Successfully loaded Player entity.");
 }
 
-Player::~Player(){
-	unregisterInterest(DF_KEYBOARD_EVENT);
-	unregisterInterest(DF_STEP_EVENT);
-}
-
-
 int Player::eventHandler(Event* e){
 	LogManager& l = LogManager::getInstance();
 	if (e->getType() == DF_KEYBOARD_EVENT){

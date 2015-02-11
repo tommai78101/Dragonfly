@@ -56,29 +56,40 @@ void Game::initializeGameState(){
 	Stage->size = Stage->height*Stage->width;
 	Stage->blockStateSize = 3;
 	Stage->blocks = new block_state[Stage->blockStateSize];
-	for (int i = 0; i < Stage->blockStateSize; i++){
-		Stage->blocks[i].initialX = 2 + i;
-		Stage->blocks[i].initialY = 4;
-		Stage->blocks[i].x = Stage->blocks[i].initialX;
-		Stage->blocks[i].y = Stage->blocks[i].initialY;
-	}
 	if (!Stage->layout){
 		Stage->layout = (int*) new int[Stage->size] { 
 			0,0,0,0,0,0,0,0,0,1,0,0,0,
-			0,0,0,0,0,0,0,0,0,1,0,0,0,
+			0,2,0,0,0,0,0,0,0,1,0,0,0,
 			0,0,0,0,0,0,0,0,0,1,0,0,0,
 			0,0,0,0,0,0,0,0,0,1,1,1,1,
 			0,0,0,0,0,0,0,0,0,0,0,0,9,
+			0,0,0,0,0,0,2,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,
-			0,0,0,0,0,0,0,0,0,0,0,0,0,
-			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,2,0,0,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,0,1,1,
 			0,0,0,0,0,0,0,0,0,0,0,1,1
 		};
 	}
+	for (int i = 0, j = 0; i < Stage->size; i++){
+		if (Stage->layout[i] == 2){
+			if (j < Stage->blockStateSize){
+				Stage->blocks[j].initialX = (i % Stage->width);
+				Stage->blocks[j].initialY = (i / Stage->width);
+				Stage->blocks[j].x = Stage->blocks[i].initialX;
+				Stage->blocks[j].y = Stage->blocks[i].initialY;
+				l.writeLog("[Game Block] pos: %d, %d", Stage->blocks[j].initialX, Stage->blocks[j].initialY);
+				j++;
+				Stage->layout[i] = 0;
+			}
+			else {
+				l.writeLog("[Game] Error: Too many blocks placed in layout. Increase block state size or remove excess blocks.");
+			}
+		}
+	}
+	
 
 	Stage->win = {};
 	Stage->win.win = false;

@@ -10,7 +10,6 @@ private:
 	game_state* GameState;
 public:
 	Player(game_state* GameState);
-	~Player();
 	int eventHandler(Event* e);
 	void draw();
 	void initializeState(game_state* GameState);
