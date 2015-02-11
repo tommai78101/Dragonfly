@@ -11,7 +11,6 @@ Exit::Exit(game_state* GameState){
 	GameState->Stage1.exit.y += GameState->Bounds.minY;
 	Position pos(GameState->Stage1.exit.x, GameState->Stage1.exit.y);
 	setPosition(pos);
-	l.writeLog("[Exit] New position: %d %d", pos.getX(), pos.getY());
 
 	registerInterest(DF_STEP_EVENT);
 	
