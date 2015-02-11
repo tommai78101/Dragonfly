@@ -53,8 +53,6 @@ Block::Block(game_state* GameState, int id){
 	blocks[id].id = id;
 	setPosition(pos);
 
-	l.writeLog("[Block %d] Block pos: %d %d", id, pos.getX(), pos.getY());
-
 	registerInterest(DF_STEP_EVENT);
 	setVisible(true);
 
@@ -71,8 +69,8 @@ int Block::eventHandler(Event* e){
 			Position pos = this->getPosition();
 			int x = pos.getX();
 			int y = pos.getY();
-			int layoutX = (x - this->GameState->Bounds.minX - 1);
-			int layoutY = (y - this->GameState->Bounds.minY - 1);
+			int layoutX = (x - this->GameState->Bounds.minX);
+			int layoutY = (y - this->GameState->Bounds.minY);
 			int* layout = this->GameState->Stage1.layout;
 			int width = this->GameState->Stage1.width;
 			int height = this->GameState->Stage1.height;
@@ -114,11 +112,11 @@ int Block::eventHandler(Event* e){
 				}
 			}
 
-			if (x <= this->GameState->Bounds.minX){
-				x = this->GameState->Bounds.minX + 1;
+			if (x < this->GameState->Bounds.minX){
+				x = this->GameState->Bounds.minX;
 			}
-			if (y <= this->GameState->Bounds.minY){
-				y = this->GameState->Bounds.minY + 1;
+			if (y < this->GameState->Bounds.minY){
+				y = this->GameState->Bounds.minY;
 			}
 			if (x > this->GameState->Bounds.maxX){
 				x = this->GameState->Bounds.maxX;
@@ -143,11 +141,12 @@ void Block::draw(){
 	LogManager& l = LogManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
 
-	Position pos = this->getPosition();
+	//Position pos(this->getPosition().getX(), this->getPosition().getY());
 	block_state* BlockState = &(this->GameState->Stage1.blocks[this->getBlockID()]);
 
 	switch (this->GameState->Board.arrayOrder){
-		case 0:{	
+		case 0:{
+			Position pos(this->getPosition().getX() + 1, this->getPosition().getY() + 1);
 			g.drawCh(pos, 'O', 7);
 			break;
 		}
@@ -155,26 +154,26 @@ void Block::draw(){
 			int x = BlockState->x;
 			int newY = this->GameState->Bounds.minY + (x - this->GameState->Bounds.minX);
 			int y = BlockState->y;
-			int newX = this->GameState->Bounds.minX + (this->GameState->Bounds.maxY - y + 1);
-			Position newPos(newX, newY);
+			int newX = this->GameState->Bounds.minX + (this->GameState->Bounds.maxY - y - 1);
+			Position newPos(newX + 1, newY + 1);
 			g.drawCh(newPos, 'O', 7);
 			break;
 		}
 		case 2:{
 			int x = BlockState->x;
-			int newX = this->GameState->Bounds.maxX - (x - this->GameState->Bounds.minX - 1);
+			int newX = (this->GameState->Bounds.maxX - 1) - (x - this->GameState->Bounds.minX);
 			int y = BlockState->y;
-			int newY = this->GameState->Bounds.minY + (this->GameState->Bounds.maxY - y + 1);
-			Position newPos(newX, newY);
+			int newY = this->GameState->Bounds.minY + ((this->GameState->Bounds.maxY - 1) - y);
+			Position newPos(newX + 1, newY + 1);
 			g.drawCh(newPos, 'O', 7);
 			break;
 		}
 		case 3:{
 			int x = BlockState->x;
-			int newY = this->GameState->Bounds.maxY - (x - this->GameState->Bounds.minX - 1);
+			int newY = (this->GameState->Bounds.maxY-1) - (x - this->GameState->Bounds.minX);
 			int y = BlockState->y;
-			int newX = this->GameState->Bounds.maxX - (this->GameState->Bounds.maxY - y);
-			Position newPos(newX, newY);
+			int newX = (this->GameState->Bounds.maxX-1) - ((this->GameState->Bounds.maxY-1) - y);
+			Position newPos(newX+1, newY+1);
 			g.drawCh(newPos, 'O', 7);
 			break;
 		}

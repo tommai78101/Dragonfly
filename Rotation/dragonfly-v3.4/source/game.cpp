@@ -102,8 +102,8 @@ void Game::initializeGameState(){
 		switch (Stage->layout[i]){
 			case 2: {
 				if (j < Stage->blockStateSize){
-					Stage->blocks[j].initialX = (i % Stage->width) + 1;
-					Stage->blocks[j].initialY = (i / Stage->width) + 1;
+					Stage->blocks[j].initialX = (i % Stage->width);
+					Stage->blocks[j].initialY = (i / Stage->width);
 					Stage->blocks[j].x = Stage->blocks[j].initialX;
 					Stage->blocks[j].y = Stage->blocks[j].initialY;
 					Stage->layout[i] = 0;
