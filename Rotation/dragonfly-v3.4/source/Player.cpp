@@ -66,8 +66,8 @@ int Player::eventHandler(Event* e){
 
 		int x = this->getPosition().getX();
 		int y = this->getPosition().getY();
-		int layoutX = (x - this->GameState->Bounds.minX - 1);
-		int layoutY = (y - this->GameState->Bounds.minY - 1);
+		int layoutX = (x - this->GameState->Bounds.minX);
+		int layoutY = (y - this->GameState->Bounds.minY);
 		int* layout = this->GameState->Stage1.layout;
 		int width = this->GameState->Stage1.width;
 
@@ -199,8 +199,8 @@ int Player::eventHandler(Event* e){
 		//Current location
 		int x = this->getPosition().getX();
 		int y = this->getPosition().getY();
-		int layoutY = (y - this->GameState->Bounds.minY - 1);
-		int layoutX = (x - this->GameState->Bounds.minX - 1);
+		int layoutY = (y - this->GameState->Bounds.minY);
+		int layoutX = (x - this->GameState->Bounds.minX);
 		int* layout = this->GameState->Stage1.layout;
 
 		if (this->GameState && this->GameState->Stage1.layout){
@@ -242,11 +242,11 @@ int Player::eventHandler(Event* e){
 		}
 
 		//Checks to see if the location is within bounds.
-		if (x <= this->GameState->Bounds.minX){
-			x = this->GameState->Bounds.minX + 1;
+		if (x < this->GameState->Bounds.minX){
+			x = this->GameState->Bounds.minX;
 		}
-		if (y <= this->GameState->Bounds.minY){
-			y = this->GameState->Bounds.minY + 1;
+		if (y < this->GameState->Bounds.minY){
+			y = this->GameState->Bounds.minY;
 		}
 		if (x > this->GameState->Bounds.maxX){
 			x = this->GameState->Bounds.maxX;
@@ -272,9 +272,10 @@ void Player::draw(){
 	GraphicsManager& g = GraphicsManager::getInstance();
 	int width = this->GameState->Stage1.width;
 	int height = this->GameState->Stage1.height;
-	Position pos = this->getPosition();
 	switch (this->GameState->Board.arrayOrder){
 		case 0:{
+			Position pos = this->getPosition();
+			pos.setXY(pos.getX() + 1, pos.getY()+1);
 			g.drawCh(pos, '@', 0);
 			break; 
 		}
@@ -282,26 +283,26 @@ void Player::draw(){
 			int x = this->GameState->PlayerState.x;
 			int newY = this->GameState->Bounds.minY + (x - this->GameState->Bounds.minX);
 			int y = this->GameState->PlayerState.y;
-			int newX = this->GameState->Bounds.minX + (this->GameState->Bounds.maxY - y + 1);
-			Position newPos(newX, newY);
+			int newX = this->GameState->Bounds.minX + ((this->GameState->Bounds.maxY-1) - y);
+			Position newPos(newX + 1, newY + 1);
 			g.drawCh(newPos, '@', 0);
 			break;
 		}
 		case 2:{
 			int x = this->GameState->PlayerState.x;
-			int newX = this->GameState->Bounds.maxX - (x - this->GameState->Bounds.minX - 1);
+			int newX = (this->GameState->Bounds.maxX-1) - (x - this->GameState->Bounds.minX);
 			int y = this->GameState->PlayerState.y;
-			int newY = this->GameState->Bounds.minY + (this->GameState->Bounds.maxY - y + 1);
-			Position newPos(newX, newY);
+			int newY = this->GameState->Bounds.minY + ((this->GameState->Bounds.maxY-1) - y);
+			Position newPos(newX + 1, newY + 1);
 			g.drawCh(newPos, '@', 0);
 			break;
 		}
 		case 3:{
 			int x = this->GameState->PlayerState.x;
-			int newY = this->GameState->Bounds.maxY - (x - this->GameState->Bounds.minX - 1);
+			int newY = (this->GameState->Bounds.maxY-1) - (x - this->GameState->Bounds.minX);
 			int y = this->GameState->PlayerState.y;
-			int newX = this->GameState->Bounds.maxX - (this->GameState->Bounds.maxY - y);
-			Position newPos(newX, newY);
+			int newX = (this->GameState->Bounds.maxX-1) - ((this->GameState->Bounds.maxY-1) - y);
+			Position newPos(newX + 1, newY + 1);
 			g.drawCh(newPos, '@', 0);
 			break; 
 		}
