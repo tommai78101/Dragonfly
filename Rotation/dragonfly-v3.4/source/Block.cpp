@@ -28,7 +28,7 @@ bool checkBlockCollision(game_state* GameState, int blockX, int blockY, int bloc
 	return result;
 }
 
-bool checkTile(int tileID){
+static bool checkTile(int tileID){
 	bool result;
 	switch (tileID){
 		case 0: {
