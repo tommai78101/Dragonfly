@@ -152,6 +152,7 @@ void Game::initializeGameState(){
 			int exitY = i / Stage->width;
 			Stage->exit.x = exitX;
 			Stage->exit.y = exitY;
+			Stage->layout[i] = 0;
 			exitCheck = true;
 			break;
 		}

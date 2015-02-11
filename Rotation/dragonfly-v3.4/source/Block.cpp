@@ -28,6 +28,29 @@ bool checkBlockCollision(game_state* GameState, int blockX, int blockY, int bloc
 	return result;
 }
 
+bool checkTile(int tileID){
+	bool result;
+	switch (tileID){
+		case 0: {
+			result = true;
+			break;
+		}
+		case 1: {
+			result = false;
+			break;
+		}
+		case 9: {
+			result = true;
+			break;
+		}
+		default: {
+			result = false;
+			break;
+		}
+	}
+	return result;
+}
+
 bool checkCollision(game_state* GameState, int blockX, int blockY, int blockID){
 	bool result = true;
 	result = (checkPlayerCollision(GameState, blockX, blockY, blockID) && checkBlockCollision(GameState, blockX, blockY, blockID));
@@ -79,7 +102,7 @@ int Block::eventHandler(Event* e){
 				switch (this->GameState->Board.arrayOrder){
 					case 0:{
 						if (layoutY + 1 < height){
-							if (layout[(layoutY + 1) * width + layoutX] == 0 && checkCollision(this->GameState, x, y+1, this->getBlockID())){
+							if (checkTile(layout[(layoutY + 1) * width + layoutX]) && checkCollision(this->GameState, x, y+1, this->getBlockID())){
 								y++;
 							}
 						}
@@ -87,7 +110,7 @@ int Block::eventHandler(Event* e){
 					}
 					case 1:{
 						if (layoutX + 1 < width){
-							if (layout[layoutY * width + (layoutX + 1)] == 0 && checkCollision(this->GameState, x + 1, y, this->getBlockID())){
+							if (checkTile(layout[layoutY * width + (layoutX + 1)]) && checkCollision(this->GameState, x + 1, y, this->getBlockID())){
 								x++;
 							}
 						}
@@ -95,7 +118,7 @@ int Block::eventHandler(Event* e){
 					}
 					case 2:{
 						if (layoutY - 1 >= 0){
-							if (layout[(layoutY - 1)* width + layoutX] == 0 && checkCollision(this->GameState, x, y - 1, this->getBlockID())){
+							if (checkTile(layout[(layoutY - 1)* width + layoutX]) && checkCollision(this->GameState, x, y - 1, this->getBlockID())){
 								y--;
 							}
 						}
@@ -103,7 +126,7 @@ int Block::eventHandler(Event* e){
 					}
 					case 3:{
 						if (layoutX - 1 >= 0){
-							if (layout[layoutY*width + (layoutX - 1)] == 0 && checkCollision(this->GameState, x - 1, y, this->getBlockID())){
+							if (checkTile(layout[layoutY*width + (layoutX - 1)]) && checkCollision(this->GameState, x - 1, y, this->getBlockID())){
 								x--;
 							}
 						}

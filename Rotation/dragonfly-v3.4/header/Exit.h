@@ -9,6 +9,7 @@
 class Exit : public Object {
 private:
 	game_state* GameState;
+	bool isExitActive;
 public:
 	Exit(game_state* GameState);
 	~Exit();

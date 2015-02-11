@@ -9,6 +9,9 @@ bool checkTile(int* layout, int x, int y, int width, int value){
 }
 
 bool checkForExit(game_state* GameState, int playerX, int playerY){
+	if (GameState->Stage1.exit.isBlocked){
+		return false;
+	}
 	bool result = false;
 	if ((GameState->Stage1.exit.x == playerX) && (GameState->Stage1.exit.y == playerY)){
 		GameState->Stage1.win.win = true;

@@ -26,18 +26,30 @@ Exit::~Exit(){
 }
 
 int Exit::eventHandler(Event* e){
-	return 1;
+	if (e->getType().compare(DF_STEP_EVENT) == 0){
+		block_state* Blocks = this->GameState->Stage1.blocks;
+		this->isExitActive = true;
+		this->GameState->Stage1.exit.isBlocked = false;
+		for (int i = 0; i<this->GameState->Stage1.blockStateSize; i++){
+			if (Blocks[i].x == this->GameState->Stage1.exit.x && Blocks[i].y == this->GameState->Stage1.exit.y){
+				this->isExitActive = false;
+				this->GameState->Stage1.exit.isBlocked = true;
+			}
+		}
+		return 1;
+	}
+	return 0;
 }
 
 void Exit::draw(){
-	if (this->GameState->Board.isRotating){
+	if (this->GameState->Board.isRotating || !this->isExitActive){
 		return;
 	}
 	LogManager& l = LogManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
-	Position pos = this->getPosition();
 	switch (this->GameState->Board.arrayOrder){
 		case 0:{
+			Position pos = this->getPosition();
 			g.drawCh(pos, '%', 5);
 			break;
 		}
