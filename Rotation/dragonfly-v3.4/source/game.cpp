@@ -36,17 +36,42 @@ Game::~Game(){
 void Game::initializeGameState(){
 	LogManager& l = LogManager::getInstance();
 
+	Player* player = 0;
+	Border* border = 0;
+
+	WorldManager& w = WorldManager::getInstance();
+	ObjectList list = w.getAllObjects();
+	for (ObjectListIterator i(&list); !i.isDone(); i.next()){
+		Object* obj = i.currentObject();
+		if (obj){
+			if (obj->getType().compare(TYPE_PLAYER) == 0){
+				player = dynamic_cast<Player*>(obj);
+			}
+			else if (obj->getType().compare(TYPE_BORDER) == 0){
+				border = dynamic_cast<Border*>(obj);
+			}
+		}
+	}
+
+
 	this->GameState = {};
-	
+
+	if (border){
+		border->setVisible(true);
+	}
+	else {
+		border = new Border(&GameState);
+	}
+
+	l.writeLog("[Game] Setting player game boundaries.");
+	Position pos = border->getPosition();
+	int borderWidth = border->getWidth() / 2;
+	int borderHeight = border->getHeight() / 2;
+	setGameBounds(&this->GameState, pos.getX() - borderWidth, pos.getY() - borderHeight, pos.getX() + borderWidth - 1, pos.getY() + borderHeight - 1);
+
 	this->GameState.Board = {};
 	this->GameState.Board.arrayOrder = 0;
 	this->GameState.Board.isRotating = false;
-
-	this->GameState.PlayerState = {};
-	this->GameState.PlayerState.initialX = 40;
-	this->GameState.PlayerState.initialY = 16;
-	this->GameState.PlayerState.x = this->GameState.PlayerState.initialX;
-	this->GameState.PlayerState.y = this->GameState.PlayerState.initialY;
 
 	this->GameState.Stage1 = {};
 	//NOTE(Thompson): We're going to go with 13x13 square.
@@ -58,36 +83,59 @@ void Game::initializeGameState(){
 	Stage->blocks = new block_state[Stage->blockStateSize];
 	if (!Stage->layout){
 		Stage->layout = (int*) new int[Stage->size] { 
-			0,0,0,0,0,0,0,0,0,1,0,0,0,
-			0,2,0,0,0,0,0,0,0,1,0,0,0,
-			0,0,0,0,0,0,0,0,0,1,0,0,0,
+			1,1,1,0,0,0,0,0,0,1,0,0,0,
+			1,2,0,0,0,0,0,0,0,1,0,0,0,
+			1,0,0,0,0,0,0,0,0,1,0,0,0,
 			0,0,0,0,0,0,0,0,0,1,1,1,1,
-			0,0,0,0,0,0,0,0,0,0,0,0,9,
-			0,0,0,0,0,0,2,0,0,0,0,0,0,
-			0,0,0,0,0,0,0,0,0,0,0,0,0,
-			0,0,0,0,0,0,0,0,0,0,0,0,0,
-			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,1,0,0,0,0,9,
+			0,0,0,0,0,0,2,1,0,0,0,0,0,
+			0,0,0,0,0,0,1,1,0,0,0,0,0,
+			0,0,0,0,0,0,1,0,0,0,0,0,0,
+			0,0,0,0,8,0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,2,0,0,
-			0,0,0,0,0,0,0,0,0,0,0,0,0,
-			0,0,0,0,0,0,0,0,0,0,0,1,1,
-			0,0,0,0,0,0,0,0,0,0,0,1,1
+			1,1,1,1,1,0,0,0,0,0,0,0,0,
+			0,0,0,0,1,0,0,0,0,0,0,1,1,
+			0,0,0,0,1,0,0,0,0,0,0,1,1
 		};
 	}
 	for (int i = 0, j = 0; i < Stage->size; i++){
-		if (Stage->layout[i] == 2){
-			if (j < Stage->blockStateSize){
-				Stage->blocks[j].initialX = (i % Stage->width);
-				Stage->blocks[j].initialY = (i / Stage->width);
-				Stage->blocks[j].x = Stage->blocks[i].initialX;
-				Stage->blocks[j].y = Stage->blocks[i].initialY;
-				l.writeLog("[Game Block] pos: %d, %d", Stage->blocks[j].initialX, Stage->blocks[j].initialY);
-				j++;
-				Stage->layout[i] = 0;
+		switch (Stage->layout[i]){
+			case 2: {
+				if (j < Stage->blockStateSize){
+					Stage->blocks[j].initialX = (i % Stage->width) + 1;
+					Stage->blocks[j].initialY = (i / Stage->width) + 1;
+					Stage->blocks[j].x = Stage->blocks[j].initialX;
+					Stage->blocks[j].y = Stage->blocks[j].initialY;
+					Stage->layout[i] = 0;
+					int k = Stage->blocks[j].initialX;
+					int n = Stage->blocks[j].initialY;
+					l.writeLog("Found case #2 - %d %d", k, n);
+					j++;
+				}
+				else {
+					l.writeLog("[Game] Error: Too many blocks placed in layout. Increase block state size or remove excess blocks.");
+				}
+				break;
 			}
-			else {
-				l.writeLog("[Game] Error: Too many blocks placed in layout. Increase block state size or remove excess blocks.");
+			case 8: {
+				l.writeLog("Found case #8");
+				this->GameState.PlayerState = {};
+				this->GameState.PlayerState.initialX = (i % Stage->width) + this->GameState.Bounds.minX;
+				this->GameState.PlayerState.initialY = (i / Stage->width) + this->GameState.Bounds.minY;
+				this->GameState.PlayerState.x = this->GameState.PlayerState.initialX;
+				this->GameState.PlayerState.y = this->GameState.PlayerState.initialY;
+				Stage->layout[i] = 0;
+				break;
 			}
 		}
+	}
+
+	if (player){
+		player->setVisible(true);
+		player->initializeState(&GameState);
+	}
+	else {
+		player = new Player(&this->GameState);
 	}
 	
 
@@ -111,44 +159,6 @@ void Game::initializeGameState(){
 	Assert(exitCheck);
 
 	this->setCurrentState(State::TUTORIAL);
-
-	Player* player = 0;
-	Border* border = 0;
-	
-	WorldManager& w = WorldManager::getInstance();
-	ObjectList list = w.getAllObjects();
-	for (ObjectListIterator i(&list); !i.isDone(); i.next()){
-		Object* obj = i.currentObject();
-		if (obj){
-			if (obj->getType().compare(TYPE_PLAYER) == 0){
-				player = dynamic_cast<Player*>(obj);
-			}
-			else if (obj->getType().compare(TYPE_BORDER) == 0){
-				border = dynamic_cast<Border*>(obj);
-			}
-		}
-	}
-
-	if (player){
-		player->setVisible(true);
-		player->initializeState(&GameState);
-	}
-	else {
-		player = new Player(&this->GameState);
-	}
-
-	if (border){
-		border->setVisible(true);
-	}
-	else {
-		border = new Border(&GameState);
-	}
-
-	l.writeLog("[Game] Setting player game boundaries.");
-	Position pos = border->getPosition();
-	int width = border->getWidth() / 2;
-	int height = border->getHeight() / 2;
-	setGameBounds(&this->GameState, pos.getX() - width, pos.getY() - height, pos.getX() + width-1, pos.getY() + height-1);
 	
 	for (int i = 0; i < Stage->blockStateSize; i++){
 		new Block(&this->GameState, i);
