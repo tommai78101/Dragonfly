@@ -221,6 +221,8 @@ int Player::eventHandler(Event* e){
 
 		if (this->GameState && this->GameState->Stage1.layout){
 			//Gravity affected movement.
+			//TODO(Thompson): Make sure when the player falls into the exit, it triggers
+			//the next stage.
 			switch (this->GameState->Board.arrayOrder){
 				case 0:{
 					if (layoutY + 1 < this->GameState->Stage1.height){

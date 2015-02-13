@@ -20,17 +20,22 @@ void setGameBounds(game_state* GameState, int x, int y, int w, int h){
 Game::Game(Menu* menu){
 	registerInterest(DF_STEP_EVENT);
 	registerInterest(DF_KEYBOARD_EVENT);
+
 	this->menu = menu;
 	menu->unregisterInterest(DF_KEYBOARD_EVENT);
 
 	new Pause('p');
 
 	initializeGameState();
+	initializeLevels();
 }
 
 Game::~Game(){
 	delete[] this->GameState.Stage1.layout;
 	delete[] this->GameState.Stage1.blocks;
+
+	delete[] this->levels.stage1;
+	delete[] this->levels.stage2;
 }
 
 void Game::initializeGameState(){
@@ -52,7 +57,6 @@ void Game::initializeGameState(){
 			}
 		}
 	}
-
 
 	this->GameState = {};
 
@@ -98,6 +102,8 @@ void Game::initializeGameState(){
 			0,0,0,0,1,0,0,0,0,0,0,1,1
 		};
 	}
+
+
 	for (int i = 0, j = 0; i < Stage->size; i++){
 		switch (Stage->layout[i]){
 			case 2: {
@@ -340,4 +346,42 @@ void Game::draw(){
 
 Menu* Game::getMenu() const {
 	return this->menu;
+}
+
+void Game::initializeLevels(){
+	Assert(this->GameState.Stage1.layout);
+
+	this->levels = {};
+	this->levels.stage1 = (int*) new int[this->GameState.Stage1.size] {
+		0,0,0,0,0,0,0,0,0,8,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,9,
+		0,0,0,0,0,0,2,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,2,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0
+	};
+	this->levels.stage2 = (int*) new int[this->GameState.Stage1.size] {
+		0,0,0,1,0,0,0,0,0,0,0,0,0,
+		0,2,0,1,0,0,0,0,0,0,0,0,0,
+		0,0,0,1,0,0,0,0,0,0,0,0,0,
+		1,1,1,1,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,9,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		8,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		1,1,1,1,1,0,0,0,0,0,0,0,0,
+		0,2,2,0,1,0,0,0,0,0,0,0,0,
+		0,0,0,0,1,0,0,0,0,0,0,0,0
+	};
+
+	return;
 }

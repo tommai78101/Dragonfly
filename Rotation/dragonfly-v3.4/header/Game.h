@@ -61,6 +61,12 @@ struct game_state {
 	board Board;
 	player_state PlayerState;
 	stage Stage1;
+	int stageLevel;
+};
+
+struct levels {
+	int* stage1;
+	int* stage2;
 };
 
 enum State {
@@ -73,6 +79,7 @@ class Game : public ViewObject{
 private:
 	State state;
 	Menu* menu;
+	levels levels;
 public:
 //members
 	game_state GameState;
@@ -81,6 +88,7 @@ public:
 	~Game();
 	int eventHandler(Event* e);
 	void initializeGameState();
+	void initializeLevels();
 	State getCurrentState();
 	void setCurrentState(State value);
 	void draw();
