@@ -99,8 +99,8 @@ int Game::eventHandler(Event* e){
 				return 0;
 			}
 			reset();
+			return 1;
 		}
-		return 1;
 	}
 	return 0;
 }

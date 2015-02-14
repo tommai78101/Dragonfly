@@ -36,22 +36,18 @@ GameWin::~GameWin(){
 }
 
 int GameWin::eventHandler(Event* e){
+	LogManager& l = LogManager::getInstance();
 	WorldManager& w = WorldManager::getInstance();
 	if (e->getType().compare(DF_KEYBOARD_EVENT) == 0){
-		this->setVisible(false);
-		Event gameWinEvent;
-		gameWinEvent.setType(GAME_WIN_EVENT);
-		w.onEvent(&gameWinEvent);
-		return 1;
-	}
-	else if (e->getType().compare(GAME_WIN_EVENT) == 0){
 		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
-		this->GameState->win.isGameWinCreated = false;
-		this->GameState->win.win = false;
-		this->game->reset();
-		this->game->getMenu()->reset();
-		w.markForDelete(this);
-		return 1;
+		if (keyboard->getKey() == ' '){
+			w.markForDelete(this);
+			this->game->reset();
+			this->setVisible(false);
+			this->GameState->win.isGameWinCreated = false;
+			this->GameState->win.win = false;
+			return 1;
+		}
 	}
 	return 0;
 }

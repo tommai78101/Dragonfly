@@ -12,6 +12,7 @@
 struct win_state {
 	bool win;
 	bool isGameWinCreated;
+	int lastWinningStage;
 };
 
 struct exit_state{

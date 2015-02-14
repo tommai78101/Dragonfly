@@ -30,7 +30,10 @@ bool checkForExit(game_state* GameState, int playerX, int playerY){
 	}
 	bool result = false;
 	if ((GameState->Stage1.exit.x == playerX) && (GameState->Stage1.exit.y == playerY)){
-		GameState->win.win = true;
+		if (GameState->win.lastWinningStage == GameState->stageLevel){
+			GameState->win.win = true;
+			GameState->stageLevel = GameState->stageLevel + 1;
+		}
 		result = true;
 	}
 	return result;

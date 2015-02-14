@@ -6,6 +6,7 @@
 #include "..\header\Border.h"
 #include "..\header\Block.h"
 #include "..\header\Exit.h"
+#include "..\header\GameWin.h"
 
 std::string Info[] {
 		"How to play:                ",
@@ -129,6 +130,7 @@ int Menu::eventHandler(Event* e){
 					this->setVisible(false);
 					bool GameIsInWorld = false;
 					Object* game = 0;
+					Object* gameWin = 0;
 					for (ObjectListIterator i(&list); !i.isDone(); i.next()){
 						Object* obj = i.currentObject();
 						if (obj->getType().compare(TYPE_LOGO) == 0){
@@ -139,6 +141,9 @@ int Menu::eventHandler(Event* e){
 							GameIsInWorld = true;
 							Menu::StartGame = true;
 						}
+						else if (obj->getType().compare(TYPE_GAME_WIN) == 0){
+							gameWin = obj;
+						}
 					}
 				
 					if (!GameIsInWorld || !game){
@@ -148,6 +153,11 @@ int Menu::eventHandler(Event* e){
 						gameObject->initializeLevels(this->GameState.Stage1.size);
 					}
 					else {
+						if (this->GameState.win.win && this->GameState.win.isGameWinCreated && gameWin){
+							gameWin->setVisible(false);
+							world.markForDelete(gameWin);
+							gameWin = 0;
+						}
 						Game* gameObject = dynamic_cast<Game*>(game);
 						gameObject->setVisible(true);
 						this->initializeGameState();
