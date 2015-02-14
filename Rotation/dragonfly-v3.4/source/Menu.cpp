@@ -284,7 +284,7 @@ void Menu::initializeGameState(){
 		border = new Border(&this->GameState);
 	}
 
-	l.writeLog("[Game] Setting player game boundaries.");
+	l.writeLog("[Menu] Setting player game boundaries.");
 	Position pos = border->getPosition();
 	int borderWidth = border->getWidth() / 2;
 	int borderHeight = border->getHeight() / 2;
@@ -391,7 +391,7 @@ void Menu::initializeGameState(){
 
 	new Exit(&this->GameState);
 
-	l.writeLog("[Game] Finished initializing/resetting game state.");
+	l.writeLog("[Menu] Finished initializing/resetting game state.");
 
 	border = 0;
 	player = 0;
