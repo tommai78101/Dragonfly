@@ -30,7 +30,7 @@ bool checkForExit(game_state* GameState, int playerX, int playerY){
 	}
 	bool result = false;
 	if ((GameState->Stage1.exit.x == playerX) && (GameState->Stage1.exit.y == playerY)){
-		GameState->Stage1.win.win = true;
+		GameState->win.win = true;
 		result = true;
 	}
 	return result;
@@ -74,7 +74,7 @@ int Player::eventHandler(Event* e){
 		if (this->GameState->Board.isRotating){
 			return 1;
 		}
-		if (this->GameState->Stage1.win.win){
+		if (this->GameState->win.win){
 			return 1;
 		}
 		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
@@ -202,13 +202,12 @@ int Player::eventHandler(Event* e){
 				return 0;
 			}
 		}
-		return 1;
 	}
 	else if (e->getType() == DF_STEP_EVENT){
 		if (this->GameState->Board.isRotating){
 			return 0;
 		}
-		if (this->GameState->Stage1.win.win){
+		if (this->GameState->win.win){
 			return 0;
 		}
 

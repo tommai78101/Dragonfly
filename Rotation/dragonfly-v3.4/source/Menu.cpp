@@ -2,7 +2,10 @@
 
 #include "..\header\Menu.h"
 #include "..\header\Game.h"
-
+#include "..\header\Player.h"
+#include "..\header\Border.h"
+#include "..\header\Block.h"
+#include "..\header\Exit.h"
 
 std::string Info[] {
 		"How to play:                ",
@@ -22,11 +25,25 @@ std::string Info[] {
 //Remember, w = h = 256, which is large.
 //Our screen buffer w and h is around 256, 80 respectively.
 
+
+void setGameBounds(game_state* GameState, int x, int y, int w, int h){
+	if (GameState){
+		GameState->Bounds.minX = x;
+		GameState->Bounds.minY = y;
+		GameState->Bounds.maxX = w;
+		GameState->Bounds.maxY = h;
+		LogManager& l = LogManager::getInstance();
+		l.writeLog("[Game] Setting game boundaries for left, top, width, and height: %d, %d, %d, %d", x, y, w, h);
+	}
+}
+
+
 Menu::Menu(){
 	LogManager& log = LogManager::getInstance();
 	ResourceManager& resource = ResourceManager::getInstance();
 	GraphicsManager& g = GraphicsManager::getInstance();
 	WorldManager& world = WorldManager::getInstance();
+
 	if (!resource.isStarted() || !g.isStarted() || !world.isStarted()){
 		log.writeLog("[Menu] Something is wrong with manager startups. Order: %s %s %s", 
 		BoolToString(resource.isStarted()), BoolToString(g.isStarted()), BoolToString(world.isStarted()));
@@ -56,6 +73,7 @@ Menu::Menu(){
 		Menu::canSelectOptions = false;
 		Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4 + 2);
 		Menu::StartGame = true;
+
 		log.writeLog("[Menu] Finished loading Menu");
 	}
 	else {
@@ -65,6 +83,8 @@ Menu::Menu(){
 }
 
 Menu::~Menu(){
+	delete[] this->GameState.Stage1.layout;
+	delete[] this->GameState.Stage1.blocks;
 	this->unregisterInterest(DF_STEP_EVENT);
 	this->unregisterInterest(DF_KEYBOARD_EVENT);
 }
@@ -122,12 +142,15 @@ int Menu::eventHandler(Event* e){
 					}
 				
 					if (!GameIsInWorld || !game){
-						new Game(this);
+						Game* gameObject = new Game(this, &this->GameState);
+						gameObject->setVisible(true);
+						this->initializeGameState();
+						gameObject->initializeLevels(this->GameState.Stage1.size);
 					}
 					else {
 						Game* gameObject = dynamic_cast<Game*>(game);
 						gameObject->setVisible(true);
-						gameObject->initializeGameState();
+						this->initializeGameState();
 					}
 				}
 				else {
@@ -219,4 +242,147 @@ void Logo::draw(){
 void Menu::reset(){
 	this->StartGame = true;
 	this->registerInterest(DF_KEYBOARD_EVENT);
+}
+
+
+void Menu::initializeGameState(){
+	LogManager& l = LogManager::getInstance();
+
+	Player* player = 0;
+	Border* border = 0;
+
+	WorldManager& w = WorldManager::getInstance();
+	ObjectList list = w.getAllObjects();
+	for (ObjectListIterator i(&list); !i.isDone(); i.next()){
+		Object* obj = i.currentObject();
+		if (obj){
+			if (obj->getType().compare(TYPE_PLAYER) == 0){
+				player = dynamic_cast<Player*>(obj);
+			}
+			else if (obj->getType().compare(TYPE_BORDER) == 0){
+				border = dynamic_cast<Border*>(obj);
+			}
+		}
+	}
+
+	this->GameState = {};
+
+	if (border){
+		border->setVisible(true);
+	}
+	else {
+		border = new Border(&this->GameState);
+	}
+
+	l.writeLog("[Game] Setting player game boundaries.");
+	Position pos = border->getPosition();
+	int borderWidth = border->getWidth() / 2;
+	int borderHeight = border->getHeight() / 2;
+	setGameBounds(&this->GameState, pos.getX() - borderWidth, pos.getY() - borderHeight, pos.getX() + borderWidth - 1, pos.getY() + borderHeight - 1);
+
+	this->GameState.Board = {};
+	this->GameState.Board.arrayOrder = 0;
+	this->GameState.Board.isRotating = false;
+
+	this->GameState.Stage1 = {};
+	//NOTE(Thompson): We're going to go with 13x13 square.
+	stage* Stage = &this->GameState.Stage1;
+	Stage->width = 13;
+	Stage->height = 13;
+	Stage->size = Stage->height*Stage->width;
+	if (!Stage->layout){
+		Stage->layout = (int*) new int[Stage->size] {
+			1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+			1, 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+			1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
+			0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 9,
+			0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0,
+			1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1,
+			0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1
+		};
+	}
+	Stage->blockStateSize = 0;
+	for (int i = 0; i < Stage->size; i++){
+		if (Stage->layout[i] == 2){
+			Stage->blockStateSize++;
+		}
+	}
+	Stage->blocks = new block_state[Stage->blockStateSize];
+
+	for (int i = 0, j = 0; i < Stage->size; i++){
+		switch (Stage->layout[i]){
+			case 2: {
+				if (j < Stage->blockStateSize){
+					Stage->blocks[j].initialX = (i % Stage->width);
+					Stage->blocks[j].initialY = (i / Stage->width);
+					Stage->blocks[j].x = Stage->blocks[j].initialX;
+					Stage->blocks[j].y = Stage->blocks[j].initialY;
+					Stage->layout[i] = 0;
+					int k = Stage->blocks[j].initialX;
+					int n = Stage->blocks[j].initialY;
+					l.writeLog("Found case #2 - %d %d", k, n);
+					j++;
+				}
+				else {
+					l.writeLog("[Game] Error: Too many blocks placed in layout. Increase block state size or remove excess blocks.");
+				}
+				break;
+			}
+			case 8: {
+				l.writeLog("Found case #8");
+				this->GameState.PlayerState = {};
+				this->GameState.PlayerState.initialX = (i % Stage->width) + this->GameState.Bounds.minX;
+				this->GameState.PlayerState.initialY = (i / Stage->width) + this->GameState.Bounds.minY;
+				this->GameState.PlayerState.x = this->GameState.PlayerState.initialX;
+				this->GameState.PlayerState.y = this->GameState.PlayerState.initialY;
+				Stage->layout[i] = 0;
+				break;
+			}
+		}
+	}
+
+	if (player){
+		player->setVisible(true);
+		player->initializeState(&this->GameState);
+	}
+	else {
+		player = new Player(&this->GameState);
+	}
+
+	this->GameState.win = {};
+	this->GameState.win.win = false;
+	this->GameState.win.isGameWinCreated = false;
+
+	Stage->exit = {};
+	Stage->exit.isBlocked = false;
+	bool exitCheck = false;
+	for (int i = 0; i < Stage->size; i++){
+		if (Stage->layout[i] == 9){
+			int exitX = i % Stage->width;
+			int exitY = i / Stage->width;
+			Stage->exit.x = exitX;
+			Stage->exit.y = exitY;
+			Stage->layout[i] = 0;
+			exitCheck = true;
+			break;
+		}
+	}
+	Assert(exitCheck);
+
+	for (int i = 0; i < Stage->blockStateSize; i++){
+		new Block(&this->GameState, i);
+	}
+
+	new Exit(&this->GameState);
+
+	l.writeLog("[Game] Finished initializing/resetting game state.");
+
+	border = 0;
+	player = 0;
 }

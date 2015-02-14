@@ -8,66 +8,6 @@
 #define TYPE_GAME "Game"
 #define GAME_TICK_SPEED 5
 
-struct win_state {
-	bool win;
-	bool isGameWinCreated;
-};
-
-struct exit_state{
-	int x;
-	int y;
-	bool isBlocked;
-};
-
-struct bounds {
-	int minX;
-	int minY;
-	int maxX;
-	int maxY;
-};
-
-struct board {
-	bool rotateCCW;
-	bool rotateCW;
-	bool isRotating;
-	int arrayOrder;
-};
-
-struct player_state {
-	int x;
-	int y;
-	int initialX;
-	int initialY;
-};
-
-struct block_state : public player_state {
-	bool isMoving;
-	int id;
-};
-
-struct stage {
-	int size;
-	int width;
-	int height;
-	int* layout;
-	block_state* blocks;
-	int blockStateSize;
-	exit_state exit;
-	win_state win;
-};
-
-struct game_state {
-	bounds Bounds;
-	board Board;
-	player_state PlayerState;
-	stage Stage1;
-	int stageLevel;
-};
-
-struct levels {
-	int* stage1;
-	int* stage2;
-};
 
 enum State {
 	TUTORIAL,
@@ -82,13 +22,13 @@ private:
 	levels levels;
 public:
 //members
-	game_state GameState;
+	game_state* GameState;
 //functions
-	Game(Menu* menu);
+	Game(Menu* menu, game_state* GameState);
 	~Game();
 	int eventHandler(Event* e);
-	void initializeGameState();
-	void initializeLevels();
+	
+	void initializeLevels(int size);
 	State getCurrentState();
 	void setCurrentState(State value);
 	void draw();

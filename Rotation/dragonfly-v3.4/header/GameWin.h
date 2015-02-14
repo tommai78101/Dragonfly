@@ -2,6 +2,7 @@
 #define GAMEWIN_H
 
 #define TYPE_GAME_WIN "GameWin"
+#define GAME_WIN_EVENT "__GameWin__"
 
 #include "Common.h"
 #include "Game.h"
