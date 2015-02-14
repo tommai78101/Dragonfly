@@ -43,6 +43,9 @@ bool LoadResources(){
 	if ((Result = resource.loadSprite("assets/game-win.txt", "game-win")) != 0){
 		log.writeLog("[Platform - %s] There's something wrong. Return value: %d", "game-win", Result);
 	}
+	if ((Result = resource.loadSprite("assets/change_levels.txt", "change_levels")) != 0){
+		log.writeLog("[Platform - %s] There's something wrong. Return value: %d", "change_levels", Result);
+	}
 	return true;
 }
 

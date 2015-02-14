@@ -83,8 +83,6 @@ void Game::initializeGameState(){
 	Stage->width = 13;
 	Stage->height = 13;
 	Stage->size = Stage->height*Stage->width;
-	Stage->blockStateSize = 3;
-	Stage->blocks = new block_state[Stage->blockStateSize];
 	if (!Stage->layout){
 		Stage->layout = (int*) new int[Stage->size] { 
 			1,1,1,0,0,0,0,0,0,1,0,0,0,
@@ -102,8 +100,14 @@ void Game::initializeGameState(){
 			0,0,0,0,1,0,0,0,0,0,0,1,1
 		};
 	}
-
-
+	Stage->blockStateSize = 0;
+	for (int i = 0; i < Stage->size; i++){
+		if (Stage->layout[i] == 2){
+			Stage->blockStateSize++;
+		}
+	}
+	Stage->blocks = new block_state[Stage->blockStateSize];
+	
 	for (int i = 0, j = 0; i < Stage->size; i++){
 		switch (Stage->layout[i]){
 			case 2: {
@@ -144,7 +148,6 @@ void Game::initializeGameState(){
 		player = new Player(&this->GameState);
 	}
 	
-
 	Stage->win = {};
 	Stage->win.win = false;
 	Stage->win.isGameWinCreated = false;
@@ -351,8 +354,9 @@ Menu* Game::getMenu() const {
 void Game::initializeLevels(){
 	Assert(this->GameState.Stage1.layout);
 
+	int size = this->GameState.Stage1.size;
 	this->levels = {};
-	this->levels.stage1 = (int*) new int[this->GameState.Stage1.size] {
+	this->levels.stage1 = (int*) new int[size] {
 		0,0,0,0,0,0,0,0,0,8,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -367,7 +371,7 @@ void Game::initializeLevels(){
 		0,0,0,0,0,0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,0,0,0,0,0
 	};
-	this->levels.stage2 = (int*) new int[this->GameState.Stage1.size] {
+	this->levels.stage2 = (int*) new int[size] {
 		0,0,0,1,0,0,0,0,0,0,0,0,0,
 		0,2,0,1,0,0,0,0,0,0,0,0,0,
 		0,0,0,1,0,0,0,0,0,0,0,0,0,
