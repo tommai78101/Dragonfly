@@ -19,7 +19,6 @@ class Game : public ViewObject{
 private:
 	State state;
 	Menu* menu;
-	levels levels;
 public:
 //members
 	game_state* GameState;
@@ -28,7 +27,6 @@ public:
 	~Game();
 	int eventHandler(Event* e);
 	
-	void initializeLevels(int size);
 	State getCurrentState();
 	void setCurrentState(State value);
 	void draw();

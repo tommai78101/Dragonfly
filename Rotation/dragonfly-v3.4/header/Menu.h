@@ -8,11 +8,16 @@
 #define TYPE_MENU "Menu"
 #define TYPE_LOGO "Logo"
 
+struct levels {
+	int size;
+	int* stage1;
+	int* stage2;
+	int* stage3;
+};
 
 struct win_state {
 	bool win;
 	bool isGameWinCreated;
-	int lastWinningStage;
 };
 
 struct exit_state{
@@ -63,16 +68,10 @@ struct game_state {
 	board Board;
 	player_state PlayerState;
 	stage Stage1;
-	int stageLevel;
+	int maxStageLevel;
 	win_state win;
+	levels levels;
 };
-
-struct levels {
-	int size;
-	int* stage1;
-	int* stage2;
-};
-
 
 class Logo : public Object {
 private:
@@ -97,6 +96,8 @@ public:
 	void initializeGameState();
 	void draw();
 	void reset();
+	void initializeLevels(int size);
+	void nextStage();
 };
 
 #endif

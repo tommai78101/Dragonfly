@@ -1,4 +1,5 @@
 #include "..\header\Player.h"
+#include "..\header\GameWin.h"
 
 static bool checkTile(int tileID){
 	bool result;
@@ -30,9 +31,12 @@ bool checkForExit(game_state* GameState, int playerX, int playerY){
 	}
 	bool result = false;
 	if ((GameState->Stage1.exit.x == playerX) && (GameState->Stage1.exit.y == playerY)){
-		if (GameState->win.lastWinningStage == GameState->stageLevel){
+		if (GameState->Stage1.currentStageLevel < GameState->maxStageLevel){
 			GameState->win.win = true;
-			GameState->stageLevel = GameState->stageLevel + 1;
+			GameState->Stage1.currentStageLevel++;
+			Event win;
+			win.setType(GAME_WIN_EVENT);
+			l.onEvent(&win);
 		}
 		result = true;
 	}

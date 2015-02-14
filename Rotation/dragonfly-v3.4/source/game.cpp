@@ -23,8 +23,8 @@ Game::Game(Menu* menu, game_state* GameState){
 }
 
 Game::~Game(){
-	delete[] this->levels.stage1;
-	delete[] this->levels.stage2;
+	unregisterInterest(DF_STEP_EVENT);
+	unregisterInterest(DF_KEYBOARD_EVENT);
 }
 
 
@@ -43,14 +43,16 @@ int Game::eventHandler(Event* e){
 	if (e->getType() == DF_STEP_EVENT){
 		ResourceManager& r = ResourceManager::getInstance();
 		GraphicsManager& g = GraphicsManager::getInstance();
-		if (this->GameState->win.win){
-			if (!this->GameState->win.isGameWinCreated){
-				new GameWin(this->GameState, this);
-				this->GameState->win.isGameWinCreated = true;
+		if (!this->GameState->Board.isRotating){
+			if (this->GameState->win.win){
+				l.writeLog("[GAME DEBUG] hit");
+				if (!this->GameState->win.isGameWinCreated){
+					new GameWin(this->GameState, this);
+					this->GameState->win.isGameWinCreated = true;
+					l.writeLog("[GAME DEBUG] created");
+				}
 			}
-		}
-		else if (!this->GameState->Board.isRotating){
-			if (this->GameState->Board.rotateCCW){
+			else if (this->GameState->Board.rotateCCW){
 				this->GameState->Board.rotateCCW = false;
 				Sprite* rccw = r.getSprite("rotate-ccw");
 				if (rccw){
@@ -106,18 +108,23 @@ int Game::eventHandler(Event* e){
 }
 
 void Game::reset(){
-	WorldManager& world = WorldManager::getInstance();
-	ObjectList list = world.getAllObjects();
-	for (ObjectListIterator i(&list); !i.isDone(); i.next()){
-		Object* obj = i.currentObject();
-		if ((obj->getType().compare(TYPE_MENU) == 0) || (obj->getType().compare(TYPE_LOGO) == 0)){
-			obj->setVisible(true);
-		}
-		else {
-			obj->setVisible(false);
-		}
+	if (GameState->Stage1.currentStageLevel < GameState->maxStageLevel){
+		this->menu->nextStage();
 	}
-	this->menu->reset();
+	else {
+		WorldManager& world = WorldManager::getInstance();
+		ObjectList list = world.getAllObjects();
+		for (ObjectListIterator i(&list); !i.isDone(); i.next()){
+			Object* obj = i.currentObject();
+			if ((obj->getType().compare(TYPE_MENU) == 0) || (obj->getType().compare(TYPE_LOGO) == 0)){
+				obj->setVisible(true);
+			}
+			else {
+				obj->setVisible(false);
+			}
+		}
+		this->menu->reset();
+	}
 }
 
 State Game::getCurrentState(){
@@ -197,43 +204,3 @@ Menu* Game::getMenu() const {
 	return this->menu;
 }
 
-void Game::initializeLevels(int size){
-	this->setCurrentState(State::TUTORIAL);
-
-	Assert(size);
-
-	this->levels = {};
-	this->levels.size = size;
-	this->levels.stage1 = new int[size] {
-		0,0,0,0,0,0,0,0,0,8,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,9,
-		0,0,0,0,0,0,2,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,2,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0
-	};
-	this->levels.stage2 = new int[size] {
-		0,0,0,1,0,0,0,0,0,0,0,0,0,
-		0,2,0,1,0,0,0,0,0,0,0,0,0,
-		0,0,0,1,0,0,0,0,0,0,0,0,0,
-		1,1,1,1,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,9,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		8,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		1,1,1,1,1,0,0,0,0,0,0,0,0,
-		0,2,2,0,1,0,0,0,0,0,0,0,0,
-		0,0,0,0,1,0,0,0,0,0,0,0,0
-	};
-
-	return;
-}

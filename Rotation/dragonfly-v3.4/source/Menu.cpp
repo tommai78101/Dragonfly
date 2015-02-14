@@ -86,6 +86,8 @@ Menu::Menu(){
 Menu::~Menu(){
 	delete[] this->GameState.Stage1.layout;
 	delete[] this->GameState.Stage1.blocks;
+	delete[] this->GameState.levels.stage1;
+	delete[] this->GameState.levels.stage2;
 	this->unregisterInterest(DF_STEP_EVENT);
 	this->unregisterInterest(DF_KEYBOARD_EVENT);
 }
@@ -150,7 +152,6 @@ int Menu::eventHandler(Event* e){
 						Game* gameObject = new Game(this, &this->GameState);
 						gameObject->setVisible(true);
 						this->initializeGameState();
-						gameObject->initializeLevels(this->GameState.Stage1.size);
 					}
 					else {
 						if (this->GameState.win.win && this->GameState.win.isGameWinCreated && gameWin){
@@ -300,24 +301,12 @@ void Menu::initializeGameState(){
 	Stage->width = 13;
 	Stage->height = 13;
 	Stage->size = Stage->height*Stage->width;
-	if (!Stage->layout){
-		Stage->layout = (int*) new int[Stage->size] {
-			1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
-			1, 2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
-			1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1,
-			0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 9,
-			0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0,
-			1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-			0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1,
-			0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1
-		};
-	}
 	Stage->blockStateSize = 0;
+
+	initializeLevels(Stage->size);
+	nextStage();
+
+
 	for (int i = 0; i < Stage->size; i++){
 		if (Stage->layout[i] == 2){
 			Stage->blockStateSize++;
@@ -396,3 +385,80 @@ void Menu::initializeGameState(){
 	border = 0;
 	player = 0;
 }
+
+void Menu::initializeLevels(int size){
+	Assert(size);
+
+	this->GameState.levels = {};
+	this->GameState.levels.size = size;
+	this->GameState.levels.stage1 = new int[size] {
+		1,1,1,0,0,0,0,0,0,1,0,0,0,
+		1,2,0,0,0,0,0,0,0,1,0,0,0,
+		1,0,0,0,0,0,0,0,0,1,0,0,0,
+		0,0,0,0,0,0,0,0,0,1,1,1,1,
+		0,0,0,0,0,0,0,1,0,0,0,0,9,
+		0,0,0,0,0,0,2,1,0,0,0,0,0,
+		0,0,0,0,0,0,1,1,0,0,0,0,0,
+		0,0,0,0,0,0,1,0,0,0,0,0,0,
+		0,0,0,0,8,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,2,0,0,
+		1,1,1,1,1,0,0,0,0,0,0,0,0,
+		0,0,0,0,1,0,0,0,0,0,0,1,1,
+		0,0,0,0,1,0,0,0,0,0,0,1,1
+	};
+	this->GameState.levels.stage2 = new int[size] {
+		0,0,0,0,0,0,0,0,0,8,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,9,
+		0,0,0,0,0,0,2,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,2,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0
+	};
+	this->GameState.levels.stage3 = new int[size]{
+		0,0,0,1,0,0,0,0,0,0,0,0,0,
+		0,2,0,1,0,0,0,0,0,0,0,0,0,
+		0,0,0,1,0,0,0,0,0,0,0,0,0,
+		1,1,1,1,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,9,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		8,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,0,0,0,0,0,
+		1,1,1,1,1,0,0,0,0,0,0,0,0,
+		0,2,2,0,1,0,0,0,0,0,0,0,0,
+		0,0,0,0,1,0,0,0,0,0,0,0,0
+	};
+
+	this->GameState.maxStageLevel = 3;
+	return;
+}
+
+void Menu::nextStage(){
+	switch (this->GameState.Stage1.currentStageLevel){
+		default:{
+			this->GameState.Stage1.layout = this->GameState.levels.stage1;
+			break;		   
+		}				   
+		case 1: {		   
+			this->GameState.Stage1.layout = this->GameState.levels.stage2;
+			break;		   
+		}				   
+		case 2: {		   
+			this->GameState.Stage1.layout = this->GameState.levels.stage3;
+			break;
+		}
+	}
+	return;
+}
+
+
+
+

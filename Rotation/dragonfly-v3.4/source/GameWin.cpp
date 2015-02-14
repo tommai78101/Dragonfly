@@ -19,7 +19,6 @@ GameWin::GameWin(game_state* GameState, Game* game){
 		setPosition(pos);
 
 		registerInterest(DF_KEYBOARD_EVENT);
-		registerInterest(GAME_WIN_EVENT);
 
 		setVisible(true);
 		this->GameState = GameState;
@@ -32,7 +31,6 @@ GameWin::GameWin(game_state* GameState, Game* game){
 
 GameWin::~GameWin(){
 	unregisterInterest(DF_KEYBOARD_EVENT);
-	unregisterInterest(GAME_WIN_EVENT);
 }
 
 int GameWin::eventHandler(Event* e){
@@ -40,7 +38,7 @@ int GameWin::eventHandler(Event* e){
 	WorldManager& w = WorldManager::getInstance();
 	if (e->getType().compare(DF_KEYBOARD_EVENT) == 0){
 		EventKeyboard* keyboard = dynamic_cast<EventKeyboard*>(e);
-		if (keyboard->getKey() == ' '){
+		if (keyboard->getKey() == ' ' || keyboard->getKey() == 'r'){
 			w.markForDelete(this);
 			this->game->reset();
 			this->setVisible(false);
