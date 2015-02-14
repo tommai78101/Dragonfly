@@ -13,6 +13,7 @@ struct levels {
 	int* stage1;
 	int* stage2;
 	int* stage3;
+	int* temp;
 };
 
 struct win_state {

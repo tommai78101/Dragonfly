@@ -436,23 +436,30 @@ void Menu::initializeLevels(int size){
 		0,2,2,0,1,0,0,0,0,0,0,0,0,
 		0,0,0,0,1,0,0,0,0,0,0,0,0
 	};
-
+	this->GameState.levels.temp = new int[size];
 	this->GameState.maxStageLevel = 3;
 	return;
 }
 
 void Menu::nextStage(){
+	this->GameState.Stage1.layout = this->GameState.levels.temp;
 	switch (this->GameState.Stage1.currentStageLevel){
 		default:{
-			this->GameState.Stage1.layout = this->GameState.levels.stage1;
+			for (int i = 0; i < this->GameState.levels.size; i++){
+				this->GameState.levels.temp[i] = this->GameState.levels.stage1[i];
+			}
 			break;		   
 		}				   
 		case 1: {		   
-			this->GameState.Stage1.layout = this->GameState.levels.stage2;
+			for (int i = 0; i < this->GameState.levels.size; i++){
+				this->GameState.levels.temp[i] = this->GameState.levels.stage2[i];
+			}
 			break;		   
 		}				   
 		case 2: {		   
-			this->GameState.Stage1.layout = this->GameState.levels.stage3;
+			for (int i = 0; i < this->GameState.levels.size; i++){
+				this->GameState.levels.temp[i] = this->GameState.levels.stage3[i];
+			}
 			break;
 		}
 	}
