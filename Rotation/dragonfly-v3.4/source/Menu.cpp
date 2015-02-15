@@ -484,6 +484,7 @@ void Menu::nextStage(){
 			break;
 		}
 	}
+	this->GameState.Board = {};
 	return;
 }
 
