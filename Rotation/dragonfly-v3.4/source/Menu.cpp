@@ -325,7 +325,6 @@ void Menu::initializeGameState(){
 					Stage->blocks[j].initialY = (i / Stage->width);
 					Stage->blocks[j].x = Stage->blocks[j].initialX;
 					Stage->blocks[j].y = Stage->blocks[j].initialY;
-					Stage->layout[i] = 0;
 					int k = Stage->blocks[j].initialX;
 					int n = Stage->blocks[j].initialY;
 					j++;
@@ -341,7 +340,6 @@ void Menu::initializeGameState(){
 				this->GameState.PlayerState.initialY = (i / Stage->width) + this->GameState.Bounds.minY;
 				this->GameState.PlayerState.x = this->GameState.PlayerState.initialX;
 				this->GameState.PlayerState.y = this->GameState.PlayerState.initialY;
-				Stage->layout[i] = 0;
 				break;
 			}
 		}
@@ -368,7 +366,6 @@ void Menu::initializeGameState(){
 			int exitY = i / Stage->width;
 			Stage->exit.x = exitX;
 			Stage->exit.y = exitY;
-			//Stage->layout[i] = 0;
 			exitCheck = true;
 			break;
 		}
