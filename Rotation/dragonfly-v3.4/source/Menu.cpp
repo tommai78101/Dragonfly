@@ -423,9 +423,9 @@ void Menu::initializeLevels(){
 			0,0,0,1,0,0,0,0,0,0,0,0,0,
 			0,2,0,1,0,0,0,0,0,0,0,0,0,
 			0,0,0,1,0,0,0,0,0,0,0,0,0,
-			1,1,1,1,0,0,0,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,0,0,1,
 			0,0,0,0,0,0,0,0,0,0,0,0,9,
-			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,1,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,
 			8,0,0,0,0,0,0,0,0,0,0,0,0,
 			0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -482,6 +482,64 @@ void Menu::nextStage(){
 	}
 	this->GameState.Stage1.layout = this->levels.temp;
 	this->GameState.Board = {};
+
+	WorldManager& w = WorldManager::getInstance();
+	ObjectList list = w.getAllObjects();
+	Player* player = 0;
+	for (ObjectListIterator i(&list); !i.isDone(); i.next()){
+		Object* obj = i.currentObject();
+		if (obj->getType().compare(TYPE_BLOCK) == 0){
+			w.markForDelete(obj);
+		}
+		else if (obj->getType().compare(TYPE_PLAYER) == 0){
+			player = dynamic_cast<Player*>(obj);
+		}
+	}
+	delete[] this->GameState.Stage1.blocks;
+
+	stage* Stage = &this->GameState.Stage1;
+	Stage->blockStateSize = 0;
+	for (int i = 0; i < Stage->size; i++){
+		if (Stage->layout[i] == 2){
+			Stage->blockStateSize++;
+		}
+	}
+	Stage->blocks = new block_state[Stage->blockStateSize];
+
+	for (int i = 0, j = 0; i < this->levels.size; i++){
+		switch (this->levels.temp[i]){
+			case 2: {
+				if (j < Stage->blockStateSize){
+					Stage->blocks[j].initialX = (i % Stage->width);
+					Stage->blocks[j].initialY = (i / Stage->width);
+					Stage->blocks[j].x = Stage->blocks[j].initialX;
+					Stage->blocks[j].y = Stage->blocks[j].initialY;
+					int k = Stage->blocks[j].initialX;
+					int n = Stage->blocks[j].initialY;
+					j++;
+				}
+				break;
+			}
+			case 8: {
+				this->GameState.PlayerState = {};
+				this->GameState.PlayerState.initialX = (i % Stage->width) + this->GameState.Bounds.minX;
+				this->GameState.PlayerState.initialY = (i / Stage->width) + this->GameState.Bounds.minY;
+				this->GameState.PlayerState.x = this->GameState.PlayerState.initialX;
+				this->GameState.PlayerState.y = this->GameState.PlayerState.initialY;
+				break;
+			}
+		}
+	}
+
+	if (player){
+		player->setVisible(true);
+		player->initializeState(&this->GameState);
+		player = 0;
+	}
+
+	for (int i = 0; i<Stage->blockStateSize; i++){
+		new Block(&this->GameState, i);
+	}
 	return;
 }
 
