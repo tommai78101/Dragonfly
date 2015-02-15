@@ -39,7 +39,15 @@ static bool checkTile(int tileID){
 			result = false;
 			break;
 		}
+		case 2: {
+			result = true;
+			break;
+		}
 		case 9: {
+			result = true;
+			break;
+		}
+		case 8: {
 			result = true;
 			break;
 		}

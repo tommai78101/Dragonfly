@@ -12,6 +12,14 @@ static bool checkTile(int tileID){
 			result = false;
 			break;
 		}
+		case 2: {
+			result = true;
+			break;
+		}
+		case 8: {
+			result = true;
+			break;
+		}
 		case 9: {
 			result = true;
 			break;
@@ -226,34 +234,38 @@ int Player::eventHandler(Event* e){
 			switch (this->GameState->Board.arrayOrder){
 				case 0:{
 					if (layoutY + 1 < this->GameState->Stage1.height){
-						if (layout[(layoutY + 1)*this->GameState->Stage1.width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y+1)){
+						if (checkTile(layout[(layoutY + 1)*this->GameState->Stage1.width + layoutX]) && checkBlockCollision(this->GameState, x, y+1)){
 							y++;
 						}
 					}
+					l.writeLog("[Player DEBUG] %d", layout[(layoutY + 1)*this->GameState->Stage1.width + layoutX]);
 					break;
 				}
 				case 1:{
 					if (layoutX + 1 < this->GameState->Stage1.width){
-						if (layout[layoutY*this->GameState->Stage1.width + (layoutX + 1)] == 0 && checkBlockCollision(this->GameState, x+1, y)){
+						if (checkTile(layout[layoutY*this->GameState->Stage1.width + (layoutX + 1)]) && checkBlockCollision(this->GameState, x+1, y)){
 							x++;
 						}
 					}
+					l.writeLog("[Player DEBUG] %d", layout[layoutY*this->GameState->Stage1.width + (layoutX + 1)]);
 					break;
 				}
 				case 2:{
 					if (layoutY - 1 >= 0){
-						if (layout[(layoutY - 1)*this->GameState->Stage1.width + layoutX] == 0 && checkBlockCollision(this->GameState, x, y-1)){
+						if (checkTile(layout[(layoutY - 1)*this->GameState->Stage1.width + layoutX]) && checkBlockCollision(this->GameState, x, y-1)){
 							y--;
 						}
 					}
+					l.writeLog("[Player DEBUG] %d", layout[(layoutY - 1)*this->GameState->Stage1.width + layoutX]);
 					break;
 				}
 				case 3:{
 					if (layoutX - 1 >= 0){
-						if (layout[layoutY * this->GameState->Stage1.width + (layoutX - 1)] == 0 && checkBlockCollision(this->GameState, x-1, y)){
+						if (checkTile(layout[layoutY * this->GameState->Stage1.width + (layoutX - 1)]) && checkBlockCollision(this->GameState, x-1, y)){
 							x--;
 						}
 					}
+					l.writeLog("[Player DEBUG] %d", layout[layoutY * this->GameState->Stage1.width + (layoutX - 1)]);
 					break;
 				}
 			}

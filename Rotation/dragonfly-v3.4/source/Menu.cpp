@@ -368,7 +368,7 @@ void Menu::initializeGameState(){
 			int exitY = i / Stage->width;
 			Stage->exit.x = exitX;
 			Stage->exit.y = exitY;
-			Stage->layout[i] = 0;
+			//Stage->layout[i] = 0;
 			exitCheck = true;
 			break;
 		}
@@ -463,7 +463,6 @@ void Menu::initializeLevels(){
 }
 
 void Menu::nextStage(){
-	this->GameState.Stage1.layout = this->levels.temp;
 	switch (this->GameState.Stage1.currentStageLevel){
 		default:{
 			for (int i = 0; i < this->levels.size; i++){
@@ -484,6 +483,7 @@ void Menu::nextStage(){
 			break;
 		}
 	}
+	this->GameState.Stage1.layout = this->levels.temp;
 	this->GameState.Board = {};
 	return;
 }
