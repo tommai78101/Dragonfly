@@ -19,6 +19,7 @@ class Game : public ViewObject{
 private:
 	State state;
 	Menu* menu;
+	bool isResetting;
 public:
 //members
 	game_state* GameState;
@@ -32,6 +33,7 @@ public:
 	void draw();
 	Menu* getMenu() const;
 	void reset();
+	void setGameResetFlag(bool value);
 };
 
 #endif

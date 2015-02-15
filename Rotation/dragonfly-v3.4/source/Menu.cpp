@@ -26,6 +26,8 @@ std::string Info[] {
 //Remember, w = h = 256, which is large.
 //Our screen buffer w and h is around 256, 80 respectively.
 
+//TODO(Thompson): Separate Logo class from Menu. It's now getting in the way.
+
 
 void setGameBounds(game_state* GameState, int x, int y, int w, int h){
 	if (GameState){
@@ -86,8 +88,10 @@ Menu::Menu(){
 Menu::~Menu(){
 	delete[] this->GameState.Stage1.layout;
 	delete[] this->GameState.Stage1.blocks;
-	delete[] this->GameState.levels.stage1;
-	delete[] this->GameState.levels.stage2;
+	delete[] this->levels.stage1;
+	delete[] this->levels.stage2;
+	delete[] this->levels.stage3;
+	delete[] this->levels.temp;
 	this->unregisterInterest(DF_STEP_EVENT);
 	this->unregisterInterest(DF_KEYBOARD_EVENT);
 }
@@ -132,7 +136,6 @@ int Menu::eventHandler(Event* e){
 					this->setVisible(false);
 					bool GameIsInWorld = false;
 					Object* game = 0;
-					Object* gameWin = 0;
 					for (ObjectListIterator i(&list); !i.isDone(); i.next()){
 						Object* obj = i.currentObject();
 						if (obj->getType().compare(TYPE_LOGO) == 0){
@@ -143,26 +146,20 @@ int Menu::eventHandler(Event* e){
 							GameIsInWorld = true;
 							Menu::StartGame = true;
 						}
-						else if (obj->getType().compare(TYPE_GAME_WIN) == 0){
-							gameWin = obj;
-						}
 					}
 				
+					Game* gameObject = 0;
 					if (!GameIsInWorld || !game){
-						Game* gameObject = new Game(this, &this->GameState);
-						gameObject->setVisible(true);
-						this->initializeGameState();
+						gameObject = new Game(this, &this->GameState);
 					}
 					else {
-						if (this->GameState.win.win && this->GameState.win.isGameWinCreated && gameWin){
-							gameWin->setVisible(false);
-							world.markForDelete(gameWin);
-							gameWin = 0;
-						}
-						Game* gameObject = dynamic_cast<Game*>(game);
-						gameObject->setVisible(true);
-						this->initializeGameState();
+						gameObject = dynamic_cast<Game*>(game);
+						gameObject->registerInterest(DF_STEP_EVENT);
 					}
+					gameObject->setVisible(true);
+					gameObject->setGameResetFlag(false);
+					this->initializeGameState();
+					this->unregisterInterest(DF_KEYBOARD_EVENT);
 				}
 				else {
 					for (ObjectListIterator i(&list); !i.isDone(); i.next()){
@@ -251,7 +248,14 @@ void Logo::draw(){
 }
 
 void Menu::reset(){
-	this->StartGame = true;
+	Menu::initalSpin = false;
+	Menu::canSelectOptions = false;
+	GraphicsManager& g = GraphicsManager::getInstance();
+	Menu::cursorPosition = Position(g.getHorizontal() / 4 + 2, (g.getVertical() / 6) * 4 + 2);
+	Menu::StartGame = true;
+
+	this->GameState.Board = {};
+
 	this->registerInterest(DF_KEYBOARD_EVENT);
 }
 
@@ -278,6 +282,8 @@ void Menu::initializeGameState(){
 
 	this->GameState = {};
 
+	initializeLevels();
+
 	if (border){
 		border->setVisible(true);
 	}
@@ -301,12 +307,9 @@ void Menu::initializeGameState(){
 	Stage->width = 13;
 	Stage->height = 13;
 	Stage->size = Stage->height*Stage->width;
-	Stage->blockStateSize = 0;
-
-	initializeLevels(Stage->size);
 	nextStage();
-
-
+	Assert(*(Stage->layout + 4) >= 0);
+	Stage->blockStateSize = 0;
 	for (int i = 0; i < Stage->size; i++){
 		if (Stage->layout[i] == 2){
 			Stage->blockStateSize++;
@@ -325,7 +328,6 @@ void Menu::initializeGameState(){
 					Stage->layout[i] = 0;
 					int k = Stage->blocks[j].initialX;
 					int n = Stage->blocks[j].initialY;
-					l.writeLog("Found case #2 - %d %d", k, n);
 					j++;
 				}
 				else {
@@ -334,7 +336,6 @@ void Menu::initializeGameState(){
 				break;
 			}
 			case 8: {
-				l.writeLog("Found case #8");
 				this->GameState.PlayerState = {};
 				this->GameState.PlayerState.initialX = (i % Stage->width) + this->GameState.Bounds.minX;
 				this->GameState.PlayerState.initialY = (i / Stage->width) + this->GameState.Bounds.minY;
@@ -386,79 +387,99 @@ void Menu::initializeGameState(){
 	player = 0;
 }
 
-void Menu::initializeLevels(int size){
-	Assert(size);
-
-	this->GameState.levels = {};
-	this->GameState.levels.size = size;
-	this->GameState.levels.stage1 = new int[size] {
-		1,1,1,0,0,0,0,0,0,1,0,0,0,
-		1,2,0,0,0,0,0,0,0,1,0,0,0,
-		1,0,0,0,0,0,0,0,0,1,0,0,0,
-		0,0,0,0,0,0,0,0,0,1,1,1,1,
-		0,0,0,0,0,0,0,1,0,0,0,0,9,
-		0,0,0,0,0,0,2,1,0,0,0,0,0,
-		0,0,0,0,0,0,1,1,0,0,0,0,0,
-		0,0,0,0,0,0,1,0,0,0,0,0,0,
-		0,0,0,0,8,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,2,0,0,
-		1,1,1,1,1,0,0,0,0,0,0,0,0,
-		0,0,0,0,1,0,0,0,0,0,0,1,1,
-		0,0,0,0,1,0,0,0,0,0,0,1,1
-	};
-	this->GameState.levels.stage2 = new int[size] {
-		0,0,0,0,0,0,0,0,0,8,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,9,
-		0,0,0,0,0,0,2,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,2,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0
-	};
-	this->GameState.levels.stage3 = new int[size]{
-		0,0,0,1,0,0,0,0,0,0,0,0,0,
-		0,2,0,1,0,0,0,0,0,0,0,0,0,
-		0,0,0,1,0,0,0,0,0,0,0,0,0,
-		1,1,1,1,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,9,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		8,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,0,0,0,0,
-		1,1,1,1,1,0,0,0,0,0,0,0,0,
-		0,2,2,0,1,0,0,0,0,0,0,0,0,
-		0,0,0,0,1,0,0,0,0,0,0,0,0
-	};
-	this->GameState.levels.temp = new int[size];
-	this->GameState.maxStageLevel = 3;
+void Menu::initializeLevels(){
+	if (!this->isLevelInitialized){
+		int size = 13 * 13;
+		this->levels = {};
+		this->levels.size = size;
+		this->levels.stage1 = new int[size] {
+			1,1,1,0,0,0,0,0,0,1,0,0,0,
+			1,2,0,0,0,0,0,0,0,1,0,0,0,
+			1,0,0,0,0,0,0,0,0,1,0,0,0,
+			0,0,0,0,0,0,0,0,0,1,1,1,1,
+			0,0,0,0,0,0,0,1,0,0,0,0,9,
+			0,0,0,0,0,0,2,1,0,0,0,0,0,
+			0,0,0,0,0,0,1,1,0,0,0,0,0,
+			0,0,0,0,0,0,1,0,0,0,0,0,0,
+			0,0,0,0,8,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,2,0,0,
+			1,1,1,1,1,0,0,0,0,0,0,0,0,
+			0,0,0,0,1,0,0,0,0,0,0,1,1,
+			0,0,0,0,1,0,0,0,0,0,0,1,1
+		};
+		this->levels.stage2 = new int[size] {
+			0,0,0,0,0,0,0,0,0,8,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,9,
+			0,0,0,0,0,0,2,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,2,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0
+		};
+		this->levels.stage3 = new int[size]{
+			0,0,0,1,0,0,0,0,0,0,0,0,0,
+			0,2,0,1,0,0,0,0,0,0,0,0,0,
+			0,0,0,1,0,0,0,0,0,0,0,0,0,
+			1,1,1,1,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,9,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			8,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			0,0,0,0,0,0,0,0,0,0,0,0,0,
+			1,1,1,1,1,0,0,0,0,0,0,0,0,
+			0,2,2,0,1,0,0,0,0,0,0,0,0,
+			0,0,0,0,1,0,0,0,0,0,0,0,0
+		};
+		this->levels.temp = new int[size];
+		this->levels.maxStageLevel = 3;
+		this->isLevelInitialized = true;
+	}
+	else {
+		if (this->levels.currentLevel < this->levels.maxStageLevel){
+			this->levels.currentLevel++;
+			this->GameState.Stage1.currentStageLevel = this->levels.currentLevel;
+		}
+		else {
+			WorldManager& w = WorldManager::getInstance();
+			ObjectList l = w.getAllObjects();
+			for (ObjectListIterator i(&l); !i.isDone(); i.next()){
+				Object* o = i.currentObject();
+				if (o->getType().compare(TYPE_GAME) == 0){
+					dynamic_cast<Game*>(o)->reset();
+					break;
+				}
+			}
+			this->reset();
+		}
+	}
 	return;
 }
 
 void Menu::nextStage(){
-	this->GameState.Stage1.layout = this->GameState.levels.temp;
+	this->GameState.Stage1.layout = this->levels.temp;
 	switch (this->GameState.Stage1.currentStageLevel){
 		default:{
-			for (int i = 0; i < this->GameState.levels.size; i++){
-				this->GameState.levels.temp[i] = this->GameState.levels.stage1[i];
+			for (int i = 0; i < this->levels.size; i++){
+				this->levels.temp[i] = this->levels.stage1[i];
 			}
 			break;		   
 		}				   
 		case 1: {		   
-			for (int i = 0; i < this->GameState.levels.size; i++){
-				this->GameState.levels.temp[i] = this->GameState.levels.stage2[i];
+			for (int i = 0; i < this->levels.size; i++){
+				this->levels.temp[i] = this->levels.stage2[i];
 			}
 			break;		   
 		}				   
 		case 2: {		   
-			for (int i = 0; i < this->GameState.levels.size; i++){
-				this->GameState.levels.temp[i] = this->GameState.levels.stage3[i];
+			for (int i = 0; i < this->levels.size; i++){
+				this->levels.temp[i] = this->levels.stage3[i];
 			}
 			break;
 		}
@@ -466,6 +487,11 @@ void Menu::nextStage(){
 	return;
 }
 
+
+
+levels Menu::getLevelState() const{
+	return this->levels;
+}
 
 
 

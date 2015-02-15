@@ -17,6 +17,8 @@ Game::Game(Menu* menu, game_state* GameState){
 
 	this->GameState = GameState;
 
+	this->isResetting = false;
+
 	new Pause('p');
 
 	l.writeLog("[Game] Initializing complete.");
@@ -41,54 +43,71 @@ Game::~Game(){
 int Game::eventHandler(Event* e){
 	LogManager& l = LogManager::getInstance();
 	if (e->getType() == DF_STEP_EVENT){
+		board* Board = &this->GameState->Board;
+		
+		if (this->isResetting){
+			return 0;
+		}
+
 		ResourceManager& r = ResourceManager::getInstance();
 		GraphicsManager& g = GraphicsManager::getInstance();
-		if (!this->GameState->Board.isRotating){
+		if (!Board->isRotating){
 			if (this->GameState->win.win){
-				l.writeLog("[GAME DEBUG] hit");
 				if (!this->GameState->win.isGameWinCreated){
 					new GameWin(this->GameState, this);
 					this->GameState->win.isGameWinCreated = true;
-					l.writeLog("[GAME DEBUG] created");
 				}
 			}
-			else if (this->GameState->Board.rotateCCW){
-				this->GameState->Board.rotateCCW = false;
+			else if (Board->rotateCCW){
+				Board->rotateCCW = false;
 				Sprite* rccw = r.getSprite("rotate-ccw");
 				if (rccw){
 					setSprite(rccw);
 					setSpriteIndex(0);
 					setSpriteSlowdown(3);
 					setPosition(Position(g.getHorizontal()/2, g.getVertical()/2));
-					this->GameState->Board.arrayOrder--;
-					if (this->GameState->Board.arrayOrder < 0){
-						this->GameState->Board.arrayOrder = 3;
+					setVisible(true);
+					Board->arrayOrder--;
+					if (Board->arrayOrder < 0){
+						Board->arrayOrder = 3;
 					}
-					this->GameState->Board.isRotating = true;
+					Board->isRotating = true;
+				}
+				else {
+					l.writeLog("[GAME] Error: Cannot get sprite 'rotate-ccw' from resource manager.");
 				}
 			}
-			else if (this->GameState->Board.rotateCW){
-				this->GameState->Board.rotateCW = false;
+			else if (Board->rotateCW){
+				Board->rotateCW = false;
 				Sprite* rcw = r.getSprite("rotate-cw");
 				if (rcw){
 					setSprite(rcw);
 					setSpriteIndex(0);
 					setSpriteSlowdown(3);
+					setVisible(true);
 					setPosition(Position(g.getHorizontal() / 2, g.getVertical() / 2));
-					this->GameState->Board.arrayOrder++;
-					if (this->GameState->Board.arrayOrder > 3){
-						this->GameState->Board.arrayOrder = 0;
+					Board->arrayOrder++;
+					if (Board->arrayOrder > 3){
+						Board->arrayOrder = 0;
 					}
-					this->GameState->Board.isRotating = true;
+					Board->isRotating = true;
+				}
+				else {
+					l.writeLog("[GAME] Error: Cannot get sprite 'rotate-cw' from resource manager.");
 				}
 			}
 		}
 		else {
 			int index = this->getSpriteIndex();
-			if (index == this->getSprite()->getFrameCount()-1){
-				this->GameState->Board.isRotating = false;
-				this->GameState->Board.rotateCCW = false;
-				this->GameState->Board.rotateCW = false;
+			if (this->getSprite()){
+				if (index == this->getSprite()->getFrameCount()-1){
+					Board->isRotating = false;
+					Board->rotateCCW = false;
+					Board->rotateCW = false;
+				}
+			}
+			else {
+				l.writeLog("[GAME] Error: No sprites set.");
 			}
 		}
 		return 1;
@@ -100,6 +119,7 @@ int Game::eventHandler(Event* e){
 			if (this->GameState->win.win){
 				return 0;
 			}
+			this->isResetting = true;
 			reset();
 			return 1;
 		}
@@ -108,7 +128,9 @@ int Game::eventHandler(Event* e){
 }
 
 void Game::reset(){
-	if (GameState->Stage1.currentStageLevel < GameState->maxStageLevel){
+	if (GameState->Stage1.currentStageLevel < this->menu->getLevelState().maxStageLevel-1 && GameState->win.win){
+		GameState->Stage1.previousStageLevel = GameState->Stage1.currentStageLevel;
+		GameState->Stage1.currentStageLevel++;
 		this->menu->nextStage();
 	}
 	else {
@@ -123,7 +145,9 @@ void Game::reset(){
 				obj->setVisible(false);
 			}
 		}
+		this->menu->registerInterest(DF_KEYBOARD_EVENT);
 		this->menu->reset();
+		this->unregisterInterest(DF_STEP_EVENT);
 	}
 }
 
@@ -203,4 +227,10 @@ void Game::draw(){
 Menu* Game::getMenu() const {
 	return this->menu;
 }
+
+void Game::setGameResetFlag(bool value){
+	this->isResetting = value;
+	return;
+}
+
 

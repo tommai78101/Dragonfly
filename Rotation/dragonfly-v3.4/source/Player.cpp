@@ -31,13 +31,7 @@ bool checkForExit(game_state* GameState, int playerX, int playerY){
 	}
 	bool result = false;
 	if ((GameState->Stage1.exit.x == playerX) && (GameState->Stage1.exit.y == playerY)){
-		if (GameState->Stage1.currentStageLevel < GameState->maxStageLevel){
-			GameState->win.win = true;
-			GameState->Stage1.currentStageLevel++;
-			Event win;
-			win.setType(GAME_WIN_EVENT);
-			l.onEvent(&win);
-		}
+		GameState->win.win = true;
 		result = true;
 	}
 	return result;

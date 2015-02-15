@@ -10,6 +10,8 @@
 
 struct levels {
 	int size;
+	int currentLevel;
+	int maxStageLevel;
 	int* stage1;
 	int* stage2;
 	int* stage3;
@@ -62,6 +64,7 @@ struct stage {
 	int blockStateSize;
 	exit_state exit;
 	int currentStageLevel;
+	int previousStageLevel;
 };
 
 struct game_state {
@@ -69,9 +72,7 @@ struct game_state {
 	board Board;
 	player_state PlayerState;
 	stage Stage1;
-	int maxStageLevel;
 	win_state win;
-	levels levels;
 };
 
 class Logo : public Object {
@@ -90,6 +91,11 @@ private:
 	bool canSelectOptions;
 	bool StartGame;
 	game_state GameState;
+	bool isLevelInitialized;
+
+	//Note(Thompson): Make the game work first, and then start worrying about the code layouts.
+	levels levels;
+
 public:
 	Menu();
 	~Menu();
@@ -97,8 +103,9 @@ public:
 	void initializeGameState();
 	void draw();
 	void reset();
-	void initializeLevels(int size);
+	void initializeLevels();
 	void nextStage();
+	struct levels getLevelState() const;
 };
 
 #endif

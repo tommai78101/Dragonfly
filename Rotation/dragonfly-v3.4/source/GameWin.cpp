@@ -34,6 +34,9 @@ GameWin::~GameWin(){
 }
 
 int GameWin::eventHandler(Event* e){
+	if (!this->GameState->win.win){
+		return 0;
+	}
 	LogManager& l = LogManager::getInstance();
 	WorldManager& w = WorldManager::getInstance();
 	if (e->getType().compare(DF_KEYBOARD_EVENT) == 0){
