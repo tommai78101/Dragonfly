@@ -94,7 +94,7 @@ private:
 	bool isLevelInitialized;
 
 	//Note(Thompson): Make the game work first, and then start worrying about the code layouts.
-	levels levels;
+	struct levels levels;
 
 public:
 	Menu();
