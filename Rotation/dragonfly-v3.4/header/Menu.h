@@ -15,6 +15,13 @@ struct levels {
 	int* stage1;
 	int* stage2;
 	int* stage3;
+	int* stage4;
+	int* stage5;
+	int* stage6;
+	int* stage7;
+	int* stage8;
+	int* stage9;
+	int* stage10;
 	int* temp;
 };
 
