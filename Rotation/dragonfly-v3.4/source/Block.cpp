@@ -1,4 +1,4 @@
-#include "..\header\Block.h"
+#include "../header/Block.h"
 
 bool checkPlayerCollision(game_state* GameState, int blockX, int blockY, int blockID){
 	bool result = true;

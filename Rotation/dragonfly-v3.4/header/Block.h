@@ -1,7 +1,7 @@
 #ifndef BLOCK_H
 
-#include "..\header\Common.h"
-#include "..\header\Game.h"
+#include "../header/Common.h"
+#include "../header/Game.h"
 
 #define TYPE_BLOCK "Block"
 

@@ -1,9 +1,9 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "..\include\ViewObject.h"
-#include "..\include\Object.h"
-#include "..\include\Event.h"
+#include "../include/ViewObject.h"
+#include "../include/Object.h"
+#include "../include/Event.h"
 
 #define TYPE_MENU "Menu"
 #define TYPE_LOGO "Logo"

@@ -2,9 +2,9 @@
  * Empty main.  Ready to fill with code!
  */
 
-#include "header\Common.h"
-#include "header\Game.h"
-#include "header\Menu.h"
+#include "header/Common.h"
+#include "header/Game.h"
+#include "header/Menu.h"
 
 bool PopulateWorld(){
 	LogManager& log = LogManager::getInstance();

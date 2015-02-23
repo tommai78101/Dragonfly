@@ -1,12 +1,12 @@
-#include "..\header\Common.h"
+#include "../header/Common.h"
 
-#include "..\header\Menu.h"
-#include "..\header\Game.h"
-#include "..\header\Player.h"
-#include "..\header\Border.h"
-#include "..\header\Block.h"
-#include "..\header\Exit.h"
-#include "..\header\GameWin.h"
+#include "../header/Menu.h"
+#include "../header/Game.h"
+#include "../header/Player.h"
+#include "../header/Border.h"
+#include "../header/Block.h"
+#include "../header/Exit.h"
+#include "../header/GameWin.h"
 
 std::string Info[] {
 		"How to play:                ",
@@ -80,7 +80,7 @@ Menu::Menu(){
 		log.writeLog("[Menu] Finished loading Menu");
 	}
 	else {
-		log.writeLog("[Menu] Sprite \"square_spinning\" not found.");
+		log.writeLog("[Menu] Sprite /"square_spinning/" not found.");
 		world.markForDelete(this);
 	}
 }
@@ -229,7 +229,7 @@ Logo::Logo(Position pos){
 		log.writeLog("[LOGO] Finished initializing object.");
 	}
 	else {
-		log.writeLog("[Logo] Sprite \"square_spinning\" not found.");
+		log.writeLog("[Logo] Sprite /"square_spinning/" not found.");
 	}
 }
 

@@ -1,10 +1,10 @@
-#include "..\header\Game.h"
-#include "..\header\Menu.h"
-#include "..\header\Player.h"
-#include "..\header\Border.h"
-#include "..\header\Block.h"
-#include "..\header\Exit.h"
-#include "..\header\GameWin.h"
+#include "../header/Game.h"
+#include "../header/Menu.h"
+#include "../header/Player.h"
+#include "../header/Border.h"
+#include "../header/Block.h"
+#include "../header/Exit.h"
+#include "../header/GameWin.h"
 
 Game::Game(Menu* menu, game_state* GameState){
 	LogManager& l = LogManager::getInstance();

@@ -1,5 +1,5 @@
-#include "..\header\Player.h"
-#include "..\header\GameWin.h"
+#include "../header/Player.h"
+#include "../header/GameWin.h"
 
 static bool checkTile(int tileID){
 	bool result;

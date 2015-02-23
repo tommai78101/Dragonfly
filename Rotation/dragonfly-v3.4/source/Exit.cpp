@@ -1,4 +1,4 @@
-#include "..\header\Exit.h"
+#include "../header/Exit.h"
 
 Exit::Exit(game_state* GameState){
 	LogManager& l = LogManager::getInstance();

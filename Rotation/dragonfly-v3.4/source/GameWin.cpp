@@ -1,5 +1,5 @@
-#include "..\header\GameWin.h"
-#include "..\header\Game.h"
+#include "../header/GameWin.h"
+#include "../header/Game.h"
 
 GameWin::GameWin(game_state* GameState, Game* game){
 	LogManager& l = LogManager::getInstance();

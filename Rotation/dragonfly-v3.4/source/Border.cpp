@@ -1,5 +1,5 @@
-#include "..\header\Game.h"
-#include "..\header\Border.h"
+#include "../header/Game.h"
+#include "../header/Border.h"
 
 Border::Border(game_state* GameState){
 	LogManager& log = LogManager::getInstance();
