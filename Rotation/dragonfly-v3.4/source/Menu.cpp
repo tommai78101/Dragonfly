@@ -80,18 +80,18 @@ Menu::Menu(){
 		log.writeLog("[Menu] Finished loading Menu");
 	}
 	else {
-		log.writeLog("[Menu] Sprite /"square_spinning/" not found.");
+		log.writeLog("[Menu] Sprite \"square_spinning\" not found.");
 		world.markForDelete(this);
 	}
 }
 
 Menu::~Menu(){
-	delete[] this->GameState.Stage1.layout;
+	/*delete[] this->GameState.Stage1.layout;
 	delete[] this->GameState.Stage1.blocks;
 	delete[] this->levels.stage1;
 	delete[] this->levels.stage2;
 	delete[] this->levels.stage3;
-	delete[] this->levels.temp;
+	delete[] this->levels.temp;*/
 	this->unregisterInterest(DF_STEP_EVENT);
 	this->unregisterInterest(DF_KEYBOARD_EVENT);
 }
@@ -229,7 +229,7 @@ Logo::Logo(Position pos){
 		log.writeLog("[LOGO] Finished initializing object.");
 	}
 	else {
-		log.writeLog("[Logo] Sprite /"square_spinning/" not found.");
+		log.writeLog("[Logo] Sprite \"square_spinning\" not found.");
 	}
 }
 
