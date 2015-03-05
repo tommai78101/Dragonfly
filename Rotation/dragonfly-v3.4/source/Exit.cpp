@@ -39,6 +39,8 @@ int Exit::eventHandler(Event* e){
 	return 0;
 }
 
+static int DEBUGValue = 0;
+
 void Exit::draw(){
 	if (this->GameState->Board.isRotating){
 		return;
@@ -53,6 +55,10 @@ void Exit::draw(){
 		case 0:{
 			Position pos(this->getPosition().getX()+1, this->getPosition().getY()+1);
 			g.drawCh(pos, '%', 5);
+			if (DEBUGValue != this->GameState->Board.arrayOrder){
+				l.writeLog("Array: %d, Pos: %d %d", this->GameState->Board.arrayOrder, pos.getX(), pos.getY());
+				DEBUGValue = this->GameState->Board.arrayOrder;
+			}
 			break;
 		}
 		case 1:{
@@ -62,6 +68,10 @@ void Exit::draw(){
 			int newX = this->GameState->Bounds.minX + ((this->GameState->Bounds.maxY-1) - y);
 			Position newPos(newX + 1, newY + 1);
 			g.drawCh(newPos, '%', 5);
+			if (DEBUGValue != this->GameState->Board.arrayOrder){
+				l.writeLog("Array: %d, Pos: %d %d", this->GameState->Board.arrayOrder, pos.getX(), pos.getY());
+				DEBUGValue = this->GameState->Board.arrayOrder;
+			}
 			break;
 		}
 		case 2:{
@@ -71,6 +81,10 @@ void Exit::draw(){
 			int newY = this->GameState->Bounds.minY + ((this->GameState->Bounds.maxY-1) - y);
 			Position newPos(newX+1, newY+1);
 			g.drawCh(newPos, '%', 5);
+			if (DEBUGValue != this->GameState->Board.arrayOrder){
+				l.writeLog("Array: %d, Pos: %d %d", this->GameState->Board.arrayOrder, pos.getX(), pos.getY());
+				DEBUGValue = this->GameState->Board.arrayOrder;
+			}
 			break;
 		}
 		case 3:{
@@ -80,6 +94,10 @@ void Exit::draw(){
 			int newY = (this->GameState->Bounds.maxY-1) - (x - this->GameState->Bounds.minX);
 			Position newPos(newX+1, newY+1);
 			g.drawCh(newPos, '%', 5);
+			if (DEBUGValue != this->GameState->Board.arrayOrder){
+				l.writeLog("Array: %d, Pos: %d %d", this->GameState->Board.arrayOrder, pos.getX(), pos.getY());
+				DEBUGValue = this->GameState->Board.arrayOrder;
+			}
 			break;
 		}
 		default:{

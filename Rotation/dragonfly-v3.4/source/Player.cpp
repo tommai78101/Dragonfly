@@ -238,7 +238,6 @@ int Player::eventHandler(Event* e){
 							y++;
 						}
 					}
-					l.writeLog("[Player DEBUG] %d", layout[(layoutY + 1)*this->GameState->Stage1.width + layoutX]);
 					break;
 				}
 				case 1:{
@@ -247,7 +246,6 @@ int Player::eventHandler(Event* e){
 							x++;
 						}
 					}
-					l.writeLog("[Player DEBUG] %d", layout[layoutY*this->GameState->Stage1.width + (layoutX + 1)]);
 					break;
 				}
 				case 2:{
@@ -256,7 +254,6 @@ int Player::eventHandler(Event* e){
 							y--;
 						}
 					}
-					l.writeLog("[Player DEBUG] %d", layout[(layoutY - 1)*this->GameState->Stage1.width + layoutX]);
 					break;
 				}
 				case 3:{
@@ -265,7 +262,6 @@ int Player::eventHandler(Event* e){
 							x--;
 						}
 					}
-					l.writeLog("[Player DEBUG] %d", layout[layoutY * this->GameState->Stage1.width + (layoutX - 1)]);
 					break;
 				}
 			}
