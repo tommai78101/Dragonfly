@@ -317,6 +317,9 @@ void Menu::initializeGameState(){
 	}
 	Stage->blocks = new block_state[Stage->blockStateSize];
 
+	Stage->exit = {};
+	Stage->exit.isBlocked = false;
+	bool exitCheck = false;
 	for (int i = 0, j = 0; i < Stage->size; i++){
 		switch (Stage->layout[i]){
 			case 2: {
@@ -342,8 +345,17 @@ void Menu::initializeGameState(){
 				this->GameState.PlayerState.y = this->GameState.PlayerState.initialY;
 				break;
 			}
+			case 9: {
+				int exitX = i % Stage->width;
+				int exitY = i / Stage->width;
+				Stage->exit.x = exitX;
+				Stage->exit.y = exitY;
+				exitCheck = true;
+				break;
+			}
 		}
 	}
+	Assert(exitCheck);
 
 	if (player){
 		player->setVisible(true);
@@ -356,21 +368,6 @@ void Menu::initializeGameState(){
 	this->GameState.win = {};
 	this->GameState.win.win = false;
 	this->GameState.win.isGameWinCreated = false;
-
-	Stage->exit = {};
-	Stage->exit.isBlocked = false;
-	bool exitCheck = false;
-	for (int i = 0; i < Stage->size; i++){
-		if (Stage->layout[i] == 9){
-			int exitX = i % Stage->width;
-			int exitY = i / Stage->width;
-			Stage->exit.x = exitX;
-			Stage->exit.y = exitY;
-			exitCheck = true;
-			break;
-		}
-	}
-	Assert(exitCheck);
 
 	for (int i = 0; i < Stage->blockStateSize; i++){
 		new Block(&this->GameState, i);
