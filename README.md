@@ -25,9 +25,9 @@ The game uses the computer keyboard to control.
 | W | Start Game |
 | E | Rotate Right |
 | R | Quit to Main Menu |
-| A | Move character Left | 
+| A | Move Character Left | 
 | S | Quit Game |
-| D | Move Right |
+| D | Move Character Right |
 | P | Pause Game |
 | CTRL+C | Force Quit |
 
