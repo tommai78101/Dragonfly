@@ -36,7 +36,7 @@ The game uses the computer keyboard to control.
 | Known Issues | Description |
 | --- | --- |
 | **The game segfaults after progressing through a few levels.** | So far, I have no clues or leads as to what causes the segfaults. I can only say that it requires more strenous debugging in the game source codes, as well as the engine source codes in order to find the culprit. |
-| **Force quitting the game causes segfaults.** | The same issue applied to the issue mentioned above. Again, either the game source codes or the engine source codes need to be strenously debugged for any bugs. |
+| **Force quitting the game causes segfaults.** | This is the same issue that applies to the issue mentioned above. Again, either the game source codes or the engine source codes need to be strenously debugged for any bugs. |
 | **Segfaults cannot be guaranteed to be resolved.** | Since I do not own the source code for the Dragonfly engine, I cannot guarantee the segfaults are going to be solved. |
 
 ---
